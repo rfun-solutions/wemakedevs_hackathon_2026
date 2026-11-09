@@ -1,0 +1,45 @@
+# A (a-schedule-agenda): re-ingest the Sessionize schedule every 30 minutes. No secrets besides the DB URI.
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: schedule-ingest
+spec:
+  schedule: "*/30 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      activeDeadlineSeconds: 120
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: ingest
+              image: app
+              command:
+                ["node", "--import", "./api/dist/telemetry.js", "api/dist/jobs/ingest.js"]
+              env:
+                - name: DATABASE_URI
+                  valueFrom:
+                    secretKeyRef:
+                      name: db-app
+                      key: uri
+                - name: DASH0_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: kc-secrets
+                      key: DASH0_TOKEN
+                      optional: true
+              resources:
+                requests:
+                  cpu: 50m
+                  memory: 128Mi
+                limits:
+                  cpu: 250m
+                  memory: 256Mi
+              securityContext:
+                runAsNonRoot: true
+                runAsUser: 1000
+                allowPrivilegeEscalation: false

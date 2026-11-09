@@ -1,25 +1,25 @@
 ## 1. PR 1: Status screen and API
-- [ ] 1.1 `api/src/routes/status.ts`: `/api/status` (use C0's `/api/ping`; do not re-register it), rolling p95 window fed by an `onResponse` hook on `POST /api/notes`; register under the `// >> f-observability-product` marker in `api/src/routes/index.ts`; span `kc.status.read`; handle a missing `feed_runs` table (`42P01`) with `feed_synced_at: null` and test it; unit tests
-- [ ] 1.2 `POST /api/status/rtt` (rate-limited per device with C0's `api/src/lib/rateLimit.ts`; no new dependency) feeding `kc_status_rtt_ms`; unit tests
-- [ ] 1.3 `web/src/screens/status/` with verdict logic as a pure function and "Saved in N ms" from `getLastSaveMs()` (C0's stub returns `null` until B replaces it, so F1 does not wait for B); pre-write mount markers on the Status screen: `{/* >> f-observability-product-health */}` (F2: `HealthBanner`, `PromiseLights`, `ReleaseFooter`) and `{/* >> f-observability-product */}` (F1: `Agent0Line`, group 7); unit tests for the three verdicts, offline, and `null` save time
-- [ ] 1.4 Insert route and nav lines under the `// >> f-observability-product` marker; EN and ES strings in `web/src/i18n/<lang>/status.json` (F1's file)
-- [ ] 1.5 Playwright mobile test (iPhone 15, Pixel 7) and axe check; ARIA live region for "saved in N ms"
+- [x] 1.1 `api/src/routes/status.ts`: `/api/status` (use C0's `/api/ping`; do not re-register it), rolling p95 window fed by an `onResponse` hook on `POST /api/notes`; register under the `// >> f-observability-product` marker in `api/src/routes/index.ts`; span `kc.status.read`; handle a missing `feed_runs` table (`42P01`) with `feed_synced_at: null` and test it; unit tests
+- [x] 1.2 `POST /api/status/rtt` (rate-limited per device with C0's `api/src/lib/rateLimit.ts`; no new dependency) feeding `kc_status_rtt_ms`; unit tests
+- [x] 1.3 `web/src/screens/status/` with verdict logic as a pure function and "Saved in N ms" from `getLastSaveMs()` (C0's stub returns `null` until B replaces it, so F1 does not wait for B); pre-write mount markers on the Status screen: `{/* >> f-observability-product-health */}` (F2: `HealthBanner`, `PromiseLights`, `ReleaseFooter`) and `{/* >> f-observability-product */}` (F1: `Agent0Line`, group 7); unit tests for the three verdicts, offline, and `null` save time
+- [x] 1.4 Insert route and nav lines under the `// >> f-observability-product` marker; EN and ES strings in `web/src/i18n/<lang>/status.json` (F1's file)
+- [x] 1.5 Playwright mobile test (iPhone 15, Pixel 7) and axe check; ARIA live region for "saved in N ms"
 
 ## 2. PR 2: Chaos switch and load script
-- [ ] 2.1 `api/src/lib/chaos.ts`: replace C0's stub, keeping `ChaosFlags`, `DEFAULT_CHAOS` and `getChaos(key)` exactly; add `isChaosActive()` and the route-key `onRequest` hook; test that the `agenda` key is read by `getChaos` but never applied by the hook; 5 s mtime re-read, protected-route list (including every `/api/status/*` route), `kc.chaos.apply` span, `kc_chaos_injected_total`; register `chaosPlugin` under the `// >> f-observability-product` marker in `api/src/routes/index.ts`; unit tests
-- [ ] 2.2 `deploy/chaos-configmap.yaml` (`flags.json: '{}'`), mounted at `/etc/kc-chaos` by inserting under the `# >> f-observability-product` markers in C0's `deploy/deployment.yaml` (`volumes:`, `volumeMounts:`, and `CHAOS_FILE` under `env:` only); list it under the `# >> f-observability-product` marker in `kustomization.yaml` `resources:`
-- [ ] 2.3 `scripts/load/agenda.js` (k6, 50 VU, 60 s) with LLM-path guard; test the guard
+- [x] 2.1 `api/src/lib/chaos.ts`: replace C0's stub, keeping `ChaosFlags`, `DEFAULT_CHAOS` and `getChaos(key)` exactly; add `isChaosActive()` and the route-key `onRequest` hook; test that the `agenda` key is read by `getChaos` but never applied by the hook; 5 s mtime re-read, protected-route list (including every `/api/status/*` route), `kc.chaos.apply` span, `kc_chaos_injected_total`; register `chaosPlugin` under the `// >> f-observability-product` marker in `api/src/routes/index.ts`; unit tests
+- [x] 2.2 `deploy/chaos-configmap.yaml` (`flags.json: '{}'`), mounted at `/etc/kc-chaos` by inserting under the `# >> f-observability-product` markers in C0's `deploy/deployment.yaml` (`volumes:`, `volumeMounts:`, and `CHAOS_FILE` under `env:` only); list it under the `# >> f-observability-product` marker in `kustomization.yaml` `resources:`
+- [x] 2.3 `scripts/load/agenda.js` (k6, 50 VU, 60 s) with LLM-path guard; test the guard
 - [ ] 2.4 Dry run against a dev `kc-chaos`: set `agenda.latencyMs` to 800 and confirm p95 rises on Status; then set `agenda.naive` to true and confirm N+1 `pg.query` spans under `kc.agenda.get` in Dash0
 
 ## 3. PR 3: Dash0 as code and runbook
-- [ ] 3.1 `observability/dashboard.perses.yaml` (capture p95, agenda p95, error rate, feed age, RTT); lint with `percli`
+- [x] 3.1 `observability/dashboard.perses.yaml` (capture p95, agenda p95, error rate, feed age, RTT); lint with `percli`
 - [ ] 3.2 `observability/check-rule.yaml` and `observability/synthetic.yaml`
 - [ ] 3.3 `.github/workflows/observability.yml`: lint on PR, apply on main; top-level `permissions: contents: read`; secret `DASH0_TOKEN`
 - [ ] 3.4 Confirm the Dash0 CLI flags with `dash0 --help`; confirm both objects appear in Dash0
-- [ ] 3.5 Grep the built bundle for the full-access token (expect zero)
+- [x] 3.5 Grep the built bundle for the full-access token (expect zero)
 - [ ] 3.6 Optional: probe SLO beta, apply `observability/slo.json` if enabled
 - [ ] 3.7 Optional: `deploy/otel-collector.yaml` only if SDK-direct drops data under load
-- [ ] 3.8 `docs/demo-runbook-dash0.md`: organic route, backup chaos route at 15:45, Agent0 to Gitar to merge queue to Argo, reset steps
+- [x] 3.8 `docs/demo-runbook-dash0.md`: organic route, backup chaos route at 15:45, Agent0 to Gitar to merge queue to Argo, reset steps
 
 ## 4. PR 4 (F2): service health poll (D2 server half)
 - [ ] 4.1 `api/src/services/health/promql.ts` (`queryPromQL`, 5 s timeout, host, path and labels (`dash0_operation_name`; fallback `route` on `kc_app_http_server_duration`) matching G's `rules-from-prod.mjs` `CONFIG`, span `kc.status.promql_query`); unit tests with mocked fetch: ok, 401, timeout, empty
@@ -37,7 +37,7 @@
 - [ ] 5.3 `scripts/release-note.mjs <sha> <radar-url> [--apply]`: PR lookup, `gitar-bot[bot]` review check, ConfigMap YAML; Vitest with mocked `gh` output (reviewed, not reviewed, no PR)
 - [ ] 5.4 `web/src/screens/status/ReleaseFooter.tsx`: "Last release HH:MM, Gitar-reviewed, Radar all-clear" with descriptive links, America/Denver time, clauses dropped when fields are missing, hidden on 204; mounted under the `f-observability-product-health` marker; EN and ES in `status-health.json`; Playwright and axe
 - [ ] 5.4a Add your registry entry: `web/src/under-the-hood/entries/f-observability-product.json` (Status, Wi-Fi or us, promise lights, health banner, release footer; tech: Dash0 PromQL poll with `live: promise:P1`..`P5`, check rules and dashboards as code, Agent0 runbook, Radar all-clear with `live: release`, `rules-from-prod` shared query) with `status.hood.*` EN and ES in `status-health.json`
-- [ ] 5.5 (**F1**, after group 3; moved from F2 because it is docs next to `demo-runbook-dash0.md` and is needed at 15:45 even if F2 slips) `docs/demo-runbook-ai-sres.md` exactly as design "Release footer and two AI SREs": Agent0 and Radar on the same 15:45 slowdown, two-column verdict table, Shared link, fix PR cites both, post-deploy all-clear, `release-note.mjs --apply`, 17:30 showing; fallback when Radar is slow or the two disagree. Its FIRST section is the unstaged Radar investigation and the after-every-merge Radar MCP routine (design "Unstaged Radar investigation")
+- [x] 5.5 (**F1**, after group 3; moved from F2 because it is docs next to `demo-runbook-dash0.md` and is needed at 15:45 even if F2 slips) `docs/demo-runbook-ai-sres.md` exactly as design "Release footer and two AI SREs": Agent0 and Radar on the same 15:45 slowdown, two-column verdict table, Shared link, fix PR cites both, post-deploy all-clear, `release-note.mjs --apply`, 17:30 showing; fallback when Radar is slow or the two disagree. Its FIRST section is the unstaged Radar investigation and the after-every-merge Radar MCP routine (design "Unstaged Radar investigation")
 - [ ] 5.6 Run the unstaged investigation when the first real event happens (any F agent, or the orchestrator): investigate in Radar, act through a PR, mark Shared, fill the runbook table
 
 ## 6. PR 6 (F2): Synthetic Kay accessibility smoke test (X1)
@@ -50,10 +50,10 @@
 
 ## 7. IN SCOPE (decided by the user 2026-11-08; **F1**, after groups 1-3, about 14:20-15:20): D3 Agent0 explains to Kay, cached
 T7 (2026-11-08) verified it: bearer token accepted, `runTask` takes params `message` and `dataset` ("default"), replies over SSE, and already returns the final answer (no `waitForTask` needed); answers took 32-42 s and were correct. So it runs asynchronously and the app only ever shows the cached result. F1 works only in its own files and never edits F2's (`poller.ts`, `status-health.ts`, `status-health.json`). Unit tests mock the MCP; no live Agent0 call runs in CI or local tests (saves credits).
-- [ ] 7.1 `api/src/services/health/agent0.ts`: subscribe to `onHealthTransition` from F2's `poller.ts` (exported from F2's PR 4; F1 never edits `poller.ts`); fire `runTask` (`message`, `dataset: "default"`, parse the SSE reply) once on a healthy-to-breached transition (at most once per 10 min), asynchronously with a 60 s timeout, store `{ text, at }`, span `kc.status.agent0_task`; unit tests with a mocked MCP: success, timeout, auth refused, debounce
-- [ ] 7.2 Per-language translation through C0's `complete()` (op `status.agent0_translate`), cached until the next sentence; unit tests with a mocked client
-- [ ] 7.3 `GET /api/status/explain?lang=` in a new `api/src/routes/status-explain.ts` (not in `status-health.ts`), registered under the `// >> f-observability-product` marker in `api/src/routes/index.ts`, with template fallback; unit tests
-- [ ] 7.4 `web/src/screens/status/Agent0Line.tsx`: "Agent0, N s ago: ..." with an "AI-generated" label, mounted with one line under F1's `f-observability-product` marker on the Status screen; EN and ES strings in `web/src/i18n/<lang>/status-agent0.json`; Playwright and axe
+- [x] 7.1 `api/src/services/health/agent0.ts`: subscribe to `onHealthTransition` from F2's `poller.ts` (exported from F2's PR 4; F1 never edits `poller.ts`); fire `runTask` (`message`, `dataset: "default"`, parse the SSE reply) once on a healthy-to-breached transition (at most once per 10 min), asynchronously with a 60 s timeout, store `{ text, at }`, span `kc.status.agent0_task`; unit tests with a mocked MCP: success, timeout, auth refused, debounce
+- [x] 7.2 Per-language translation through C0's `complete()` (op `status.agent0_translate`), cached until the next sentence; unit tests with a mocked client
+- [x] 7.3 `GET /api/status/explain?lang=` in a new `api/src/routes/status-explain.ts` (not in `status-health.ts`), registered under the `// >> f-observability-product` marker in `api/src/routes/index.ts`, with template fallback; unit tests
+- [x] 7.4 `web/src/screens/status/Agent0Line.tsx`: "Agent0, N s ago: ..." with an "AI-generated" label, mounted with one line under F1's `f-observability-product` marker on the Status screen; EN and ES strings in `web/src/i18n/<lang>/status-agent0.json`; Playwright and axe
 
 ## Split (innovation set)
 F with the innovation set and the promise lights is more than two agents' 2.5 h. Run two agents, plus an optional third:

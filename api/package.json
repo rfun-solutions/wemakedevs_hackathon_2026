@@ -33,6 +33,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.typecheck.json",
+    "seed:threads": "node dist/seed/threads-demo.js",
     "start": "node --import ./dist/telemetry.js dist/server.js"
   }
 }
