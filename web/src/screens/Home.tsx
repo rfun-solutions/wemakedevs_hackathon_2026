@@ -79,7 +79,11 @@ const TILES = [
   { key: 'status', href: '/status' },
 ] as const;
 
-type NextState = { kind: 'loading' } | { kind: 'none' } | { kind: 'session'; session: Session };
+type NextState =
+  | { kind: 'loading' }
+  | { kind: 'none' }
+  | { kind: 'error' }
+  | { kind: 'session'; session: Session; timing: 'current' | 'next' };
 
 /** Next (or current) session on Kay's agenda; any failure falls back calmly, never blocks the page. */
 function useNextSession(): NextState {
@@ -90,10 +94,12 @@ function useNextSession(): NextState {
       .then((res) => {
         const hit = currentOrNextSession(res.items ?? [], new Date());
         if (!cancelled)
-          setState(hit ? { kind: 'session', session: hit.session } : { kind: 'none' });
+          setState(
+            hit ? { kind: 'session', session: hit.session, timing: hit.state } : { kind: 'none' },
+          );
       })
       .catch(() => {
-        if (!cancelled) setState({ kind: 'none' });
+        if (!cancelled) setState({ kind: 'error' });
       });
     return () => {
       cancelled = true;
@@ -110,7 +116,9 @@ function NextUp({ state, lang }: { state: NextState; lang: string }) {
       <a class="home-next" href="/agenda" data-testid="home-next">
         {icons.next}
         <span class="home-next-body">
-          <span class="home-next-label">{t('app.home.next.title')}</span>
+          <span class="home-next-label">
+            {t(state.timing === 'current' ? 'schedule.now.badge' : 'app.home.next.title')}
+          </span>
           <span class="home-next-time">{formatTimeRange(s, lang)}</span>
           <span class="home-next-name">{s.title}</span>
           {where && <span class="home-next-room">{where}</span>}
@@ -128,8 +136,18 @@ function NextUp({ state, lang }: { state: NextState; lang: string }) {
       {icons.next}
       <span class="home-next-body">
         <span class="home-next-label">{t('app.home.next.title')}</span>
-        <span class="home-next-name">{t('app.home.next.empty')}</span>
-        <span class="home-next-room">{t('app.home.next.emptyHint')}</span>
+        <span class="home-next-name">
+          {t(
+            state.kind === 'loading'
+              ? 'app.home.next.loading'
+              : state.kind === 'error'
+                ? 'app.home.next.unavailable'
+                : 'app.home.next.empty',
+          )}
+        </span>
+        {state.kind === 'none' && (
+          <span class="home-next-room">{t('app.home.next.emptyHint')}</span>
+        )}
       </span>
     </a>
   );

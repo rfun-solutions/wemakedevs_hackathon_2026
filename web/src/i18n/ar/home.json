@@ -1,5 +1,7 @@
 {
   "app.home.next.title": "التالي",
+  "app.home.next.loading": "جارٍ تحميل جدولك…",
+  "app.home.next.unavailable": "جدولك غير متاح مؤقتًا.",
   "app.home.next.empty": "أضف جلسات إلى جدولك",
   "app.home.next.emptyHint": "تصفح البرنامج واحفظ المحاضرات التي تريدها.",
   "app.home.go": "انتقل إلى",
