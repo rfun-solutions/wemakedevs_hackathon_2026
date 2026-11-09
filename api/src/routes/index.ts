@@ -24,6 +24,7 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
   // >> f-observability-product
   await app.register((await import('./status.js')).default);
   await app.register((await import('../lib/chaos.js')).chaosPlugin);
+  await app.register((await import('./status-explain.js')).default);
   // >> f-observability-product-health
   // >> f-observability-product-kay
   // >> e-captions-translation

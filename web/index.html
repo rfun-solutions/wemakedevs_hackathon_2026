@@ -12,6 +12,49 @@
     <link rel="icon" type="image/svg+xml" href="/icons/icon.svg" />
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
     <title>KubeCompanion</title>
+    <!-- >> d-access-kit: pre-paint display prefs. Keep in step with web/src/prefs/display.ts and web/src/i18n/index.ts. -->
+    <script>
+      (function () {
+        var d = document.documentElement;
+        var s = null;
+        try {
+          s = JSON.parse(localStorage.getItem('kc.display.v1') || 'null');
+        } catch (e) {}
+        s = s || {};
+        function mq(q) {
+          try {
+            return window.matchMedia(q).matches;
+          } catch (e) {
+            return false;
+          }
+        }
+        var scale = typeof s.typeScale === 'number' ? Math.min(2, Math.max(1, s.typeScale)) : 1;
+        d.setAttribute('data-type-scale', String(scale));
+        d.style.setProperty('--type-scale', String(scale));
+        d.setAttribute('data-font', s.font === 'system' ? 'system' : 'atkinson');
+        var high = s.contrast ? s.contrast === 'high' : mq('(prefers-contrast: more)');
+        if (high) d.setAttribute('data-contrast', 'high');
+        var reduced = s.motion ? s.motion === 'reduced' : mq('(prefers-reduced-motion: reduce)');
+        if (reduced) d.setAttribute('data-motion', 'reduced');
+        var lang = null;
+        try {
+          lang = localStorage.getItem('kc.lang');
+        } catch (e) {}
+        if (['en', 'es', 'pt-BR', 'ar'].indexOf(lang) < 0) {
+          var n = (navigator.language || 'en').toLowerCase();
+          lang =
+            n.indexOf('es') === 0
+              ? 'es'
+              : n.indexOf('pt') === 0
+                ? 'pt-BR'
+                : n.indexOf('ar') === 0
+                  ? 'ar'
+                  : 'en';
+        }
+        d.lang = lang;
+        d.dir = lang === 'ar' ? 'rtl' : 'ltr';
+      })();
+    </script>
   </head>
   <body>
     <div id="app"></div>

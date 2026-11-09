@@ -1,6 +1,8 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 
+const NO_EXPLAIN = { text: null, lang: 'en', at: null, source: 'none' };
+
 const status = {
   server_ms_p95: 120,
   feed_synced_at: '2026-11-09T17:56:00Z',
@@ -9,7 +11,8 @@ const status = {
   chaos_active: false,
 };
 
-async function stubApi(page: Page, body: object = status) {
+async function stubApi(page: Page, body: object = status, explain: object = NO_EXPLAIN) {
+  await page.route('**/api/status/explain**', (r) => r.fulfill({ json: explain }));
   await page.route('**/api/status', (r) => r.fulfill({ json: body }));
   await page.route('**/api/status/rtt', (r) => r.fulfill({ status: 204 }));
   await page.route('**/api/ping', (r) => r.fulfill({ status: 204 }));
@@ -56,5 +59,38 @@ test.describe('status screen', () => {
     const box = await link.boundingBox();
     expect(box!.width).toBeGreaterThanOrEqual(24);
     expect(box!.height).toBeGreaterThanOrEqual(24);
+  });
+
+  test('shows the AI-generated Agent0 sentence and is axe clean', async ({ page }) => {
+    const at = new Date(Date.now() - 20_000).toISOString();
+    await stubApi(page, status, {
+      text: 'The agenda is slow for everyone right now.',
+      lang: 'en',
+      at,
+      source: 'agent0',
+    });
+    await page.goto('/status');
+    const line = page.locator('#status-agent0');
+    await expect(line).toContainText(/Agent0, .* ago: The agenda is slow for everyone right now\./);
+    await expect(line).toContainText(/AI-generated|Generado por IA/);
+    const results = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag22aa'])
+      .analyze();
+    expect(results.violations).toEqual([]);
+  });
+
+  test('says the explanation is not available instead of inventing one, axe clean', async ({
+    page,
+  }) => {
+    await stubApi(page);
+    await page.goto('/status');
+    await expect(page.locator('#status-agent0')).toContainText(
+      /Explanation not available right now|La explicación no está disponible/,
+    );
+    await expect(page.locator('#status-agent0')).not.toContainText(/AI-generated|Generado por IA/);
+    const results = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag22aa'])
+      .analyze();
+    expect(results.violations).toEqual([]);
   });
 });
