@@ -8,7 +8,11 @@ import {
 
 const STOPWORDS_EN = `a about after all also am an and any are as at be been but by can could did do does for from had has have he her his how i if in into is it its just me my no not of on or our out so than that the their them then there these they this to up us was we were what when which who will with would you your`;
 const STOPWORDS_ES = `a al algo ante como con de del el ella ellos en es esa ese esta este esto la las lo los me mi muy no nos o para pero por que se si sin su sus te tu un una uno unos y ya yo`;
-export const STOPWORDS = new Set(`${STOPWORDS_EN} ${STOPWORDS_ES}`.split(/\s+/));
+// Conference-speak that says nothing about the topic.
+const STOPWORDS_DOMAIN = `talk talks demo session keynote day notes note said met worth more most use`;
+export const STOPWORDS = new Set(
+  `${STOPWORDS_EN} ${STOPWORDS_ES} ${STOPWORDS_DOMAIN}`.split(/\s+/),
+);
 
 /** Fixed EN/ES action verbs; multi-word entries match as a phrase. */
 export const ACTION_VERBS = [
@@ -33,6 +37,19 @@ const PROMISE_THRESHOLD = 0.2;
 
 /** Lowercase, strip accents, split on non-letters, drop stopwords and 1-char tokens. */
 export function tokenize(text: string): string[] {
+  return words(text).map(stem);
+}
+
+/** Crude plural/gerund stemmer so "sidecars" matches "sidecar" and "filtering" matches "filter". */
+export function stem(w: string): string {
+  if (w === 'kubernetes') return w;
+  if (w.length > 6 && w.endsWith('ing')) return w.slice(0, -3);
+  if (w.length > 4 && w.endsWith('s') && !w.endsWith('ss')) return w.slice(0, -1);
+  return w;
+}
+
+/** Normalised, stopword-free words (unstemmed, for display). */
+function words(text: string): string[] {
   return text
     .toLowerCase()
     .normalize('NFD')
@@ -61,11 +78,17 @@ function overlap(small: Set<string>, big: Set<string>): number {
 /** Top-n keywords by frequency, ties alphabetical. */
 function topKeywords(texts: string[], n: number): string[] {
   const freq = new Map<string, number>();
-  for (const t of texts) for (const w of tokenize(t)) freq.set(w, (freq.get(w) ?? 0) + 1);
+  const shown = new Map<string, string>();
+  for (const t of texts)
+    for (const w of words(t)) {
+      const k = stem(w);
+      freq.set(k, (freq.get(k) ?? 0) + 1);
+      if (!shown.has(k)) shown.set(k, w);
+    }
   return [...freq.entries()]
     .sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : 1))
     .slice(0, n)
-    .map(([w]) => w);
+    .map(([k]) => shown.get(k)!);
 }
 
 const firstSentence = (s: string): string => {
@@ -105,14 +128,25 @@ export function heuristicGroup(input: HeuristicInput): GroupedThread[] {
     notes: [],
     existing: t,
   }));
+  // A note joins a cluster when Jaccard reaches the threshold, or when they share two keywords, or one
+  // distinctive (4+ letter) keyword: notes are short, so whole-set Jaccard alone almost never fires.
   const bestFor = (kw: Set<string>, pool: Cluster[], threshold: number): Cluster | undefined => {
     let best: Cluster | undefined;
     let bestScore = 0;
     for (const c of pool) {
-      const s = jaccard(kw, c.keywords);
-      if (s >= threshold && s > bestScore) {
+      let shared = 0;
+      let longShared = false;
+      for (const w of kw)
+        if (c.keywords.has(w)) {
+          shared++;
+          if (w.length >= 4) longShared = true;
+        }
+      const j = jaccard(kw, c.keywords);
+      if (!(j >= threshold || shared >= 2 || (shared >= 1 && longShared))) continue;
+      const score = shared + j;
+      if (score > bestScore) {
         best = c;
-        bestScore = s;
+        bestScore = score;
       }
     }
     return best;
@@ -156,7 +190,13 @@ export function heuristicGroup(input: HeuristicInput): GroupedThread[] {
     return {
       ...(c.threadId ? { threadId: c.threadId } : {}),
       title: c.existing?.title ?? (keywords.join(' ') || 'Notes'),
-      summary: c.existing?.summary ?? '',
+      // Heuristic threads keep their keywords in the summary so later runs can match against more than the title.
+      summary:
+        c.existing?.summary ??
+        topKeywords(
+          c.notes.map((n) => n.body),
+          8,
+        ).join(', '),
       noteIds: c.notes.map((n) => n.id),
       followUps,
       promiseIds: [],

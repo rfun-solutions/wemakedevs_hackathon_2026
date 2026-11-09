@@ -97,4 +97,24 @@ describe('heuristicGroup', () => {
   it('returns nothing for no notes', () => {
     expect(heuristicGroup({ notes: [], openThreads: [], promises: [] })).toEqual([]);
   });
+
+  it('joins short notes that share one distinctive word (after stemming) and reuses stored keywords across days', () => {
+    const day1 = heuristicGroup({
+      notes: [
+        note('a', 'Mesh talk: sidecars cost memory'),
+        note('b', 'Ambient mode removes sidecar proxies'),
+      ],
+      openThreads: [],
+      promises: [],
+    });
+    expect(day1).toHaveLength(1);
+    const t = day1[0]!;
+    const day2 = heuristicGroup({
+      notes: [note('c', 'Mesh observability needs span metrics')],
+      openThreads: [{ id: 'T', title: t.title, summary: t.summary }],
+      promises: [],
+    });
+    expect(day2).toHaveLength(1);
+    expect(day2[0]!.threadId).toBe('T');
+  });
 });
