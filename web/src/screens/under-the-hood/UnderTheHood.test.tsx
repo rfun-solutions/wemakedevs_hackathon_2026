@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { cleanup, render, screen } from '@testing-library/preact';
+import { act, cleanup, render, screen } from '@testing-library/preact';
 import { ENTRIES } from '../../under-the-hood/registry';
-import { t } from '../../i18n';
+import { setLang, t } from '../../i18n';
 import { UnderTheHood, needsSignin, techHref } from './UnderTheHood';
 
 afterEach(() => {
@@ -17,6 +17,18 @@ describe('UnderTheHood', () => {
     expect(screen.getAllByRole('heading', { level: 3 })).toHaveLength(ENTRIES.length);
     expect(await screen.findAllByText('No live data right now')).not.toHaveLength(0);
     expect(await screen.findAllByRole('status')).not.toHaveLength(0);
+  });
+});
+
+describe('language', () => {
+  it('re-renders in Spanish when the language changes', async () => {
+    vi.stubGlobal('fetch', () => Promise.reject(new Error('offline')));
+    setLang('en');
+    render(<UnderTheHood />);
+    expect(screen.getByRole('heading', { level: 2 }).textContent).toBe('Under the hood');
+    act(() => setLang('es'));
+    expect(screen.getByRole('heading', { level: 2 }).textContent).toBe('Bajo el capó');
+    act(() => setLang('en'));
   });
 });
 
