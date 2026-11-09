@@ -17,4 +17,4 @@ resources:
 images:
   - name: app
     newName: ghcr.io/rfun-solutions/wemakedevs_hackathon_2026
-    newTag: e9105a4
+    newTag: a115649
