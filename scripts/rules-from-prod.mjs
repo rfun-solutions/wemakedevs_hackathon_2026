@@ -47,7 +47,29 @@ export class QueryError extends Error {
   }
 }
 
-export async function queryPromQL(expr, { token, config = CONFIG, fetchImpl = fetch } = {}) {
+const otel = await import('@opentelemetry/api').catch(() => null);
+
+/** Runs fn inside a `kc.dash0.query` span when @opentelemetry/api is available (no-op without an SDK). */
+function withSpan(fn) {
+  if (!otel) return fn();
+  return otel.trace.getTracer('kc-rules-from-prod').startActiveSpan('kc.dash0.query', async (span) => {
+    try {
+      return await fn();
+    } catch (err) {
+      span.recordException(err);
+      span.setStatus({ code: otel.SpanStatusCode.ERROR });
+      throw err;
+    } finally {
+      span.end();
+    }
+  });
+}
+
+export function queryPromQL(expr, { token, config = CONFIG, fetchImpl = fetch } = {}) {
+  return withSpan(() => runQuery(expr, { token, config, fetchImpl }));
+}
+
+async function runQuery(expr, { token, config, fetchImpl }) {
   const url = `${config.apiHost}${config.queryPath}?${new URLSearchParams({ query: expr })}`;
   let res;
   try {
@@ -65,7 +87,7 @@ export async function queryPromQL(expr, { token, config = CONFIG, fetchImpl = fe
   try {
     body = await res.json();
   } catch {
-    throw new QueryError('Dash0 query returned non-JSON', 'shape');
+    throw new QueryError('Dash0 query returned a non-JSON body', 'shape');
   }
   if (body?.status !== 'success' || !Array.isArray(body?.data?.result)) throw new QueryError('Dash0 query returned an unexpected shape', 'shape');
   return body.data.result;
@@ -230,8 +252,9 @@ export async function main(argv = process.argv.slice(2), env = process.env, { fe
         console.log('rules-from-prod: Dash0 returned no finite route series; nothing written.');
         return 0;
       }
-      const captionResult = await queryPromQL(captionsQuery(args.window), { token, fetchImpl });
-      input = { routes, captions: extractCaptions(captionResult) };
+      // A failed caption query is a QueryError like any other: write nothing rather than clear CAP-1 falsely.
+      const captions = extractCaptions(await queryPromQL(captionsQuery(args.window), { token, fetchImpl }));
+      input = { routes, captions };
     } catch (err) {
       if (err instanceof QueryError) {
         console.log(`rules-from-prod: ${err.message}; nothing written.`);
