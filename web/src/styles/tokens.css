@@ -1,75 +1,93 @@
-/* PLACEHOLDER token values (column B "Kay Sunrise"). Token NAMES are final (design/token-names.md);
-   D1 owns and overwrites the VALUES. Text sizes scale with --type-scale (1 to 2). */
+/* KubeCompanion design tokens. Direction B "Kay Sunrise" (user pick 2026-11-09).
+   Token NAMES are frozen once PR0 merges: change values only; a rename or a new name needs the orchestrator.
+   Mustard (--color-accent) is 1.9:1 on white: never use it as text.
+   Contrast is checked in web/tests (token-pairs). Logical properties only elsewhere. */
 :root {
-  --color-bg: #fbf8f1;
-  --color-surface: #ffffff;
-  --color-surface-raised: #ffffff;
-  --color-text: #1b2352;
-  --color-text-muted: #454c73;
-  --color-text-on-accent: #1b2352;
-  --color-accent: #f2b13d;
-  --color-accent-strong: #db9a22;
-  --color-link: #1f3a93;
-  --color-border: #d8d0bc;
-  --color-border-strong: #6b7099;
-  --color-focus-ring: #0b6b75;
-  --color-success: #17603a;
-  --color-success-bg: #e1f2e6;
-  --color-warning: #8a4b00;
-  --color-warning-bg: #ffefc9;
-  --color-danger: #b3261e;
-  --color-danger-bg: #fce4e1;
-  --color-info: #0b6b75;
-  --color-info-bg: #ddf1f2;
-  --color-unknown: #4a4f6b;
-  --color-unknown-bg: #ece9e0;
-  --show-fg: #fff6e0;
-  --show-bg: #1b2352;
+  --color-bg: #fbf8f1; /* page background */
+  --color-surface: #ffffff; /* cards, inputs, footer */
+  --color-surface-raised: #ffffff; /* raised panels, sheets */
+  --color-text: #1b2352; /* body text */
+  --color-text-muted: #454c73; /* secondary text (still 4.5:1) */
+  --color-text-on-accent: #1b2352; /* text on --color-accent */
+  --color-accent: #f2b13d; /* primary action fill */
+  --color-accent-strong: #db9a22; /* primary action pressed */
+  --color-link: #1f3a93; /* link text */
+  --color-border: #d8d0bc; /* decorative dividers and card edges */
+  --color-border-strong: #6b7099; /* UI component boundaries (3:1) */
+  --color-focus-ring: #0b6b75; /* focus outline (3:1) */
+  --color-success: #17603a; /* success text/icon on --color-success-bg */
+  --color-success-bg: #e1f2e6; /* success tint */
+  --color-warning: #8a4b00; /* warning text/icon */
+  --color-warning-bg: #ffefc9; /* warning tint */
+  --color-danger: #b3261e; /* error text/icon */
+  --color-danger-bg: #fce4e1; /* error tint */
+  --color-info: #0b6b75; /* info text/icon */
+  --color-info-bg: #ddf1f2; /* info tint */
+  --color-unknown: #4a4f6b; /* "not measured" text/icon (grey, never green) */
+  --color-unknown-bg: #ece9e0; /* "not measured" tint */
+  --show-fg: #fff6e0; /* ShowToPerson text (G5 pair) */
+  --show-bg: #1b2352; /* ShowToPerson background (G5 pair) */
+  --font-sans:
+    'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    sans-serif; /* UI font stack */
+  --font-reading:
+    'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    sans-serif; /* note and card reading text */
+  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; /* code, ids */
+  --weight-regular: 400; /* body weight */
+  --weight-medium: 700; /* labels */
+  --weight-bold: 700; /* headings, buttons */
+  --text-sm: calc(0.9375rem * var(--type-scale)); /* small text (min 14 px at 100%) */
+  --text-base: calc(1.0625rem * var(--type-scale)); /* body */
+  --text-md: calc(1.1875rem * var(--type-scale)); /* labels, buttons */
+  --text-lg: calc(1.375rem * var(--type-scale)); /* card titles */
+  --text-xl: calc(1.625rem * var(--type-scale)); /* screen titles */
+  --text-2xl: calc(2rem * var(--type-scale)); /* large titles */
+  --text-show: clamp(2rem, 9vw, 4.5rem); /* ShowToPerson starting size before fit-text */
+  --leading-tight: 1.25; /* line height, titles */
+  --leading-normal: 1.55; /* line height, body */
+  --leading-loose: 1.7; /* line height, note text */
+  --type-scale: 1; /* unitless multiplier 1 to 2, set from data-type-scale */
+  --space-1: 4px; /* spacing step */
+  --space-2: 8px; /* spacing step */
+  --space-3: 14px; /* spacing step */
+  --space-4: 20px; /* page gutter, card padding */
+  --space-5: 28px; /* spacing step */
+  --space-6: 36px; /* spacing step */
+  --space-7: 52px; /* spacing step */
+  --space-8: 72px; /* spacing step */
+  --radius-sm: 10px; /* small controls */
+  --radius-md: 16px; /* buttons, inputs */
+  --radius-lg: 24px; /* cards, sheets */
+  --radius-full: 999px; /* pills */
+  --border-width: 2px; /* border thickness */
+  --elevation-0: none; /* flat */
+  --elevation-1: 0 0 0 1px var(--color-border); /* cards */
+  --elevation-2: 0 0 0 2px var(--color-border-strong); /* raised or open sheets */
+  --focus-ring-width: 3px; /* outline width */
+  --focus-ring-offset: 2px; /* outline offset */
+  --target-min: 24px; /* WCAG 2.2 minimum target, 24 px */
+  --target-comfort: 44px; /* comfortable target, 44 px */
+  --target-primary: 52px; /* primary button height */
+  --motion-fast: 150ms; /* hover/press */
+  --motion-base: 250ms; /* transitions (0ms when data-motion=reduced) */
+}
 
-  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-reading: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
-  --weight-regular: 400;
-  --weight-medium: 700;
-  --weight-bold: 700;
-
+/* Set by web/src/prefs/display.ts via html[data-type-scale]. */
+html[data-type-scale='1'] {
   --type-scale: 1;
-  --text-sm: calc(0.9375rem * var(--type-scale));
-  --text-base: calc(1.0625rem * var(--type-scale));
-  --text-md: calc(1.1875rem * var(--type-scale));
-  --text-lg: calc(1.375rem * var(--type-scale));
-  --text-xl: calc(1.625rem * var(--type-scale));
-  --text-2xl: calc(2rem * var(--type-scale));
-  --text-show: clamp(2rem, 9vw, 4.5rem);
-  --leading-tight: 1.25;
-  --leading-normal: 1.55;
-  --leading-loose: 1.7;
-
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 14px;
-  --space-4: 20px;
-  --space-5: 28px;
-  --space-6: 36px;
-  --space-7: 52px;
-  --space-8: 72px;
-
-  --radius-sm: 10px;
-  --radius-md: 16px;
-  --radius-lg: 24px;
-  --radius-full: 999px;
-  --border-width: 2px;
-  --elevation-0: none;
-  --elevation-1: 0 0 0 1px var(--color-border);
-  --elevation-2: 0 0 0 2px var(--color-border-strong);
-  --focus-ring-width: 3px;
-  --focus-ring-offset: 2px;
-
-  --target-min: 24px;
-  --target-comfort: 44px;
-  --target-primary: 52px;
-  --motion-fast: 150ms;
-  --motion-base: 250ms;
+}
+html[data-type-scale='1.25'] {
+  --type-scale: 1.25;
+}
+html[data-type-scale='1.5'] {
+  --type-scale: 1.5;
+}
+html[data-type-scale='1.75'] {
+  --type-scale: 1.75;
+}
+html[data-type-scale='2'] {
+  --type-scale: 2;
 }
 
 html[data-motion='reduced'] {
@@ -77,6 +95,7 @@ html[data-motion='reduced'] {
   --motion-base: 0ms;
 }
 
+/* High contrast: text 7:1, UI boundaries and focus ring 3:1. Attribute value "high" to be confirmed against prefs/display.ts (PR2). */
 html[data-contrast='high'] {
   --color-bg: #ffffff;
   --color-text: #0a0f2e;
@@ -96,7 +115,6 @@ html[data-contrast='high'] {
   --color-danger-bg: #fbe4e2;
   --color-info: #07525a;
   --color-unknown: #2a2f4a;
-  --color-unknown-bg: #ece9e0;
   --show-fg: #ffffff;
   --show-bg: #0a0f2e;
   --border-width: 3px;

@@ -526,7 +526,7 @@
       "id": "100900",
       "title": "Registration and Badge Pickup",
       "description": "Fictional service session.",
-      "roomId": 5,
+      "roomId": 4,
       "categoryItems": [15, 20],
       "starts_at": "2026-11-10T08:00:00",
       "ends_at": "2026-11-10T09:00:00"
@@ -544,39 +544,39 @@
   "rooms": [
     {
       "id": 1,
-      "building": "Hyatt Regency",
+      "building": "Salt Palace",
       "level": "Level 2",
       "room": "260A"
     },
     {
       "id": 2,
-      "building": "Hyatt Regency",
+      "building": "Salt Palace",
       "level": "Level 2",
       "room": "260B"
     },
     {
       "id": 3,
-      "building": "Hyatt Regency",
-      "level": "Level 3",
-      "room": "Mesa Ballroom"
+      "building": "Salt Palace",
+      "level": "Level 1",
+      "room": "151G"
     },
     {
       "id": 4,
-      "building": "Hyatt Regency",
-      "level": "Level 3",
-      "room": "301"
+      "building": "Salt Palace",
+      "level": "Level 1",
+      "room": "200 South Entrance (South)"
     },
     {
       "id": 5,
-      "building": "Colorado Convention Center",
+      "building": "Salt Palace",
       "level": "Level 1",
-      "room": "Hall A"
+      "room": "Hall DE"
     },
     {
       "id": 6,
-      "building": "Colorado Convention Center",
-      "level": "Level 4",
-      "room": "405"
+      "building": "Hyatt Regency",
+      "level": "Level 2",
+      "room": "Grand Ballroom"
     }
   ],
   "categories": [
