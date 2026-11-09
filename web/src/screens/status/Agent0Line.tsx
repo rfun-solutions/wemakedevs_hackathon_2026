@@ -26,6 +26,10 @@ export function Agent0Line({ now = () => Date.now() }: { now?: () => number } = 
   useEffect(() => {
     let cancelled = false;
     const load = async () => {
+      if (!navigator.onLine) {
+        setData({ text: null, at: null }); // offline: no network call
+        return;
+      }
       try {
         const res = await api(`/api/status/explain?lang=${getLang()}`, {
           signal: AbortSignal.timeout(TIMEOUT_MS),

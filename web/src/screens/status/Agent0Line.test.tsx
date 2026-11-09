@@ -69,4 +69,16 @@ describe('Agent0Line', () => {
     render(<Agent0Line now={() => NOW} />);
     await waitFor(() => expect(screen.getByText('Generado por IA')).toBeTruthy());
   });
+
+  it('makes no network call when offline', async () => {
+    vi.spyOn(navigator, 'onLine', 'get').mockReturnValue(false);
+    const spy = vi.fn();
+    vi.stubGlobal('fetch', spy);
+    render(<Agent0Line now={() => NOW} />);
+    await waitFor(() =>
+      expect(screen.getByText('Explanation not available right now.')).toBeTruthy(),
+    );
+    expect(spy).not.toHaveBeenCalled();
+    vi.restoreAllMocks();
+  });
 });
