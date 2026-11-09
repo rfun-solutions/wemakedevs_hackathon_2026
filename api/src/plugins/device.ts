@@ -21,11 +21,13 @@ export interface DevicePluginOptions {
   db?: { query(sql: string, params?: unknown[]): Promise<unknown> };
   /** Minimum ms between `last_seen_at` writes for the same id on this replica. */
   touchEveryMs?: number;
+  /** Test seam: the id -> last-write-time cache, so tests can observe that it stays bounded. */
+  touchCache?: Map<string, number>;
 }
 
 const plugin: FastifyPluginCallback<DevicePluginOptions> = (app: FastifyInstance, opts, done) => {
   const touchEveryMs = opts.touchEveryMs ?? 5 * 60_000;
-  const lastTouched = new Map<string, number>();
+  const lastTouched = opts.touchCache ?? new Map<string, number>();
   let calls = 0;
 
   app.decorateRequest('deviceId', undefined);

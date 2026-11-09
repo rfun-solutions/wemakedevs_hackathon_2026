@@ -69,20 +69,23 @@ describe('device plugin', () => {
     expect(query.mock.calls[0]?.[1]).toEqual([GOOD]);
   });
 
-  it('sweeps expired touch entries every 1000 requests and still re-upserts after the window', async () => {
+  it('sweeps expired touch-cache entries every 1000 requests so the cache stays bounded', async () => {
     vi.useFakeTimers();
     try {
       const query = vi.fn<Q>().mockResolvedValue({});
-      const app = await make({ query });
+      const touchCache = new Map<string, number>();
+      const app = Fastify();
+      await app.register(devicePlugin, { db: { query }, touchCache });
+      app.get('/api/who', async () => 'ok');
       const uuid = (i: number) => `3f2b8c1e-5d4a-4b7e-9a1c-${String(i).padStart(12, '0')}`;
-      await app.inject({ url: '/api/who', headers: { 'x-device-id': GOOD } });
-      expect(query).toHaveBeenCalledTimes(1);
-      vi.advanceTimersByTime(6 * 60_000);
-      for (let i = 0; i < 1000; i++)
-        await app.inject({ url: '/api/who', headers: { 'x-device-id': uuid(i) } });
-      expect(query).toHaveBeenCalledTimes(1001);
-      await app.inject({ url: '/api/who', headers: { 'x-device-id': GOOD } });
-      expect(query).toHaveBeenCalledTimes(1002);
+      const hit = (i: number) =>
+        app.inject({ url: '/api/who', headers: { 'x-device-id': uuid(i) } });
+
+      for (let i = 0; i < 500; i++) await hit(i);
+      expect(touchCache.size).toBe(500);
+      vi.advanceTimersByTime(6 * 60_000); // all 500 entries are now expired
+      for (let i = 500; i < 1000; i++) await hit(i); // the 1000th request triggers the sweep
+      expect(touchCache.size).toBe(500); // only the 500 fresh entries remain (the 1000th is added after the sweep)
     } finally {
       vi.useRealTimers();
     }
