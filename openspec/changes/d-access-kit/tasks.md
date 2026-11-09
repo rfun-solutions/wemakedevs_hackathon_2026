@@ -21,19 +21,19 @@ Edits: `web/index.html` (pre-paint prefs script), app shell (mount live regions)
 - [x] 1.6 Write `docs/accessibility.md` (rules, checklist, token and `t()` usage)
 
 ## 2. i18n framework (PR 1)
-- [ ] 2.1 Implement `t()`, `useLang()`, `setLang()`, EN fallback, `{param}` interpolation, `Intl` helpers with explicit time zone; set `<html lang dir>`
-- [ ] 2.2 Registry loading via `import.meta.glob` of `web/src/i18n/<lang>/*.json`, merged by key, never by file name (split agents own separate files such as `access-cards.json`, `translate.json`, `status-health.json`); unit test: a key defined in two files fails
-- [ ] 2.3 Language switcher in Settings; persist; announce change; AI-assisted disclosure text
-- [ ] 2.4 Claude-assisted strings in `access.json`: EN and ES complete for D1's `access.*` keys (C0 ships EN/ES `app.*`); PT-BR and AR for `app.*` and D1's `access.*` keys (display settings, promises). Cards, badge and calm-places strings are D2's, in `access-cards.json`
-- [ ] 2.5 Unit tests: fallback, missing key, interpolation, ES-covers-EN, RTL attribute switching
+- [x] 2.1 Implement `t()`, `useLang()`, `setLang()`, EN fallback, `{param}` interpolation, `Intl` helpers with explicit time zone; set `<html lang dir>`
+- [x] 2.2 Registry loading via `import.meta.glob` of `web/src/i18n/<lang>/*.json`, merged by key, never by file name (split agents own separate files such as `access-cards.json`, `translate.json`, `status-health.json`); unit test: a key defined in two files fails
+- [x] 2.3 Language switcher in Settings; persist; announce change; AI-assisted disclosure text
+- [x] 2.4 Claude-assisted strings in `access.json`: EN and ES complete for D1's `access.*` keys (C0 ships EN/ES `app.*`); PT-BR and AR for `app.*` and D1's `access.*` keys (display settings, promises). Cards, badge and calm-places strings are D2's, in `access-cards.json`
+- [x] 2.5 Unit tests: fallback, missing key, interpolation, ES-covers-EN, RTL attribute switching
 
 ## 3. Display modes and a11y plumbing (PR 2)
-- [ ] 3.1 `prefs/display.ts`: type scale, font, contrast, motion; export `PREFS_STORAGE_KEYS` (F's Synthetic Kay seeds through it); localStorage in try/catch; honour `prefers-contrast` and `prefers-reduced-motion` as defaults
-- [ ] 3.2 Pre-paint inline script in `index.html`
-- [ ] 3.3 Self-host Atkinson Hyperlegible (woff2 plus OFL licence), lazy load on selection
-- [ ] 3.4 Settings screen controls (slider, three toggles) with labels, keyboard support and announcements; insert its route and nav line under the `// >> d-access-kit` marker
-- [ ] 3.5 `announce()` helper and shell live regions
-- [ ] 3.6 Unit tests for prefs and announce; Playwright mobile: 200% has no horizontal scroll, prefs persist across reload, storage-blocked fallback
+- [x] 3.1 `prefs/display.ts`: type scale, font, contrast, motion; export `PREFS_STORAGE_KEYS` (F's Synthetic Kay seeds through it); localStorage in try/catch; honour `prefers-contrast` and `prefers-reduced-motion` as defaults
+- [x] 3.2 Pre-paint inline script in `index.html`
+- [x] 3.3 Self-host Atkinson Hyperlegible (woff2 plus OFL licence), lazy load on selection
+- [x] 3.4 Settings screen controls (slider, three toggles) with labels, keyboard support and announcements; insert its route and nav line under the `// >> d-access-kit` marker
+- [x] 3.5 `announce()` helper and shell live regions
+- [x] 3.6 Unit tests for prefs and announce; Playwright mobile: 200% has no horizontal scroll, prefs persist across reload, storage-blocked fallback
 
 ## 4. Communication cards and badge (PR 3)
 - [ ] 4.1 Cards screen with presets from i18n (`access.card.*` in `web/src/i18n/{en,es,pt-BR,ar}/access-cards.json`), custom text card, card-language selector; insert its route and nav line under the `// >> d-access-kit-cards` marker

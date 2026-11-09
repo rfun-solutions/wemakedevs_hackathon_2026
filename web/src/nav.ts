@@ -9,6 +9,7 @@ export interface NavItem {
 export const navItems: NavItem[] = [
   { path: '/', labelKey: 'app.nav.home' },
   // >> d-access-kit
+  { path: '/settings', labelKey: 'access.nav.settings' },
   // >> d-access-kit-cards
   // >> a-schedule-agenda
   // >> b-capture

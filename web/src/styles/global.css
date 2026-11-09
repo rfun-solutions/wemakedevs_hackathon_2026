@@ -112,3 +112,12 @@ video {
     animation-duration: 0ms !important;
   }
 }
+
+/* Shell header at 200% type: the title and the language button wrap instead of overflowing. */
+.shell-header {
+  flex-wrap: wrap;
+}
+.shell-header h1 {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}

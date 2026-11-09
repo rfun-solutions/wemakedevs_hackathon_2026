@@ -18,3 +18,9 @@ Promise P3: every button and screen works with text at 200% and in high contrast
 
 ## Fonts
 Atkinson Hyperlegible 400 and 700 are self-hosted in `web/public/fonts/` (OFL, see `README.txt` there). No third-party font request at runtime.
+
+## Display preferences and language (web/src/prefs, web/src/i18n)
+- `setPrefs({ typeScale, font, contrast, motion })` applies the `html[data-*]` attributes and saves to `localStorage` key `kc.display.v1` (`PREFS_STORAGE_KEYS`). Saved choices beat `prefers-contrast` and `prefers-reduced-motion`. Blocked storage means defaults for this visit, never an error.
+- The inline script in `web/index.html` applies the same attributes and `<html lang dir>` before first paint. Keep it in step with `prefs/display.ts` and `i18n/index.ts`.
+- Languages: EN, ES, PT-BR, AR. AR sets `dir="rtl"`. PT-BR and AR fall back to EN per key. `formatTime(date, timeZone)` and `formatDate` always take an explicit time zone.
+- `announce(text, 'polite' | 'assertive')` writes to the live regions mounted by `<LiveRegions />` in the shell.

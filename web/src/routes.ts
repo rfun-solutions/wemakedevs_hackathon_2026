@@ -4,6 +4,7 @@ import type { ComponentType } from 'preact';
 import { Home } from './screens/Home';
 // Imports: add YOUR import line directly under YOUR OWN `>> import:<change-id>` marker (prevents merge conflicts).
 // >> import:d-access-kit
+import { Settings } from './features/access/Settings';
 // >> import:d-access-kit-cards
 // >> import:a-schedule-agenda
 // >> import:b-capture
@@ -20,6 +21,7 @@ export interface AppRoute {
 export const routes: AppRoute[] = [
   { path: '/', component: Home },
   // >> d-access-kit
+  { path: '/settings', component: Settings },
   // >> d-access-kit-cards
   // >> a-schedule-agenda
   // >> b-capture
