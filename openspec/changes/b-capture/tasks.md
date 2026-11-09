@@ -13,6 +13,7 @@
 - [ ] 2.6 Browser span `kc.capture.save`, `X-Capture-Saved-Ms` header, RUM event `kc.capture.saved`
 - [ ] 2.7 Playwright (iPhone 15 and Pixel 7): type-save, offline-save-then-reconnect, dictation-unsupported, 50-save p95 < 500 ms
 - [ ] 2.8 axe check on capture screen
+- [ ] 2.9 (Added 2026-11-09, user: Field Notes parity) "From this session": add optional `session_id` query filter to `GET /api/notes` (update the contract in design.md, integration test for filtered and unfiltered lists); the capture screen reads `?session=<id>` and sends it as `session_id` via `enqueueNote({ body, source, session_id })`; the notes list gets a "From this session" filter (using `GET /api/notes?session_id=`) and shows the session id label when present; tests for the query param, the filter and notes without a session; EN and ES strings in your `capture.json`
 
 ## 3. PR 3: polish
 - [ ] 3.1 "Needs attention" state with Delete and Retry; verify no duplicates after lost response

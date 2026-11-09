@@ -10,6 +10,7 @@
 - [ ] 2.1 Captions route (insert under the `// >> e-captions-translation` marker in `web/src/routes.ts`, `web/src/nav.ts`): start/stop, engine label, large type from D tokens, ARIA live region; pre-write a `{/* >> e-captions-translation-translate */}` marker on the Captions screen where E2 mounts the Translate toggle (one line)
 - [ ] 2.2 "Save as note" per line via B's `enqueueNote({ body, source: 'caption' })` (posts to `POST /api/notes`, offline-queued); span `kc.captions.highlight_to_note`
 - [ ] 2.3 Playwright (iPhone 15 and Pixel 7 viewports) with a fake audio source; axe; 24 px targets; EN and ES strings
+- [ ] 2.4 (Added 2026-11-09, user: Field Notes parity) "Insert time mark" on the captions screen: one tap adds a marker line with the venue time (HH:MM:SS, America/Denver) to the live transcript and saves a note `[mark HH:MM:SS] <last caption line>` via `enqueueNote({ body, source: 'caption' })`; works offline (queued); unit test for the mark text, Playwright test with the fake audio source; EN and ES strings (`captions.mark.*`); 24 px target, announced in the live region
 
 ## 3. Translation (PR 2 or 3)
 - [ ] 3.1 Client translator in `web/src/lib/translate/`: detect Chrome `Translator`, bind a single handler, user-gesture create; unit test one call per segment. After E1's PR 2 merges, mount the Translate toggle with one line under the `e-captions-translation-translate` marker on the Captions screen
