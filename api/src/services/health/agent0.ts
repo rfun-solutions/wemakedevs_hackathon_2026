@@ -160,7 +160,7 @@ export function createAgent0Service(opts: Agent0Options = {}): Agent0Service {
   let lastFired = Number.NEGATIVE_INFINITY;
   let running = false;
   let es: { forText: string; text: string } | null = null;
-  let esInFlight: Promise<string | null> | null = null;
+  let esInFlight: { forText: string; p: Promise<string | null> } | null = null;
 
   const trigger: Agent0Service['trigger'] = async () => {
     if (running) return 'running';
@@ -191,17 +191,20 @@ export function createAgent0Service(opts: Agent0Options = {}): Agent0Service {
 
   const translated = async (s: Agent0Stored): Promise<string | null> => {
     if (es && es.forText === s.text) return es.text;
-    esInFlight ??= translate(s.text, 'es')
-      .then((text) => {
-        if (!text) return null;
-        es = { forText: s.text, text };
-        return text;
-      })
-      .catch(() => null)
-      .finally(() => {
-        esInFlight = null;
-      });
-    return esInFlight;
+    if (!esInFlight || esInFlight.forText !== s.text) {
+      const p = translate(s.text, 'es')
+        .then((text) => {
+          if (!text) return null;
+          es = { forText: s.text, text };
+          return text;
+        })
+        .catch(() => null)
+        .finally(() => {
+          if (esInFlight?.p === p) esInFlight = null;
+        });
+      esInFlight = { forText: s.text, p };
+    }
+    return esInFlight.p;
   };
 
   const unsubscribe = opts.subscribe?.(() => void trigger());

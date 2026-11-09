@@ -35,8 +35,13 @@ describe('Agent0Line', () => {
     mockExplain({ text: 'The agenda is slow.', at: '2026-11-09T17:59:30Z', source: 'agent0' });
     render(<Agent0Line now={() => NOW} />);
     await waitFor(() =>
-      expect(screen.getByText(/Agent0, 30 s ago: The agenda is slow\./)).toBeTruthy(),
+      expect(screen.getByText('The agenda is slow.').parentElement?.textContent).toContain(
+        'Agent0, 30 s ago:',
+      ),
     );
+    const sentence = screen.getByText('The agenda is slow.');
+    expect(sentence.getAttribute('aria-live')).toBe('polite');
+    expect(sentence.getAttribute('aria-atomic')).toBe('true');
     expect(screen.getByText('AI-generated')).toBeTruthy();
   });
 
@@ -65,9 +70,10 @@ describe('Agent0Line', () => {
 
   it('renders Spanish chrome', async () => {
     setLang('es');
-    mockExplain({ text: 'La agenda va lenta.', at: '2026-11-09T17:59:30Z' });
+    mockExplain({ text: 'La agenda va lenta.', lang: 'en', at: '2026-11-09T17:59:30Z' });
     render(<Agent0Line now={() => NOW} />);
     await waitFor(() => expect(screen.getByText('Generado por IA')).toBeTruthy());
+    expect(screen.getByText('La agenda va lenta.').getAttribute('lang')).toBe('en');
   });
 
   it('makes no network call when offline', async () => {

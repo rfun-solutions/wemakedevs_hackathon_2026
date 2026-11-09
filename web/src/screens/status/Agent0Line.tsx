@@ -7,6 +7,7 @@ const TIMEOUT_MS = 5000;
 
 interface Explain {
   text: string | null;
+  lang?: 'en' | 'es';
   at: string | null;
 }
 
@@ -59,7 +60,14 @@ export function Agent0Line({ now = () => Date.now() }: { now?: () => number } = 
       <h3 id="status-agent0-title">{t('status.agent0.title')}</h3>
       {hasText && ago ? (
         <p>
-          {t('status.agent0.line', { ago: t(ago.key, { n: ago.n }), text: data!.text! })}{' '}
+          {t('status.agent0.line', { ago: t(ago.key, { n: ago.n }), text: '' })}
+          <span
+            aria-live="polite"
+            aria-atomic="true"
+            lang={data!.lang && data!.lang !== getLang() ? data!.lang : undefined}
+          >
+            {data!.text}
+          </span>{' '}
           <small>{t('status.agent0.label')}</small>
         </p>
       ) : (
