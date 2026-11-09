@@ -25,7 +25,7 @@
   --color-info-bg: #ddf1f2; /* info tint */
   --color-unknown: #4a4f6b; /* "not measured" text/icon (grey, never green) */
   --color-unknown-bg: #ece9e0; /* "not measured" tint */
-  --show-fg: #fff6e0; /* ShowToPerson text (G5 pair) */
+  --show-fg: #7c819c; /* ShowToPerson text (G5 pair) */
   --show-bg: #1b2352; /* ShowToPerson background (G5 pair) */
   --font-sans:
     'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
