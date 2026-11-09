@@ -16,6 +16,7 @@ describe('UnderTheHood', () => {
     expect(screen.getByRole('heading', { level: 2 }).textContent).toBe(t('hood.title'));
     expect(screen.getAllByRole('heading', { level: 3 })).toHaveLength(ENTRIES.length);
     expect(await screen.findAllByText('No live data right now')).not.toHaveLength(0);
+    expect(await screen.findAllByRole('status')).not.toHaveLength(0);
   });
 });
 

@@ -64,7 +64,7 @@ function TechItem({ tech, live }: { tech: TechRef; live: LiveData | null }) {
       )}
       {needsSignin(tech) && <span class="hood-note">{t('hood.signin')}</span>}
       {result && (
-        <p class={`hood-live hood-live-${result.state}`}>
+        <p role="status" class={`hood-live hood-live-${result.state}`}>
           <span aria-hidden="true" class="hood-icon">
             {ICON[result.state]}
           </span>

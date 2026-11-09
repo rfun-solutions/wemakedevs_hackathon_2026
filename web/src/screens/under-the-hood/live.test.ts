@@ -27,15 +27,15 @@ describe('resolveLive promises', () => {
 });
 
 describe('resolveLive routes', () => {
-  it('shows the p95 and the Denver time', () => {
+  it('explains route latency in plain language and includes the Denver time', () => {
     expect(resolveLive('route:GET /api/agenda', snap, null).text).toBe(
-      'p95 180 ms, measured 15:52',
+      '95 in 100 requests take 180 ms or less, measured 15:52',
     );
   });
   it('matches a path-only route and flags slow', () => {
     const r = resolveLive('route:POST /api/notes', snap, null);
     expect(r.state).toBe('degraded');
-    expect(r.text).toContain('p95 650 ms');
+    expect(r.text).toContain('95 in 100 requests take 650 ms or less');
   });
   it('absent route is "No live data right now", never a number', () => {
     expect(resolveLive('route:GET /api/nope', snap, null)).toEqual({
@@ -75,6 +75,9 @@ describe('resolveLive snapshot failures', () => {
   it('Spanish strings', () => {
     setLang('es');
     expect(resolveLive('promise:P1', snap, null).text).toBe('Funciona');
+    expect(resolveLive('route:GET /api/agenda', snap, null).text).toBe(
+      'En la medición de las 15:52, 95 de cada 100 solicitudes tardan 180 ms o menos',
+    );
   });
 });
 
