@@ -192,6 +192,52 @@ describe('startCaptionsWith', () => {
   });
 });
 
+describe('startCaptionsWith regressions (Gitar review)', () => {
+  it('the old engine keeps captioning while the new engine is still starting', async () => {
+    const { d, ws, wh } = deps({
+      fetchHealth: vi.fn().mockResolvedValue({ fasterEngine: 'webspeech', lagging: false }),
+    });
+    let release!: () => void;
+    (wh.e.start as ReturnType<typeof vi.fn>).mockImplementation(
+      () => new Promise<void>((r) => (release = r)),
+    );
+    const onSeg = vi.fn();
+    const status: CaptionStatus[] = [];
+    const s = await startCaptionsWith(d, onSeg, { onStatus: (x) => status.push(x) });
+    expect(s.engine).toBe('webspeech');
+    for (let i = 0; i < 3; i++) ws.e.cb().onLag?.(5000); // starts switching to whisper (consent stored)
+    await vi.waitFor(() => expect(wh.e.start).toHaveBeenCalled());
+    ws.e.cb().onSegment({ id: 'x', text: 'still here', lang: 'en', final: true });
+    expect(onSeg).toHaveBeenCalledWith(expect.objectContaining({ text: 'still here' }));
+    release();
+    await vi.waitFor(() => expect(status.some((x) => x.type === 'switched')).toBe(true));
+    expect(s.engine).toBe('whisper');
+  });
+
+  it('a declined consent is remembered: the SLI switch does not ask again', async () => {
+    const { d, ws } = deps({ hasConsent: vi.fn().mockReturnValue(false) });
+    const ask = vi.fn().mockResolvedValue(false);
+    await startCaptionsWith(d, vi.fn(), { requestConsent: ask });
+    expect(ask).toHaveBeenCalledTimes(1);
+    for (let i = 0; i < 3; i++) ws.e.cb().onLag?.(6000);
+    await new Promise((r) => setTimeout(r, 10));
+    expect(ask).toHaveBeenCalledTimes(1);
+  });
+
+  it('download progress status is throttled to 10% steps', async () => {
+    const { d } = deps({ hasConsent: vi.fn().mockReturnValue(true) });
+    let progress!: (l: number, t: number) => void;
+    (d.makeWhisper as ReturnType<typeof vi.fn>).mockImplementation((_cb, hooks) => {
+      progress = hooks.onProgress;
+      return { id: 'whisper', start: vi.fn().mockResolvedValue(undefined), stop: vi.fn() };
+    });
+    const status: CaptionStatus[] = [];
+    await startCaptionsWith(d, vi.fn(), { onStatus: (x) => status.push(x) });
+    for (let i = 0; i <= 100; i++) progress(i, 100);
+    expect(status.filter((x) => x.type === 'downloading')).toHaveLength(11);
+  });
+});
+
 describe('startDictation', () => {
   it('is unsupported without SpeechRecognition', async () => {
     expect((await startDictation(vi.fn())).supported).toBe(false);

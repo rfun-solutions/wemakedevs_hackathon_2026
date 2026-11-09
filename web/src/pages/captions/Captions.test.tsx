@@ -200,6 +200,25 @@ describe('Captions screen', () => {
     await waitFor(() => expect(result).toBe(true));
   });
 
+  it('a session that finishes starting after the page was left is stopped', async () => {
+    let finish!: (v: unknown) => void;
+    startCaptions.mockImplementation(() => new Promise((r) => (finish = r)));
+    const view = render(<Captions />);
+    fireEvent.click(screen.getByRole('button', { name: 'Turn on captions' }));
+    view.unmount();
+    await act(async () => finish({ supported: true, engine: 'webspeech', stop }));
+    expect(stop).toHaveBeenCalled();
+  });
+
+  it('hides Cancel download once the engine has switched', async () => {
+    render(<Captions />);
+    await turnOn();
+    act(() => onStatus({ type: 'downloading', loaded: 1, total: 10 }));
+    expect(screen.getByRole('button', { name: 'Cancel download' })).toBeTruthy();
+    act(() => onStatus({ type: 'switched', from: 'webspeech', to: 'whisper' }));
+    expect(screen.queryByRole('button', { name: 'Cancel download' })).toBeNull();
+  });
+
   it('turning captions off stops the session', async () => {
     render(<Captions />);
     await turnOn();

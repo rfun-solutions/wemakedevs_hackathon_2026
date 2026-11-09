@@ -126,6 +126,7 @@ export function Captions() {
       requestConsent: () => new Promise<boolean>((resolve) => setConsentAsk(() => resolve)),
     });
     if (!mounted.current) {
+      // Left the page while starting (mic prompt, health, consent, download): do not leave the mic running.
       s.stop();
       return;
     }

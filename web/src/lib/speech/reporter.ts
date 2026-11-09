@@ -4,7 +4,7 @@ import type { DeviceClass, EngineId } from './types';
 
 export const SLI_URL = '/api/captions/sli';
 export const MAX_SAMPLES = 20;
-export const SLI_TIMEOUT_MS = 1500;
+export const SLI_TIMEOUT_MS = 5000;
 const MAX_SAMPLE_MS = 120_000;
 
 export interface ReporterOptions {
@@ -37,6 +37,7 @@ export function createSliReporter(opts: ReporterOptions): SliReporter {
 
   function flush(): void {
     if (!batchEngine || batch.length === 0) return;
+    const sampleCount = batch.length;
     const body = JSON.stringify({
       engine: batchEngine,
       deviceClass: opts.deviceClass,
@@ -68,13 +69,23 @@ export function createSliReporter(opts: ReporterOptions): SliReporter {
         }, SLI_TIMEOUT_MS);
       });
       void Promise.race([request, timedOut])
-        .then((outcome) => span.sliPost({ outcome, ms: Math.round(performance.now() - started) }))
+        .then((outcome) =>
+          span.sliPost({
+            outcome,
+            ms: Math.round(performance.now() - started),
+            samples: sampleCount,
+          }),
+        )
         .finally(() => {
           if (timeout) clearTimeout(timeout);
         });
     } catch {
       if (timeout) clearTimeout(timeout);
-      span.sliPost({ outcome: 'error', ms: Math.round(performance.now() - started) });
+      span.sliPost({
+        outcome: 'error',
+        ms: Math.round(performance.now() - started),
+        samples: sampleCount,
+      });
     }
   }
 

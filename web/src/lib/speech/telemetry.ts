@@ -26,7 +26,8 @@ export const span = {
     emit('kc.captions.model_load', a),
   chunkDecode: (a: { ms: number; audioS: number }) => emit('kc.captions.chunk_decode', a),
   restart: () => emit('kc.captions.restart'),
-  sliPost: (a: { outcome: string; ms: number }) => emit('kc.captions.sli_post', a),
-  healthFetch: (a: { outcome: string; ms: number }) => emit('kc.captions.health_fetch', a),
+  sliPost: (a: { outcome: string; ms: number; samples: number }) => emit('kc.captions.sli_post', a),
+  healthFetch: (a: { outcome: string; ms: number; deviceClass: string }) =>
+    emit('kc.captions.health_fetch', a),
   highlightToNote: (a: { chars: number }) => emit('kc.captions.highlight_to_note', a),
 };

@@ -57,6 +57,6 @@ export async function fetchCaptionsHealth(
     return NONE;
   } finally {
     if (timer) clearTimeout(timer);
-    span.healthFetch({ outcome, ms: Math.round(performance.now() - started) });
+    span.healthFetch({ outcome, ms: Math.round(performance.now() - started), deviceClass });
   }
 }

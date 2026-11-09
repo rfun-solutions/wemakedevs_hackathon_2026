@@ -120,8 +120,10 @@ export async function startCaptionsWith(
 
   let stopped = false;
   let current: Engine | null = null;
+  /** Engine being started; its callbacks are accepted while the previous engine keeps captioning. */
   let pending: EngineId | null = null;
   let consentDeclined = false;
+  let lastPercentStep = -1;
   const session: CaptionSession = {
     supported: true,
     stop() {
@@ -134,14 +136,15 @@ export async function startCaptionsWith(
 
   const sli = createSliMonitor(() => order.some((e) => e !== session.engine));
 
+  const accepts = (id: EngineId) => session.engine === id || pending === id;
+
   function callbacks(id: EngineId): EngineCallbacks {
-    const accepts = () => !stopped && (session.engine === id || pending === id);
     return {
       onSegment: (seg) => {
-        if (accepts()) onSegment(seg);
+        if (!stopped && accepts(id)) onSegment(seg);
       },
       onLag: (ms) => {
-        if (!accepts() || session.engine !== id) return;
+        if (stopped || !accepts(id) || session.engine !== id) return;
         metric.lag(ms, id);
         reporter.add(id, ms);
         const action = sli.record(ms);
@@ -149,7 +152,7 @@ export async function startCaptionsWith(
         else if (action === 'switch') void switchEngine('slow');
       },
       onGiveUp: (reason) => {
-        if (accepts()) status({ type: 'gave_up', reason });
+        if (!stopped && accepts(id)) status({ type: 'gave_up', reason });
       },
     };
   }
@@ -160,7 +163,7 @@ export async function startCaptionsWith(
     try {
       if (id === 'whisper') {
         if (!deps.hasConsent()) {
-          if (consentDeclined) return false;
+          if (consentDeclined) return false; // never re-ask mid-talk after a "no"
           const ok = (await options.requestConsent?.()) === true;
           if (!ok) {
             consentDeclined = true;
@@ -168,9 +171,16 @@ export async function startCaptionsWith(
           }
           deps.saveConsent();
         }
+        lastPercentStep = -1;
         engine = deps.makeWhisper(callbacks(id), {
           signal: options.signal,
-          onProgress: (loaded, total) => status({ type: 'downloading', loaded, total }),
+          // Throttled to 10% steps so the polite live region is not flooded.
+          onProgress: (loaded, total) => {
+            const step = total > 0 ? Math.min(10, Math.floor((loaded / total) * 10)) : 0;
+            if (step === lastPercentStep) return;
+            lastPercentStep = step;
+            status({ type: 'downloading', loaded, total });
+          },
         });
       } else {
         engine = deps.makeWebSpeech(callbacks(id));
@@ -203,7 +213,6 @@ export async function startCaptionsWith(
         status({ type: 'switched', from, to: next });
         return;
       }
-      session.engine = from;
     }
   }
 
@@ -214,7 +223,6 @@ export async function startCaptionsWith(
       status({ type: 'engine', engine: id, fallback: i > 0 });
       return session;
     }
-    session.engine = undefined;
   }
   reporter.stop();
   status({ type: 'unsupported' });
