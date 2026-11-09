@@ -25,13 +25,37 @@ spec:
           env:
             - name: TEAM_NAME
               value: "kubecompanion2026"
+            - name: DATABASE_URI
+              valueFrom:
+                secretKeyRef:
+                  name: db-app
+                  key: uri
+            # kc-secrets is created by hand, never in git (see AGENTS.md). optional so the
+            # pod starts (LLM and telemetry degrade gracefully) before the Secret exists.
+            - name: ANTHROPIC_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: kc-secrets
+                  key: ANTHROPIC_API_KEY
+                  optional: true
+            - name: DASH0_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: kc-secrets
+                  key: DASH0_TOKEN
+                  optional: true
+            # >> f-observability-product
+            # >> c-evening-threads
           resources:
             requests:
               cpu: 100m
-              memory: 128Mi
+              memory: 192Mi
             limits:
               cpu: 500m
-              memory: 256Mi
+              memory: 384Mi
+          volumeMounts:
+            # >> f-observability-product
+            # >> f-observability-product-health
           readinessProbe:
             httpGet:
               path: /readyz
@@ -49,3 +73,7 @@ spec:
               type: RuntimeDefault
             capabilities:
               drop: ["ALL"]
+      # Pod-level volumes (each entry goes under its own marker).
+      volumes:
+        # >> f-observability-product
+        # >> f-observability-product-health
