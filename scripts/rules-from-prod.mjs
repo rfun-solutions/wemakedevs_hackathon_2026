@@ -178,7 +178,7 @@ export function renderHotPaths({ routes, captions }, now, { window = '1h', sourc
   return `${lines.join('\n')}\n`;
 }
 
-/** Hot-route set and caption-breach state of a rendered file (what shouldCommit compares). */
+/** Hot-route set, source and caption-breach state of a rendered file (what shouldCommit compares). */
 export function summarize(text) {
   if (!text) return null;
   const routes = [...text.matchAll(/^- HP-\d+(?: \(Promise P\d+\))?: .*?for `([^`]+)`/gm)].map((m) => m[1]).sort();
