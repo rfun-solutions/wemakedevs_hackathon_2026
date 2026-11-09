@@ -27,12 +27,12 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY package.json ./
 COPY api/package.json api/
 COPY --from=build /build/api/dist api/dist
+COPY api/migrations api/migrations
 COPY --from=build /build/web/dist web/dist
-# The starter app is kept until the Fastify server lands (c0-scaffold group 2); it serves /healthz.
-COPY app/ app/
 ARG APP_VERSION=dev
 ENV PORT=8080 APP_VERSION=$APP_VERSION NODE_ENV=production
 # The node image's "node" user, by number so runAsNonRoot can check it.
 USER 1000
 EXPOSE 8080
-CMD ["sh", "-c", "if [ -f api/dist/server.js ]; then exec node api/dist/server.js; else exec node app/server.js; fi"]
+# telemetry.js is preloaded so OTel instruments http/pg/pino before the app imports them (design D3).
+CMD ["node", "--import", "./api/dist/telemetry.js", "api/dist/server.js"]
