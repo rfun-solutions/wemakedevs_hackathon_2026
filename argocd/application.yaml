@@ -5,16 +5,16 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: app
-  namespace: team-__TEAM__
+  namespace: team-kubecompanion2026
 spec:
-  project: team-__TEAM__
+  project: team-kubecompanion2026
   source:
-    repoURL: https://github.com/OWNER/REPO.git
+    repoURL: https://github.com/rfun-solutions/wemakedevs_hackathon_2026.git
     targetRevision: main
     path: deploy
   destination:
     server: https://kubernetes.default.svc
-    namespace: team-__TEAM__
+    namespace: team-kubecompanion2026
   syncPolicy:
     automated:
       prune: true
