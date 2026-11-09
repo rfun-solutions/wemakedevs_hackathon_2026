@@ -40,3 +40,5 @@ jobs:
         run: npx vitest run --project api api/src/services/sessionize
       - name: Fixture and mock upstream tests
         run: npx vitest run --config feed-contract/vitest.config.mjs
+      - name: Deploy bump changes exactly one line
+        run: scripts/test-set-image-tag.sh
