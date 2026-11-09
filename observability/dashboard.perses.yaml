@@ -1,4 +1,4 @@
-# KubeCompanion service dashboard (Perses). Applied by .github/workflows/observability.yml.
+# KubeCompanion service dashboard (Perses). Linted by .github/workflows/observability.yml (percli); applied from the laptop.
 # Metric names: B kc_capture_saved_ms, A kc_agenda_request_ms, F kc_status_rtt_ms; span metrics from Dash0.
 kind: Dashboard
 metadata:

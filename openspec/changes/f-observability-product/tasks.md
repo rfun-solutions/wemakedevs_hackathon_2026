@@ -12,7 +12,7 @@
 - [ ] 2.4 Dry run against a dev `kc-chaos`: set `agenda.latencyMs` to 800 and confirm p95 rises on Status; then set `agenda.naive` to true and confirm N+1 `pg.query` spans under `kc.agenda.get` in Dash0
 
 ## 3. PR 3: Dash0 as code and runbook
-- [ ] 3.1 `observability/dashboard.perses.yaml` (capture p95, agenda p95, error rate, feed age, RTT); lint with `percli`
+- [x] 3.1 `observability/dashboard.perses.yaml` (capture p95, agenda p95, error rate, feed age, RTT); lint with `percli`
 - [ ] 3.2 `observability/check-rule.yaml` and `observability/synthetic.yaml`
 - [ ] 3.3 `.github/workflows/observability.yml`: lint on PR, apply on main; top-level `permissions: contents: read`; secret `DASH0_TOKEN`
 - [ ] 3.4 Confirm the Dash0 CLI flags with `dash0 --help`; confirm both objects appear in Dash0
