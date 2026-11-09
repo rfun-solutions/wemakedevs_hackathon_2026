@@ -9,8 +9,8 @@ Creates: `.github/workflows/ci-traces.yml`, `.github/workflows/rules-from-prod.y
 - [x] 1.5 Verify locally with each variant: v2 and 429 fail, defaults pass
 
 ## 2. PR 2: release and deploy bot
-- [ ] 2.1 Take over C0's `deploy.yaml` and verify or fix: skip head commits starting `deploy:` or `rules:` (G4 bot commits need no image), image job to GHCR (packages: write on job only), deploy job with App token, a single-line `newTag:` replacement in `deploy/kustomization.yaml` (`sed` or `yq -i`, not `kustomize edit set image`, so the per-change markers and formatting survive; test that the diff of a `deploy:` commit is exactly one line), `deploy: <sha>` commit, `concurrency`, `pull --rebase`
-- [ ] 2.2 Confirm secrets and variables exist (`DEPLOY_BOT_PRIVATE_KEY`, `DEPLOY_BOT_APP_ID`) and App is a ruleset bypass actor; record result in PR
+- [x] 2.1 Take over C0's `deploy.yaml` and verify or fix: skip head commits starting `deploy:` or `rules:` (G4 bot commits need no image), image job to GHCR (packages: write on job only), deploy job with App token, a single-line `newTag:` replacement in `deploy/kustomization.yaml` (`sed` or `yq -i`, not `kustomize edit set image`, so the per-change markers and formatting survive; test that the diff of a `deploy:` commit is exactly one line), `deploy: <sha>` commit, `concurrency`, `pull --rebase`
+- [x] 2.2 Confirm secrets and variables exist (`DEPLOY_BOT_PRIVATE_KEY`, `DEPLOY_BOT_APP_ID`) and App is a ruleset bypass actor; record result in PR
 - [ ] 2.3 Merge a trivial change and check image, bot commit, skipped follow-up run
 
 ## 3. PR 3: CI traces and runbook
