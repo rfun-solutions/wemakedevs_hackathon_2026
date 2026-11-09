@@ -14,6 +14,7 @@ import { ShowToPerson } from './ShowToPerson';
 import './access-cards.css';
 
 interface Shown {
+  opener: HTMLElement | null;
   text: string;
   lang: CardLang;
 }
@@ -25,9 +26,9 @@ export function Cards() {
   const empty = custom.trim() === '';
   const customRef = useRef<HTMLTextAreaElement>(null);
 
-  const open = (preset: string, text: string) => {
+  const open = (preset: string, text: string, opener: HTMLElement | null) => {
     void trackAccess({ name: 'kc.access.card_shown', attrs: { preset } });
-    setShown({ text, lang: cardLang });
+    setShown({ text, lang: cardLang, opener });
   };
 
   return (
@@ -67,7 +68,7 @@ export function Cards() {
                 class="card-btn"
                 lang={cardLang}
                 dir={cardLang === 'ar' ? 'rtl' : 'ltr'}
-                onClick={() => open(id, text)}
+                onClick={(e) => open(id, text, e.currentTarget)}
               >
                 {text}
               </button>
@@ -96,13 +97,20 @@ export function Cards() {
           type="button"
           class="btn"
           disabled={empty}
-          onClick={() => open('custom', custom.trim())}
+          onClick={(e) => open('custom', custom.trim(), e.currentTarget)}
         >
           {t('access.cards.custom.show')}
         </button>
       </div>
 
-      {shown && <ShowToPerson text={shown.text} lang={shown.lang} onClose={() => setShown(null)} />}
+      {shown && (
+        <ShowToPerson
+          text={shown.text}
+          lang={shown.lang}
+          returnTo={shown.opener}
+          onClose={() => setShown(null)}
+        />
+      )}
     </section>
   );
 }

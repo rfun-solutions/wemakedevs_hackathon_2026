@@ -132,3 +132,7 @@ h3 {
 .show :focus-visible {
   outline-color: var(--show-fg);
 }
+a.source-link {
+  display: inline-block;
+  min-block-size: var(--target-min);
+}

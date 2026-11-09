@@ -21,7 +21,7 @@ export function CalmPlaces() {
         ))}
       </ul>
       <p class="hint">
-        <a href={CALM_SOURCE_URL} rel="noopener noreferrer">
+        <a class="source-link" href={CALM_SOURCE_URL} rel="noopener noreferrer">
           {t('access.calm.source')}
         </a>
         {'. '}

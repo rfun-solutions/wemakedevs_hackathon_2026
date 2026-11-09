@@ -10,12 +10,14 @@ export interface ShowToPersonProps {
   /** Card language: tags the text with `lang` and sets direction. */
   lang: CardLang;
   onClose: () => void;
+  /** Element to focus on close. Safari does not focus a button on tap, so the opener passes itself. */
+  returnTo?: HTMLElement | null;
 }
 
 const MIN_PX = 16;
 
 /** Full-screen, fit-text display of a phrase for another person. Uses the --show-fg/--show-bg pair. */
-export function ShowToPerson({ text, lang, onClose }: ShowToPersonProps) {
+export function ShowToPerson({ text, lang, onClose, returnTo }: ShowToPersonProps) {
   const root = useRef<HTMLDivElement>(null);
   const box = useRef<HTMLDivElement>(null);
   const body = useRef<HTMLParagraphElement>(null);
@@ -24,7 +26,7 @@ export function ShowToPerson({ text, lang, onClose }: ShowToPersonProps) {
 
   // Remember what opened us so focus returns to it, and move focus into the dialog.
   useEffect(() => {
-    const opener = document.activeElement as HTMLElement | null;
+    const opener = returnTo ?? (document.activeElement as HTMLElement | null);
     closeBtn.current?.focus();
     return () => {
       stopSpeaking();

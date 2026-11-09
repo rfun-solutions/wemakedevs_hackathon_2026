@@ -20,7 +20,7 @@ export function badgeLines(b: BadgeData, lang: CardLang): string[] {
 export function Badge() {
   const [badge, setBadge] = useState<BadgeData>(() => loadBadge());
   const [status, setStatus] = useState('');
-  const [showing, setShowing] = useState(false);
+  const [showing, setShowing] = useState<{ opener: HTMLElement } | null>(null);
   const cardLang = loadCardLang(getLang());
   const empty = badgeIsEmpty(badge);
 
@@ -78,9 +78,9 @@ export function Badge() {
         class="btn"
         disabled={empty}
         aria-describedby={empty ? 'badge-empty' : undefined}
-        onClick={() => {
+        onClick={(e) => {
           void trackAccess({ name: 'kc.access.card_shown', attrs: { preset: 'badge' } });
-          setShowing(true);
+          setShowing({ opener: e.currentTarget });
         }}
       >
         {t('access.badge.show')}
@@ -94,7 +94,8 @@ export function Badge() {
         <ShowToPerson
           text={badgeLines(badge, cardLang).join('\n')}
           lang={cardLang}
-          onClose={() => setShowing(false)}
+          returnTo={showing.opener}
+          onClose={() => setShowing(null)}
         />
       )}
     </section>
