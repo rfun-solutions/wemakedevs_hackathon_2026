@@ -10,6 +10,12 @@ describe('resolveServiceName', () => {
     expect(resolveServiceName({ getItem: () => null })).toBe(DEFAULT_SERVICE_NAME);
   });
   it('keeps the default when storage throws', () => {
-    expect(resolveServiceName({ getItem: () => { throw new Error('denied'); } })).toBe(DEFAULT_SERVICE_NAME);
+    expect(
+      resolveServiceName({
+        getItem: () => {
+          throw new Error('denied');
+        },
+      }),
+    ).toBe(DEFAULT_SERVICE_NAME);
   });
 });

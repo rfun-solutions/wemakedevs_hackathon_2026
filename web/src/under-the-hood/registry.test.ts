@@ -16,9 +16,17 @@ describe('under-the-hood registry', () => {
   it('ids are unique and entries sorted by order', () => {
     const ids = ENTRIES.map((e) => e.id);
     expect(new Set(ids).size).toBe(ids.length);
-    expect(ENTRIES.map((e) => e.order)).toEqual([...ENTRIES.map((e) => e.order)].sort((a, b) => a - b));
+    expect(ENTRIES.map((e) => e.order)).toEqual(
+      [...ENTRIES.map((e) => e.order)].sort((a, b) => a - b),
+    );
   });
   it('validateEntry rejects bad entries', () => {
-    expect(validateEntry({ id: 'x', order: 0, titleKey: 'nope', whatKey: 'app.hood.what', promises: [], tech: [] }, 'y', keys).length).toBeGreaterThan(3);
+    expect(
+      validateEntry(
+        { id: 'x', order: 0, titleKey: 'nope', whatKey: 'app.hood.what', promises: [], tech: [] },
+        'y',
+        keys,
+      ).length,
+    ).toBeGreaterThan(3);
   });
 });

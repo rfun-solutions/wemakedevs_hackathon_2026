@@ -4,7 +4,13 @@
 importScripts('/sw-should-handle.js');
 
 var CACHE = 'kc-shell-v1';
-var SHELL = ['/', '/offline.html', '/manifest.webmanifest', '/icons/icon.svg', '/sw-should-handle.js'];
+var SHELL = [
+  '/',
+  '/offline.html',
+  '/manifest.webmanifest',
+  '/icons/icon.svg',
+  '/sw-should-handle.js',
+];
 
 self.addEventListener('install', function (event) {
   event.waitUntil(
@@ -51,7 +57,10 @@ self.addEventListener('fetch', function (event) {
       fetch(req)
         .then(function (res) {
           var copy = res.clone();
-          if (res.ok) caches.open(CACHE).then(function (c) { return c.put('/', copy); });
+          if (res.ok)
+            caches.open(CACHE).then(function (c) {
+              return c.put('/', copy);
+            });
           return res;
         })
         .catch(function () {
@@ -69,7 +78,10 @@ self.addEventListener('fetch', function (event) {
         if (hit) return hit;
         return fetch(req).then(function (res) {
           var copy = res.clone();
-          if (res.ok) caches.open(CACHE).then(function (c) { return c.put(req, copy); });
+          if (res.ok)
+            caches.open(CACHE).then(function (c) {
+              return c.put(req, copy);
+            });
           return res;
         });
       }),

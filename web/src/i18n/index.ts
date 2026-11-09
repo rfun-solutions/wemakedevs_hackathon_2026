@@ -71,5 +71,7 @@ export function setLang(lang: Lang): void {
 export function t(key: string, params?: Record<string, string | number>): string {
   const raw = dicts[current].dict[key] ?? dicts.en.dict[key] ?? key;
   if (!params) return raw;
-  return raw.replace(/\{(\w+)\}/g, (m, name: string) => (name in params ? String(params[name]) : m));
+  return raw.replace(/\{(\w+)\}/g, (m, name: string) =>
+    name in params ? String(params[name]) : m,
+  );
 }

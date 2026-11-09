@@ -1,5 +1,6 @@
 export type Sponsor = 'gitar' | 'dash0' | 'radar';
-export type TechKind = 'rule' | 'check' | 'query' | 'trace' | 'dashboard' | 'investigation' | 'workflow';
+export type TechKind =
+  'rule' | 'check' | 'query' | 'trace' | 'dashboard' | 'investigation' | 'workflow';
 
 export interface TechRef {
   sponsor: Sponsor;

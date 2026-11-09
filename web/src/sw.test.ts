@@ -1,9 +1,13 @@
 import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 // sw-should-handle.js is a classic script (importScripts in the worker); load it as text here.
-const src = readFileSync(new URL('../public/sw-should-handle.js', import.meta.url), 'utf8');
-const shouldHandle = new Function(`${src}; return shouldHandle;`)() as (url: string, origin: string) => boolean;
+const src = readFileSync(resolve(process.cwd(), 'web/public/sw-should-handle.js'), 'utf8');
+const shouldHandle = new Function(`${src}; return shouldHandle;`)() as (
+  url: string,
+  origin: string,
+) => boolean;
 const O = 'https://kc.example.org';
 
 describe('shouldHandle', () => {

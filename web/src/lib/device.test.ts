@@ -19,8 +19,12 @@ describe('getDeviceId', () => {
   });
   it('falls back to an in-memory id when storage throws', () => {
     vi.stubGlobal('localStorage', {
-      getItem() { throw new Error('denied'); },
-      setItem() { throw new Error('denied'); },
+      getItem() {
+        throw new Error('denied');
+      },
+      setItem() {
+        throw new Error('denied');
+      },
     });
     const id = getDeviceId();
     expect(id).toMatch(UUID4);

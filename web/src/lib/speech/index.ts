@@ -12,10 +12,14 @@ export interface CaptionSegment {
   final: boolean;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function startDictation(_onText: (text: string) => void): Promise<SpeechSession> {
   return Promise.resolve({ supported: false, stop() {} });
 }
 
-export function startCaptions(_onSegment: (segment: CaptionSegment) => void): Promise<SpeechSession> {
+export function startCaptions(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _onSegment: (segment: CaptionSegment) => void,
+): Promise<SpeechSession> {
   return Promise.resolve({ supported: false, stop() {} });
 }

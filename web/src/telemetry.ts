@@ -23,7 +23,9 @@ export async function initTelemetry(): Promise<void> {
       serviceName: resolveServiceName(),
       endpoint: { url: INGRESS_URL, authToken: token },
       // join browser spans to API spans via traceparent on same-origin calls
-      propagateTraceHeadersCorsURLs: [new RegExp(`^${location.origin.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`)],
+      propagateTraceHeadersCorsURLs: [
+        new RegExp(`^${location.origin.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`),
+      ],
     });
   } catch {
     /* never let telemetry break the app */

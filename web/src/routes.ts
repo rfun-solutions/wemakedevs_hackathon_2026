@@ -5,7 +5,7 @@ import { Home } from './screens/Home';
 
 export interface AppRoute {
   path: string;
-  component: ComponentType<any>;
+  component: ComponentType;
 }
 
 export const routes: AppRoute[] = [

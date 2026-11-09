@@ -9,7 +9,14 @@ describe('i18n', () => {
     expect(allKeys('es').sort()).toEqual(allKeys('en').sort());
   });
   it('mergeFiles merges by key and reports duplicates', () => {
-    const r = mergeFiles({ './en/a.json': { x: '1', y: '2' }, './en/b.json': { y: '3', z: '4' }, './es/a.json': { q: '9' } }, 'en');
+    const r = mergeFiles(
+      {
+        './en/a.json': { x: '1', y: '2' },
+        './en/b.json': { y: '3', z: '4' },
+        './es/a.json': { q: '9' },
+      },
+      'en',
+    );
     expect(r.dict).toEqual({ x: '1', y: '3', z: '4' });
     expect(r.duplicates).toEqual(['y']);
   });

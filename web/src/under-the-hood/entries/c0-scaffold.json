@@ -5,9 +5,29 @@
   "whatKey": "app.hood.what",
   "promises": [],
   "tech": [
-    { "sponsor": "dash0", "kind": "trace", "label": "traceparent: browser to API (kc.app.*)", "ref": "web/src/telemetry.ts" },
-    { "sponsor": "dash0", "kind": "check", "label": "/readyz success ratio", "ref": "api/src/routes/index.ts" },
-    { "sponsor": "gitar", "kind": "rule", "label": "accessibility.md A11Y-1 and review rules", "ref": ".gitar/review/accessibility.md" },
-    { "sponsor": "gitar", "kind": "workflow", "label": "merge queue + five required checks", "ref": ".github/workflows/lint-unit.yml" }
+    {
+      "sponsor": "dash0",
+      "kind": "trace",
+      "label": "traceparent: browser to API (kc.app.*)",
+      "ref": "web/src/telemetry.ts"
+    },
+    {
+      "sponsor": "dash0",
+      "kind": "check",
+      "label": "/readyz success ratio",
+      "ref": "api/src/routes/index.ts"
+    },
+    {
+      "sponsor": "gitar",
+      "kind": "rule",
+      "label": "accessibility.md A11Y-1 and review rules",
+      "ref": ".gitar/review/accessibility.md"
+    },
+    {
+      "sponsor": "gitar",
+      "kind": "workflow",
+      "label": "merge queue + five required checks",
+      "ref": ".github/workflows/lint-unit.yml"
+    }
   ]
 }

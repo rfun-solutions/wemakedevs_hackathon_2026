@@ -7,6 +7,7 @@ export interface NoteInput {
   session_id?: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function enqueueNote(_input: NoteInput): Promise<{ client_id: string }> {
   return Promise.reject(new Error('not implemented'));
 }

@@ -6,6 +6,7 @@ const apiPort = process.env.PORT ?? '3000';
 const vitePort = Number(process.env.VITE_PORT ?? 5173);
 
 export default defineConfig({
+  root: import.meta.dirname,
   plugins: [preact()],
   build: { outDir: 'dist', emptyOutDir: true, sourcemap: false },
   server: {
