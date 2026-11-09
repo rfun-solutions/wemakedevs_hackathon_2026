@@ -105,14 +105,23 @@ function samples(result, label) {
     .filter((s) => s.label && Number.isFinite(s.value));
 }
 
-/** Route p95 in ms per route (method prefix stripped; max across methods). */
+/**
+ * Route p95 in ms per route (method prefix stripped; max across methods).
+ * Units differ by source: the primary dash0 span histogram (routeLabel) is in SECONDS, so it is
+ * multiplied by 1000; the fallback kc_app_http_server_duration (fallbackRouteLabel) is recorded
+ * in MILLISECONDS (api/src/plugins/httpMetrics.ts) and is used as is.
+ */
 export function extractRoutes(result, config = CONFIG) {
   const byRoute = new Map();
-  for (const s of [...samples(result, config.routeLabel), ...samples(result, config.fallbackRouteLabel)]) {
-    const route = s.label.replace(/^(GET|POST|PUT|PATCH|DELETE)\s+/, '');
-    const ms = s.value * 1000; // both route histograms are in seconds
-    byRoute.set(route, Math.max(byRoute.get(route) ?? 0, ms));
-  }
+  const sources = [
+    [samples(result, config.routeLabel), 1000],
+    [samples(result, config.fallbackRouteLabel), 1],
+  ];
+  for (const [list, toMs] of sources)
+    for (const s of list) {
+      const route = s.label.replace(/^(GET|POST|PUT|PATCH|DELETE)\s+/, '');
+      byRoute.set(route, Math.max(byRoute.get(route) ?? 0, s.value * toMs));
+    }
   return [...byRoute].map(([route, p95Ms]) => ({ route, p95Ms }));
 }
 

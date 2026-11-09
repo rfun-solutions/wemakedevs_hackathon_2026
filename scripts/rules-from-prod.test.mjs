@@ -33,9 +33,12 @@ const input = (routes, captions = [['whisper', 3200], ['webspeech', 1100]]) => (
 });
 
 describe('extract and select', () => {
-  it('strips the method prefix, converts seconds to ms and falls back to the route label', () => {
+  it('strips the method prefix and converts the primary dash0 seconds histogram to ms', () => {
     expect(extractRoutes(routesResult([['/api/agenda', 2.1]]))).toEqual([{ route: '/api/agenda', p95Ms: 2100 }]);
-    expect(extractRoutes(vec([['/api/x', 0.5]], 'route'))).toEqual([{ route: '/api/x', p95Ms: 500 }]);
+  });
+  it('keeps the fallback kc_app_http_server_duration histogram in ms (recorded in ms, not seconds)', () => {
+    expect(extractRoutes(vec([['/api/x', 250]], 'route'))).toEqual([{ route: '/api/x', p95Ms: 250 }]);
+    expect(hotRoutes(extractRoutes(vec([['/api/x', 250]], 'route')))).toEqual([]); // 250 ms is under the 300 ms threshold: no false breach
   });
   it('drops NaN samples', () => {
     expect(extractRoutes(routesResult([['/api/a', 'NaN']]))).toEqual([]);
@@ -243,7 +246,7 @@ describe('main', () => {
       fetchImpl: async (url) => {
         urls.push(url);
         if (url.includes('kc_captions')) return ok(capResult([['whisper', 3200]]));
-        if (url.includes('kc_app_http_server_duration_bucket')) return ok(vec([['/api/agenda', 0.8]], 'route'));
+        if (url.includes('kc_app_http_server_duration_bucket')) return ok(vec([['/api/agenda', 800]], 'route'));
         return ok(routesResult([['/api/agenda', 'NaN']]));
       },
       now: NOW,
