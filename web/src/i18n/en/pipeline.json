@@ -1,4 +1,4 @@
 {
   "pipeline.hood.title": "Checks that guard your schedule",
-  "pipeline.hood.what": "If the conference schedule feed changes shape, a check fails before it reaches you, and review rules are written from what production actually measures."
+  "pipeline.hood.what": "If the schedule format changes, a check stops it before you see it. Review rules use measured app speed."
 }
