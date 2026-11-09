@@ -30,6 +30,7 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
   // >> e-captions-translation
   await app.register((await import('./captions.js')).default);
   // >> e-captions-translation-translate
+  await app.register((await import('./translate.js')).default);
   // >> c-evening-threads
   await app.register((await import('./threads.js')).default);
 }
