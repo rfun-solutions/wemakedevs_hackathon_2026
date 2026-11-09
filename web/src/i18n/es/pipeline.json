@@ -1,4 +1,4 @@
 {
   "pipeline.hood.title": "Controles que protegen tu agenda",
-  "pipeline.hood.what": "Si cambia el formato, un control lo detiene antes de que lo veas. Las reglas usan datos reales de velocidad."
+  "pipeline.hood.what": "Si cambia el formato, un control lo detiene antes de que lo veas. Las reglas usan los datos de velocidad de la app (datos de prueba hasta que se ejecuten las reglas de producción)."
 }
