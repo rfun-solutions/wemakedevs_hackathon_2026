@@ -19,7 +19,7 @@ export function LiveRegions() {
       <div aria-live="polite" aria-atomic="true" data-testid="announce-polite">
         {polite}
       </div>
-      <div role="alert" aria-live="assertive" aria-atomic="true" data-testid="announce-assertive">
+      <div aria-live="assertive" aria-atomic="true" data-testid="announce-assertive">
         {assertive}
       </div>
     </div>

@@ -85,12 +85,18 @@ describe('display prefs', () => {
       contrast: 'high',
     });
     expect(document.documentElement.getAttribute('data-contrast')).toBe('high');
-    const spy = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+    // happy-dom's localStorage is not backed by Storage.prototype, so replace the global itself.
+    const setItem = vi.fn(() => {
       throw new Error('blocked');
     });
-    expect(() => setPrefs({ motion: 'reduced' })).not.toThrow();
-    expect(document.documentElement.getAttribute('data-motion')).toBe('reduced');
-    spy.mockRestore();
+    vi.stubGlobal('localStorage', { getItem: () => null, setItem });
+    try {
+      expect(() => setPrefs({ motion: 'reduced' })).not.toThrow();
+      expect(setItem).toHaveBeenCalled(); // proves the blocked path ran
+      expect(document.documentElement.getAttribute('data-motion')).toBe('reduced');
+    } finally {
+      vi.unstubAllGlobals();
+    }
     setPrefs({ typeScale: 1, contrast: 'normal', motion: 'normal' });
   });
 });
