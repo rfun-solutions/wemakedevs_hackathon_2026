@@ -42,7 +42,7 @@ function channel(v: number): number {
 export function luminance(hex: string): number {
   const m = /^#([0-9a-f]{6})$/i.exec(hex.trim());
   if (!m) throw new Error(`not a #RRGGBB colour: ${hex}`);
-  const n = parseInt(m[1], 16);
+  const n = parseInt(m[1] ?? '', 16);
   return (
     0.2126 * channel((n >> 16) & 255) + 0.7152 * channel((n >> 8) & 255) + 0.0722 * channel(n & 255)
   );
@@ -50,14 +50,17 @@ export function luminance(hex: string): number {
 
 /** WCAG contrast ratio, 1 to 21. */
 export function contrastRatio(a: string, b: string): number {
-  const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
-  return (hi + 0.05) / (lo + 0.05);
+  const la = luminance(a);
+  const lb = luminance(b);
+  return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
 }
 
 /** Read `--name: #hex;` declarations from one CSS block body. */
 export function parseTokens(block: string): Record<string, string> {
   const out: Record<string, string> = {};
-  for (const m of block.matchAll(/(--[\w-]+):\s*(#[0-9a-fA-F]{6})\s*;/g)) out[m[1]] = m[2];
+  for (const m of block.matchAll(/(--[\w-]+):\s*(#[0-9a-fA-F]{6})\s*;/g)) {
+    if (m[1] && m[2]) out[m[1]] = m[2];
+  }
   return out;
 }
 

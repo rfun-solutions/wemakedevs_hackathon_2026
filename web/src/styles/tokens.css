@@ -30,22 +30,23 @@
   --font-sans:
     'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
     sans-serif; /* UI font stack */
-  --font-reading`(+):
-    system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; /* note and card reading text */
-  --font-mono`(+): ui-monospace, 'SF Mono', Menlo, Consolas, monospace; /* code, ids */
-  --weight-regular`(+): 500; /* body weight */
-  --weight-medium`(+): 700; /* labels */
-  --weight-bold`(+): 800; /* headings, buttons */
+  --font-reading:
+    'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    sans-serif; /* note and card reading text */
+  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; /* code, ids */
+  --weight-regular: 400; /* body weight */
+  --weight-medium: 700; /* labels */
+  --weight-bold: 700; /* headings, buttons */
   --text-sm: calc(0.9375rem * var(--type-scale)); /* small text (min 14 px at 100%) */
   --text-base: calc(1.0625rem * var(--type-scale)); /* body */
   --text-md: calc(1.1875rem * var(--type-scale)); /* labels, buttons */
   --text-lg: calc(1.375rem * var(--type-scale)); /* card titles */
   --text-xl: calc(1.625rem * var(--type-scale)); /* screen titles */
   --text-2xl: calc(2rem * var(--type-scale)); /* large titles */
-  --text-show`(+): clamp(2rem, 9vw, 4.5rem); /* ShowToPerson starting size before fit-text */
-  --leading-tight`(+): 1.2; /* line height, titles */
-  --leading-normal`(+): 1.5; /* line height, body */
-  --leading-loose`(+): 1.6; /* line height, note text */
+  --text-show: clamp(2rem, 9vw, 4.5rem); /* ShowToPerson starting size before fit-text */
+  --leading-tight: 1.25; /* line height, titles */
+  --leading-normal: 1.55; /* line height, body */
+  --leading-loose: 1.7; /* line height, note text */
   --type-scale: 1; /* unitless multiplier 1 to 2, set from data-type-scale */
   --space-1: 4px; /* spacing step */
   --space-2: 8px; /* spacing step */
@@ -67,9 +68,9 @@
   --focus-ring-offset: 2px; /* outline offset */
   --target-min: 24px; /* WCAG 2.2 minimum target, 24 px */
   --target-comfort: 44px; /* comfortable target, 44 px */
-  --target-primary`(+): 56px; /* primary button height */
-  --motion-fast`(+): 100ms; /* hover/press */
-  --motion-base`(+): 160ms; /* transitions (0ms when data-motion=reduced) */
+  --target-primary: 52px; /* primary button height */
+  --motion-fast: 150ms; /* hover/press */
+  --motion-base: 250ms; /* transitions (0ms when data-motion=reduced) */
 }
 
 /* Set by web/src/prefs/display.ts via html[data-type-scale]. */
