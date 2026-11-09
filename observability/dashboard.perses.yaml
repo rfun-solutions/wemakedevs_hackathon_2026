@@ -1,6 +1,6 @@
 # KubeCompanion service dashboard (Perses). Applied by .github/workflows/observability.yml.
 # Metric names: B kc_capture_saved_ms, A kc_agenda_request_ms, F kc_status_rtt_ms; span metrics from Dash0.
-kind: PersesDashboard
+kind: Dashboard
 metadata:
   name: kubecompanion-service
   project: default
