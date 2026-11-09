@@ -21,7 +21,7 @@
 
 ## 3. Deploy and demo (PR 3)
 
-- [ ] 3.1 `deploy/threads-cronjob.yaml` (suspended, `timeZone: America/Denver`, Secret `THREADS_CRON_TOKEN`), listed under the `# >> c-evening-threads` marker in `kustomization.yaml` `resources:`
+- [x] 3.1 `deploy/threads-cronjob.yaml` (suspended, `timeZone: America/Denver`, Secret `THREADS_CRON_TOKEN`), listed under the `# >> c-evening-threads` marker in `kustomization.yaml` `resources:`
 - [ ] 3.2 Document env vars (`THREADS_MODEL`, `THREADS_DAILY_CAP_USD`, `DASH0_TRACE_URL_TEMPLATE`) in deploy config, inserted under the `# >> c-evening-threads` marker in `deploy/deployment.yaml` `env:` (after C0b merges)
 - [ ] 3.3 Dash0 saved view / dashboard for `kc.threads.llm` tokens and cost; demo script notes
 - [ ] 3.4 Manual check with a real key: one run traced in Dash0; cap forced to 0 shows fallback with heuristic actions

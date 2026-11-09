@@ -8,12 +8,12 @@
 - [x] 1.7 Startup hook, `jobs/ingest.ts` entry and `deploy/cronjob-ingest.yaml` (every 30 min; no secrets needed), listed under the `# >> a-schedule-agenda` marker in `deploy/kustomization.yaml` `resources:`
 
 ## 2. API (PR 2)
-- [ ] 2.1 `GET /api/sessions` (day, room, track filters, `is_service` hidden) with span `kc.schedule.sessions_list` and tests
-- [ ] 2.2 `GET/POST/DELETE /api/agenda` keyed by `X-Device-Id`; 400 when missing; integration tests
-- [ ] 2.3 `buildingWarnings()` pure function, `WALK_MINUTES` env, unit tests for tight, ok, unknown
-- [ ] 2.4 Import `getChaos` from C0's stub `api/src/lib/chaos.ts` (import only; C0 ships it, F replaces it; do not create or edit the file); handler applies the `agenda` flags (latencyMs, errorRate, naive); naive N+1 branch; tests mock `getChaos`
-- [ ] 2.5 Spans `kc.agenda.get/add`; metrics `kc_agenda_request_ms`, `kc_agenda_db_queries`, `kc_agenda_items`
-- [ ] 2.6 Register routes under the `// >> a-schedule-agenda` marker in `api/src/routes/index.ts`
+- [x] 2.1 `GET /api/sessions` (day, room, track filters, `is_service` hidden) with span `kc.schedule.sessions_list` and tests
+- [x] 2.2 `GET/POST/DELETE /api/agenda` keyed by `X-Device-Id`; 400 when missing; integration tests
+- [x] 2.3 `buildingWarnings()` pure function, `WALK_MINUTES` env, unit tests for tight, ok, unknown
+- [x] 2.4 Import `getChaos` from C0's stub `api/src/lib/chaos.ts` (import only; C0 ships it, F replaces it; do not create or edit the file); handler applies the `agenda` flags (latencyMs, errorRate, naive); naive N+1 branch; tests mock `getChaos`
+- [x] 2.5 Spans `kc.agenda.get/add`; metrics `kc_agenda_request_ms`, `kc_agenda_db_queries`, `kc_agenda_items`
+- [x] 2.6 Register routes under the `// >> a-schedule-agenda` marker in `api/src/routes/index.ts`
 
 ## 3. UI (PR 3)
 - [ ] 3.1 `web/src/pages/Schedule.tsx` (day tabs, room and track selects, list, add button) using D tokens only

@@ -17,6 +17,7 @@ import { Captions } from './pages/captions/Captions';
 // >> import:c-evening-threads
 import { Threads } from './screens/Threads';
 // >> import:h-under-the-hood
+import { UnderTheHood } from './screens/under-the-hood/UnderTheHood';
 
 export interface AppRoute {
   path: string;
@@ -39,4 +40,5 @@ export const routes: AppRoute[] = [
   // >> c-evening-threads
   { path: '/threads', component: Threads },
   // >> h-under-the-hood
+  { path: '/under-the-hood', component: UnderTheHood },
 ];

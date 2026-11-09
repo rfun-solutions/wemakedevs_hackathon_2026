@@ -68,6 +68,15 @@ describe('POST /api/captions/sli', () => {
     expect(Number(res.headers['retry-after'])).toBeGreaterThanOrEqual(1);
   });
 
+  it('the default limiter (none injected) allows 6 per minute per device and answers the 7th with 429', async () => {
+    const app = await build({ record: vi.fn() });
+    const body = { engine: 'webspeech', deviceClass: 'ios', samples: [100] };
+    for (let i = 0; i < 6; i++) expect((await post(app, body)).statusCode).toBe(204);
+    const res = await post(app, body);
+    expect(res.statusCode).toBe(429);
+    expect(res.json().error).toBe('rate_limited');
+  });
+
   it('limits per device, not globally', async () => {
     const app = await build({ record: vi.fn() });
     const body = { engine: 'webspeech', deviceClass: 'ios', samples: [100] };

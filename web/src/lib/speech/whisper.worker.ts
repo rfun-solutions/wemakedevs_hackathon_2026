@@ -1,6 +1,6 @@
 /// <reference lib="webworker" />
 // Whisper worker: transformers.js whisper-tiny (multilingual), WebGPU first then WASM. Never created on iOS.
-import { pipeline } from '@huggingface/transformers';
+import { pipeline, type AutomaticSpeechRecognitionPipeline } from '@huggingface/transformers';
 
 export type WorkerIn =
   { type: 'load' } | { type: 'decode'; id: number; pcm: Float32Array; lang?: string };
@@ -12,8 +12,7 @@ export type WorkerOut =
 
 export const MODEL_ID = 'Xenova/whisper-tiny';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let transcriber: any = null;
+let transcriber: AutomaticSpeechRecognitionPipeline | null = null;
 const post = (m: WorkerOut) => (self as unknown as Worker).postMessage(m);
 
 async function load(): Promise<void> {
