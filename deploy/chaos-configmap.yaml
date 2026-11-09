@@ -1,5 +1,4 @@
 # Runtime chaos flags, read by api/src/lib/chaos.ts (re-read at most every 5 s).
-# This manifest is applied separately, not by Argo CD, so demo patches persist through syncs.
 # Empty by default: no request is altered. Demo backup: see docs/demo-runbook-dash0.md.
 apiVersion: v1
 kind: ConfigMap
