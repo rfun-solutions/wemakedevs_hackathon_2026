@@ -9,6 +9,11 @@ RUN npm ci --no-audit --no-fund
 COPY tsconfig.base.json ./
 COPY api/ api/
 COPY web/ web/
+# Browser telemetry: the ingest-only Dash0 token is baked into the web bundle at build time (build stage only,
+# never the runtime stage). Empty for PR builds; the app works without it. Passed by deploy.yaml.
+ARG VITE_DASH0_INGEST_TOKEN=""
+ARG VITE_DASH0_ENDPOINT=""
+ENV VITE_DASH0_INGEST_TOKEN=$VITE_DASH0_INGEST_TOKEN VITE_DASH0_ENDPOINT=$VITE_DASH0_ENDPOINT
 # Workspaces without a build script are skipped; ensure the output dirs exist for the COPY below.
 RUN npm run build && mkdir -p api/dist web/dist
 

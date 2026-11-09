@@ -130,3 +130,29 @@ The section above is the cnh-starter guide (cluster, GitOps, Radar). The rules b
 
 ---
 
+## Working agreement (C0 extension; applies to every change)
+
+- **Branches and commits.** Branches `feature/KC-<n>-<change>[-<part>]-pr<k>`; commits `feat: [KC-<n>] ...`; label every PR `gitar-managed`. Commit email is a GitHub noreply address (CI traces export author emails). Never force-push after Gitar pushes; run `git pull --rebase` first, only for local unpushed commits.
+- **Shared registries.** Insert only under your own `>> <change-id>` marker (TS `// >> id`, YAML `# >> id`, Markdown `<!-- >> id -->`). Never append at the end of a list.
+- **Dependencies.** No dependency, lockfile or `tsconfig*` change outside the orchestrator. Accident: `git checkout origin/main -- package-lock.json && npm ci`.
+- **`deploy/kustomization.yaml`.** The `images:` block is bot-owned: only the `newTag:` line changes, written by the deploy-bot App in `deploy.yaml`. `resources:` entries go under each change's marker.
+- **Telemetry names.** Spans `kc.<domain>.<op>`, metrics `kc_<domain>_<name>`; domains: `app`, `access`, `pipeline`, `schedule`, `capture`, `status`, `captions`, `translate`, `threads`, `hood`.
+- **Under-the-hood.** Every change adds exactly one entry file `web/src/under-the-hood/entries/<change-id>.json`.
+- **CI.** Required checks: `lint-unit`, `e2e-mobile`, `a11y`, `build-image`, `feed-contract` (workflow and job names are identical). They run on `pull_request` and `merge_group`. Gitar rule files live in `.gitar/review/`.
+- **After every merge.** Use the Radar MCP to check the cluster after every merge: Argo sync status, `get_changes`, warning events; note anything odd in the PR.
+- **Merge order.** C0, D, G, A, B, F, E, C, H.
+
+### Secrets (never in git)
+
+Create Secret `kc-secrets` once in the namespace, by hand, with real values from your shell (do not paste them into a file or commit):
+
+```bash
+kubectl -n team-kubecompanion2026 create secret generic kc-secrets \
+  --from-literal=ANTHROPIC_API_KEY="$ANTHROPIC_API_KEY" \
+  --from-literal=DASH0_TOKEN="$DASH0_TOKEN" \
+  --from-literal=THREADS_CRON_TOKEN="$THREADS_CRON_TOKEN"   # optional, change C only
+```
+
+or with Radar's `apply_resource`, following `examples/agent-workflows/README.md`. The Deployment reads the keys as optional, so pods start (LLM and telemetry degrade gracefully) before the Secret exists. Database credentials come from Secret `db-app` (created by CloudNativePG for Cluster `db`). `VITE_DASH0_INGEST_TOKEN` (ingest-only) is a GitHub Actions build variable, not a cluster Secret.
+
+---
