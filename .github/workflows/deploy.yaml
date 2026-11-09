@@ -70,7 +70,7 @@ jobs:
           REPO: ${{ github.repository }}
         run: |
           git config user.name "kubecompanion-deploy-bot[bot]"
-          git config user.email "5685272+kubecompanion-deploy-bot[bot]@users.noreply.github.com"
+          git config user.email "354589384+kubecompanion-deploy-bot[bot]@users.noreply.github.com"
           # Push as the App: its token is a ruleset bypass actor, so it can push to main.
           git remote set-url origin "https://x-access-token:${GH_APP_TOKEN}@github.com/${REPO}.git"
           # Set the image on top of the latest main, not on the commit this run
