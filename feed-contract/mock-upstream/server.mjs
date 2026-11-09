@@ -1,3 +1,4 @@
+/* global process, console */
 // Mock Sessionize upstream (no dependencies). Env: FIXTURE (default sessionize-v1),
 // MODE (ok | 429), PORT (default 4010). In mode 429 the first two requests get
 // 429 with Retry-After: 1, later ones are served normally.
@@ -29,7 +30,12 @@ export function createServer({ fixture = 'sessionize-v1', mode = 'ok' } = {}) {
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const port = Number(process.env.PORT || 4010);
-  createServer({ fixture: process.env.FIXTURE || 'sessionize-v1', mode: process.env.MODE || 'ok' }).listen(port, () =>
-    console.log(`mock-upstream listening on ${port} fixture=${process.env.FIXTURE || 'sessionize-v1'} mode=${process.env.MODE || 'ok'}`),
+  createServer({
+    fixture: process.env.FIXTURE || 'sessionize-v1',
+    mode: process.env.MODE || 'ok',
+  }).listen(port, () =>
+    console.log(
+      `mock-upstream listening on ${port} fixture=${process.env.FIXTURE || 'sessionize-v1'} mode=${process.env.MODE || 'ok'}`,
+    ),
   );
 }

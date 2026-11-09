@@ -9,12 +9,17 @@ const FORBIDDEN = ['speakers', 'speaker', 'bio', 'tagLine', 'profilePicture', 'l
 
 function keysDeep(v, acc = new Set()) {
   if (Array.isArray(v)) v.forEach((x) => keysDeep(x, acc));
-  else if (v && typeof v === 'object') for (const [k, x] of Object.entries(v)) { acc.add(k); keysDeep(x, acc); }
+  else if (v && typeof v === 'object')
+    for (const [k, x] of Object.entries(v)) {
+      acc.add(k);
+      keysDeep(x, acc);
+    }
   return acc;
 }
 
 describe('fixtures-no-pii', () => {
-  it('finds the fixtures', () => expect(files).toEqual(expect.arrayContaining(['sessionize-v1.json', 'sessionize-v2.json'])));
+  it('finds the fixtures', () =>
+    expect(files).toEqual(expect.arrayContaining(['sessionize-v1.json', 'sessionize-v2.json'])));
   for (const f of files) {
     it(`${f} has no speaker or personal fields`, () => {
       const feed = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
@@ -24,6 +29,8 @@ describe('fixtures-no-pii', () => {
     });
   }
   it('v1 has 60 sessions', () => {
-    expect(JSON.parse(fs.readFileSync(path.join(dir, 'sessionize-v1.json'), 'utf8')).sessions).toHaveLength(60);
+    expect(
+      JSON.parse(fs.readFileSync(path.join(dir, 'sessionize-v1.json'), 'utf8')).sessions,
+    ).toHaveLength(60);
   });
 });

@@ -1,3 +1,4 @@
+/* global fetch */
 import { describe, it, expect, afterEach } from 'vitest';
 import { createServer } from './server.mjs';
 

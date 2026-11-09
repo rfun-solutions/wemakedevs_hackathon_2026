@@ -2,7 +2,13 @@ import { describe, it, expect } from 'vitest';
 import fs from 'node:fs';
 import { mapFeed, FeedShapeError } from './mapper';
 
-const load = (n: string) => JSON.parse(fs.readFileSync(new URL(`../../../../feed-contract/fixtures/${n}.json`, import.meta.url), 'utf8'));
+const load = (n: string) =>
+  JSON.parse(
+    fs.readFileSync(
+      new URL(`../../../../feed-contract/fixtures/${n}.json`, import.meta.url),
+      'utf8',
+    ),
+  );
 
 describe('mapFeed (v1)', () => {
   const mapped = mapFeed(load('sessionize-v1'));

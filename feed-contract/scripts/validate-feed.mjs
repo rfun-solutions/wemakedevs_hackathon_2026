@@ -1,3 +1,4 @@
+/* global process, console, fetch, URL, AbortSignal */
 // Usage: node feed-contract/scripts/validate-feed.mjs <url>
 // Fetches the feed and validates it against the v1 schema; exit 1 names the drift.
 import fs from 'node:fs';

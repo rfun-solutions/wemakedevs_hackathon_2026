@@ -32,23 +32,37 @@ export function mapFeed(feed: unknown): MappedSession[] {
     const detail = (validate.errors ?? [])
       .slice(0, 8)
       .map((e) => {
-        const extra = e.params && 'additionalProperty' in e.params ? ` (${String(e.params.additionalProperty)})` : '';
+        const extra =
+          e.params && 'additionalProperty' in e.params
+            ? ` (${String(e.params.additionalProperty)})`
+            : '';
         return `${e.instancePath || '/'} ${e.message}${extra}`;
       })
       .join('; ');
     throw new FeedShapeError(`Feed does not match the v1 schema: ${detail}`);
   }
   const data = feed as {
-    sessions: { id: string; title: string; description?: string | null; startsAt: string; endsAt: string; roomId: number; categoryItems: number[] }[];
+    sessions: {
+      id: string;
+      title: string;
+      description?: string | null;
+      startsAt: string;
+      endsAt: string;
+      roomId: number;
+      categoryItems: number[];
+    }[];
     rooms: { id: number; name: string }[];
     categories: { title: string; items: { id: number; name: string }[] }[];
   };
   const rooms = new Map(data.rooms.map((r) => [r.id, r.name]));
   const items = new Map<number, { group: string; name: string }>();
-  for (const c of data.categories) for (const i of c.items) items.set(i.id, { group: c.title, name: i.name });
+  for (const c of data.categories)
+    for (const i of c.items) items.set(i.id, { group: c.title, name: i.name });
 
   return data.sessions.map((s) => {
-    const cats = s.categoryItems.map((id) => items.get(id)).filter((x): x is { group: string; name: string } => !!x);
+    const cats = s.categoryItems
+      .map((id) => items.get(id))
+      .filter((x): x is { group: string; name: string } => !!x);
     return {
       id: s.id,
       title: s.title,

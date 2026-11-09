@@ -7,10 +7,7 @@
       "startsAt": "2026-11-10T09:00:00",
       "endsAt": "2026-11-10T09:35:00",
       "roomId": 1,
-      "categoryItems": [
-        10,
-        20
-      ]
+      "categoryItems": [10, 20]
     },
     {
       "id": "100001",
@@ -19,10 +16,7 @@
       "startsAt": "2026-11-10T09:00:00",
       "endsAt": "2026-11-10T09:35:00",
       "roomId": 4,
-      "categoryItems": [
-        11,
-        21
-      ]
+      "categoryItems": [11, 21]
     },
     {
       "id": "100002",
@@ -31,10 +25,7 @@
       "startsAt": "2026-11-10T09:00:00",
       "endsAt": "2026-11-10T09:35:00",
       "roomId": 1,
-      "categoryItems": [
-        12,
-        22
-      ]
+      "categoryItems": [12, 22]
     },
     {
       "id": "100003",
@@ -43,10 +34,7 @@
       "startsAt": "2026-11-10T10:00:00",
       "endsAt": "2026-11-10T10:35:00",
       "roomId": 4,
-      "categoryItems": [
-        13,
-        20
-      ]
+      "categoryItems": [13, 20]
     },
     {
       "id": "100004",
@@ -55,10 +43,7 @@
       "startsAt": "2026-11-10T10:00:00",
       "endsAt": "2026-11-10T10:35:00",
       "roomId": 1,
-      "categoryItems": [
-        14,
-        21
-      ]
+      "categoryItems": [14, 21]
     },
     {
       "id": "100005",
@@ -67,10 +52,7 @@
       "startsAt": "2026-11-10T10:00:00",
       "endsAt": "2026-11-10T10:35:00",
       "roomId": 4,
-      "categoryItems": [
-        15,
-        22
-      ]
+      "categoryItems": [15, 22]
     },
     {
       "id": "100006",
@@ -79,10 +61,7 @@
       "startsAt": "2026-11-10T11:00:00",
       "endsAt": "2026-11-10T11:35:00",
       "roomId": 1,
-      "categoryItems": [
-        10,
-        20
-      ]
+      "categoryItems": [10, 20]
     },
     {
       "id": "100007",
@@ -91,10 +70,7 @@
       "startsAt": "2026-11-10T11:00:00",
       "endsAt": "2026-11-10T11:35:00",
       "roomId": 4,
-      "categoryItems": [
-        11,
-        21
-      ]
+      "categoryItems": [11, 21]
     },
     {
       "id": "100008",
@@ -103,10 +79,7 @@
       "startsAt": "2026-11-10T11:00:00",
       "endsAt": "2026-11-10T11:35:00",
       "roomId": 1,
-      "categoryItems": [
-        12,
-        22
-      ]
+      "categoryItems": [12, 22]
     },
     {
       "id": "100009",
@@ -115,10 +88,7 @@
       "startsAt": "2026-11-10T13:00:00",
       "endsAt": "2026-11-10T13:35:00",
       "roomId": 4,
-      "categoryItems": [
-        13,
-        20
-      ]
+      "categoryItems": [13, 20]
     },
     {
       "id": "100010",
@@ -127,10 +97,7 @@
       "startsAt": "2026-11-10T13:00:00",
       "endsAt": "2026-11-10T13:35:00",
       "roomId": 1,
-      "categoryItems": [
-        14,
-        21
-      ]
+      "categoryItems": [14, 21]
     },
     {
       "id": "100011",
@@ -139,10 +106,7 @@
       "startsAt": "2026-11-10T13:00:00",
       "endsAt": "2026-11-10T13:35:00",
       "roomId": 4,
-      "categoryItems": [
-        15,
-        22
-      ]
+      "categoryItems": [15, 22]
     },
     {
       "id": "100012",
@@ -151,10 +115,7 @@
       "startsAt": "2026-11-10T14:00:00",
       "endsAt": "2026-11-10T14:35:00",
       "roomId": 1,
-      "categoryItems": [
-        10,
-        20
-      ]
+      "categoryItems": [10, 20]
     },
     {
       "id": "100013",
@@ -163,10 +124,7 @@
       "startsAt": "2026-11-10T14:00:00",
       "endsAt": "2026-11-10T14:35:00",
       "roomId": 4,
-      "categoryItems": [
-        11,
-        21
-      ]
+      "categoryItems": [11, 21]
     },
     {
       "id": "100014",
@@ -175,10 +133,7 @@
       "startsAt": "2026-11-10T14:00:00",
       "endsAt": "2026-11-10T14:35:00",
       "roomId": 1,
-      "categoryItems": [
-        12,
-        22
-      ]
+      "categoryItems": [12, 22]
     },
     {
       "id": "100015",
@@ -187,10 +142,7 @@
       "startsAt": "2026-11-10T15:00:00",
       "endsAt": "2026-11-10T15:35:00",
       "roomId": 4,
-      "categoryItems": [
-        13,
-        20
-      ]
+      "categoryItems": [13, 20]
     },
     {
       "id": "100016",
@@ -199,10 +151,7 @@
       "startsAt": "2026-11-10T15:00:00",
       "endsAt": "2026-11-10T15:35:00",
       "roomId": 1,
-      "categoryItems": [
-        14,
-        21
-      ]
+      "categoryItems": [14, 21]
     },
     {
       "id": "100017",
@@ -211,10 +160,7 @@
       "startsAt": "2026-11-10T15:00:00",
       "endsAt": "2026-11-10T15:35:00",
       "roomId": 4,
-      "categoryItems": [
-        15,
-        22
-      ]
+      "categoryItems": [15, 22]
     },
     {
       "id": "100018",
@@ -223,10 +169,7 @@
       "startsAt": "2026-11-10T16:00:00",
       "endsAt": "2026-11-10T16:35:00",
       "roomId": 1,
-      "categoryItems": [
-        10,
-        20
-      ]
+      "categoryItems": [10, 20]
     },
     {
       "id": "100019",
@@ -235,10 +178,7 @@
       "startsAt": "2026-11-10T16:00:00",
       "endsAt": "2026-11-10T16:35:00",
       "roomId": 4,
-      "categoryItems": [
-        11,
-        21
-      ]
+      "categoryItems": [11, 21]
     },
     {
       "id": "100020",
@@ -247,10 +187,7 @@
       "startsAt": "2026-11-10T16:00:00",
       "endsAt": "2026-11-10T16:35:00",
       "roomId": 1,
-      "categoryItems": [
-        12,
-        22
-      ]
+      "categoryItems": [12, 22]
     },
     {
       "id": "100021",
@@ -259,10 +196,7 @@
       "startsAt": "2026-11-11T09:00:00",
       "endsAt": "2026-11-11T09:35:00",
       "roomId": 4,
-      "categoryItems": [
-        13,
-        20
-      ]
+      "categoryItems": [13, 20]
     },
     {
       "id": "100022",
@@ -271,10 +205,7 @@
       "startsAt": "2026-11-11T09:00:00",
       "endsAt": "2026-11-11T09:35:00",
       "roomId": 1,
-      "categoryItems": [
-        14,
-        21
-      ]
+      "categoryItems": [14, 21]
     },
     {
       "id": "100023",
@@ -283,10 +214,7 @@
       "startsAt": "2026-11-11T09:00:00",
       "endsAt": "2026-11-11T09:35:00",
       "roomId": 4,
-      "categoryItems": [
-        15,
-        22
-      ]
+      "categoryItems": [15, 22]
     },
     {
       "id": "100024",
@@ -295,10 +223,7 @@
       "startsAt": "2026-11-11T10:00:00",
       "endsAt": "2026-11-11T10:35:00",
       "roomId": 1,
-      "categoryItems": [
-        10,
-        20
-      ]
+      "categoryItems": [10, 20]
     },
     {
       "id": "100025",
@@ -307,10 +232,7 @@
       "startsAt": "2026-11-11T10:00:00",
       "endsAt": "2026-11-11T10:35:00",
       "roomId": 4,
-      "categoryItems": [
-        11,
-        21
-      ]
+      "categoryItems": [11, 21]
     },
     {
       "id": "100026",
@@ -319,10 +241,7 @@
       "startsAt": "2026-11-11T10:00:00",
       "endsAt": "2026-11-11T10:35:00",
       "roomId": 1,
-      "categoryItems": [
-        12,
-        22
-      ]
+      "categoryItems": [12, 22]
     },
     {
       "id": "100027",
@@ -331,10 +250,7 @@
       "startsAt": "2026-11-11T11:00:00",
       "endsAt": "2026-11-11T11:35:00",
       "roomId": 4,
-      "categoryItems": [
-        13,
-        20
-      ]
+      "categoryItems": [13, 20]
     },
     {
       "id": "100028",
@@ -343,10 +259,7 @@
       "startsAt": "2026-11-11T11:00:00",
       "endsAt": "2026-11-11T11:35:00",
       "roomId": 1,
-      "categoryItems": [
-        14,
-        21
-      ]
+      "categoryItems": [14, 21]
     },
     {
       "id": "100029",
@@ -355,10 +268,7 @@
       "startsAt": "2026-11-11T11:00:00",
       "endsAt": "2026-11-11T11:35:00",
       "roomId": 4,
-      "categoryItems": [
-        15,
-        22
-      ]
+      "categoryItems": [15, 22]
     },
     {
       "id": "100030",
@@ -367,10 +277,7 @@
       "startsAt": "2026-11-11T13:00:00",
       "endsAt": "2026-11-11T13:35:00",
       "roomId": 1,
-      "categoryItems": [
-        10,
-        20
-      ]
+      "categoryItems": [10, 20]
     },
     {
       "id": "100031",
@@ -379,10 +286,7 @@
       "startsAt": "2026-11-11T13:00:00",
       "endsAt": "2026-11-11T13:35:00",
       "roomId": 4,
-      "categoryItems": [
-        11,
-        21
-      ]
+      "categoryItems": [11, 21]
     },
     {
       "id": "100032",
@@ -391,10 +295,7 @@
       "startsAt": "2026-11-11T13:00:00",
       "endsAt": "2026-11-11T13:35:00",
       "roomId": 1,
-      "categoryItems": [
-        12,
-        22
-      ]
+      "categoryItems": [12, 22]
     },
     {
       "id": "100033",
@@ -403,10 +304,7 @@
       "startsAt": "2026-11-11T14:00:00",
       "endsAt": "2026-11-11T14:35:00",
       "roomId": 4,
-      "categoryItems": [
-        13,
-        20
-      ]
+      "categoryItems": [13, 20]
     },
     {
       "id": "100034",
@@ -415,10 +313,7 @@
       "startsAt": "2026-11-11T14:00:00",
       "endsAt": "2026-11-11T14:35:00",
       "roomId": 1,
-      "categoryItems": [
-        14,
-        21
-      ]
+      "categoryItems": [14, 21]
     },
     {
       "id": "100035",
@@ -427,10 +322,7 @@
       "startsAt": "2026-11-11T14:00:00",
       "endsAt": "2026-11-11T14:35:00",
       "roomId": 4,
-      "categoryItems": [
-        15,
-        22
-      ]
+      "categoryItems": [15, 22]
     },
     {
       "id": "100036",
@@ -439,10 +331,7 @@
       "startsAt": "2026-11-11T15:00:00",
       "endsAt": "2026-11-11T15:35:00",
       "roomId": 1,
-      "categoryItems": [
-        10,
-        20
-      ]
+      "categoryItems": [10, 20]
     },
     {
       "id": "100037",
@@ -451,10 +340,7 @@
       "startsAt": "2026-11-11T15:00:00",
       "endsAt": "2026-11-11T15:35:00",
       "roomId": 4,
-      "categoryItems": [
-        11,
-        21
-      ]
+      "categoryItems": [11, 21]
     },
     {
       "id": "100038",
@@ -463,10 +349,7 @@
       "startsAt": "2026-11-11T15:00:00",
       "endsAt": "2026-11-11T15:35:00",
       "roomId": 1,
-      "categoryItems": [
-        12,
-        22
-      ]
+      "categoryItems": [12, 22]
     },
     {
       "id": "100039",
@@ -475,10 +358,7 @@
       "startsAt": "2026-11-11T16:00:00",
       "endsAt": "2026-11-11T16:35:00",
       "roomId": 4,
-      "categoryItems": [
-        13,
-        20
-      ]
+      "categoryItems": [13, 20]
     },
     {
       "id": "100040",
@@ -487,10 +367,7 @@
       "startsAt": "2026-11-11T16:00:00",
       "endsAt": "2026-11-11T16:35:00",
       "roomId": 1,
-      "categoryItems": [
-        14,
-        21
-      ]
+      "categoryItems": [14, 21]
     },
     {
       "id": "100041",
@@ -499,10 +376,7 @@
       "startsAt": "2026-11-11T16:00:00",
       "endsAt": "2026-11-11T16:35:00",
       "roomId": 4,
-      "categoryItems": [
-        15,
-        22
-      ]
+      "categoryItems": [15, 22]
     },
     {
       "id": "100042",
@@ -511,10 +385,7 @@
       "startsAt": "2026-11-12T09:00:00",
       "endsAt": "2026-11-12T09:35:00",
       "roomId": 1,
-      "categoryItems": [
-        10,
-        20
-      ]
+      "categoryItems": [10, 20]
     },
     {
       "id": "100043",
@@ -523,10 +394,7 @@
       "startsAt": "2026-11-12T09:00:00",
       "endsAt": "2026-11-12T09:35:00",
       "roomId": 4,
-      "categoryItems": [
-        11,
-        21
-      ]
+      "categoryItems": [11, 21]
     },
     {
       "id": "100044",
@@ -535,10 +403,7 @@
       "startsAt": "2026-11-12T09:00:00",
       "endsAt": "2026-11-12T09:35:00",
       "roomId": 1,
-      "categoryItems": [
-        12,
-        22
-      ]
+      "categoryItems": [12, 22]
     },
     {
       "id": "100045",
@@ -547,10 +412,7 @@
       "startsAt": "2026-11-12T10:00:00",
       "endsAt": "2026-11-12T10:35:00",
       "roomId": 4,
-      "categoryItems": [
-        13,
-        20
-      ]
+      "categoryItems": [13, 20]
     },
     {
       "id": "100046",
@@ -559,10 +421,7 @@
       "startsAt": "2026-11-12T10:00:00",
       "endsAt": "2026-11-12T10:35:00",
       "roomId": 1,
-      "categoryItems": [
-        14,
-        21
-      ]
+      "categoryItems": [14, 21]
     },
     {
       "id": "100047",
@@ -571,10 +430,7 @@
       "startsAt": "2026-11-12T10:00:00",
       "endsAt": "2026-11-12T10:35:00",
       "roomId": 4,
-      "categoryItems": [
-        15,
-        22
-      ]
+      "categoryItems": [15, 22]
     },
     {
       "id": "100048",
@@ -583,10 +439,7 @@
       "startsAt": "2026-11-12T11:00:00",
       "endsAt": "2026-11-12T11:35:00",
       "roomId": 1,
-      "categoryItems": [
-        10,
-        20
-      ]
+      "categoryItems": [10, 20]
     },
     {
       "id": "100049",
@@ -595,10 +448,7 @@
       "startsAt": "2026-11-12T11:00:00",
       "endsAt": "2026-11-12T11:35:00",
       "roomId": 4,
-      "categoryItems": [
-        11,
-        21
-      ]
+      "categoryItems": [11, 21]
     },
     {
       "id": "100050",
@@ -607,10 +457,7 @@
       "startsAt": "2026-11-12T11:00:00",
       "endsAt": "2026-11-12T11:35:00",
       "roomId": 1,
-      "categoryItems": [
-        12,
-        22
-      ]
+      "categoryItems": [12, 22]
     },
     {
       "id": "100051",
@@ -619,10 +466,7 @@
       "startsAt": "2026-11-12T13:00:00",
       "endsAt": "2026-11-12T13:35:00",
       "roomId": 4,
-      "categoryItems": [
-        13,
-        20
-      ]
+      "categoryItems": [13, 20]
     },
     {
       "id": "100052",
@@ -631,10 +475,7 @@
       "startsAt": "2026-11-12T13:00:00",
       "endsAt": "2026-11-12T13:35:00",
       "roomId": 1,
-      "categoryItems": [
-        14,
-        21
-      ]
+      "categoryItems": [14, 21]
     },
     {
       "id": "100053",
@@ -643,10 +484,7 @@
       "startsAt": "2026-11-12T13:00:00",
       "endsAt": "2026-11-12T13:35:00",
       "roomId": 4,
-      "categoryItems": [
-        15,
-        22
-      ]
+      "categoryItems": [15, 22]
     },
     {
       "id": "100054",
@@ -655,10 +493,7 @@
       "startsAt": "2026-11-12T14:00:00",
       "endsAt": "2026-11-12T14:35:00",
       "roomId": 1,
-      "categoryItems": [
-        10,
-        20
-      ]
+      "categoryItems": [10, 20]
     },
     {
       "id": "100055",
@@ -667,10 +502,7 @@
       "startsAt": "2026-11-12T14:00:00",
       "endsAt": "2026-11-12T14:35:00",
       "roomId": 4,
-      "categoryItems": [
-        11,
-        21
-      ]
+      "categoryItems": [11, 21]
     },
     {
       "id": "100056",
@@ -679,10 +511,7 @@
       "startsAt": "2026-11-12T14:00:00",
       "endsAt": "2026-11-12T14:35:00",
       "roomId": 1,
-      "categoryItems": [
-        12,
-        22
-      ]
+      "categoryItems": [12, 22]
     },
     {
       "id": "100057",
@@ -691,10 +520,7 @@
       "startsAt": "2026-11-12T15:00:00",
       "endsAt": "2026-11-12T15:35:00",
       "roomId": 4,
-      "categoryItems": [
-        13,
-        20
-      ]
+      "categoryItems": [13, 20]
     },
     {
       "id": "100900",
@@ -703,10 +529,7 @@
       "startsAt": "2026-11-10T08:00:00",
       "endsAt": "2026-11-10T09:00:00",
       "roomId": 5,
-      "categoryItems": [
-        15,
-        20
-      ]
+      "categoryItems": [15, 20]
     },
     {
       "id": "100901",
@@ -715,10 +538,7 @@
       "startsAt": "2026-11-10T12:00:00",
       "endsAt": "2026-11-10T13:00:00",
       "roomId": 5,
-      "categoryItems": [
-        15,
-        20
-      ]
+      "categoryItems": [15, 20]
     }
   ],
   "rooms": [

@@ -25,7 +25,9 @@ describe('fetchFeed', () => {
   it('aborts on timeout', async () => {
     const slow = (() => new Promise(() => {})) as unknown as typeof fetch;
     const fetchImpl = ((_u: string, init: RequestInit) =>
-      new Promise((_r, rej) => init.signal!.addEventListener('abort', () => rej(init.signal!.reason)))) as unknown as typeof fetch;
+      new Promise((_r, rej) =>
+        init.signal!.addEventListener('abort', () => rej(init.signal!.reason)),
+      )) as unknown as typeof fetch;
     void slow;
     await expect(fetchFeed('http://x', { timeoutMs: 20, fetchImpl })).rejects.toBeDefined();
   });
