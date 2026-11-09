@@ -59,13 +59,28 @@ test.describe('home', () => {
     await page.goto('/');
     const next = page.getByTestId('home-next');
     await expect(next).toContainText('Add sessions to your agenda');
+    await expect(next).toContainText('Browse the schedule and save the talks you want.');
     await expect(next).toHaveAttribute('href', '/schedule');
   });
 
-  test('Next up falls back when the agenda errors', async ({ page }) => {
+  test('Next up shows loading while the agenda is being fetched', async ({ page }) => {
+    await page.route('**/api/agenda', async (route) => {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      await route.fulfill({ json: { items: [], warnings: [] } });
+    });
+    await page.goto('/');
+    const next = page.getByTestId('home-next');
+    await expect(next).toContainText('Checking your agenda…');
+    await expect(next).not.toContainText('Add sessions to your agenda');
+  });
+
+  test('Next up shows an unavailable message when the agenda errors', async ({ page }) => {
     await page.route('**/api/agenda', (route) => route.fulfill({ status: 500, body: 'x' }));
     await page.goto('/');
-    await expect(page.getByTestId('home-next')).toHaveAttribute('href', '/schedule');
+    const next = page.getByTestId('home-next');
+    await expect(next).toContainText('Your agenda is temporarily unavailable.');
+    await expect(next).not.toContainText('Add sessions to your agenda');
+    await expect(next).toHaveAttribute('href', '/schedule');
   });
 
   test('Next up shows the next agenda session in venue time', async ({ page }) => {
@@ -75,16 +90,20 @@ test.describe('home', () => {
     await expect(next).toContainText('Accessible observability for everyone');
     await expect(next).toContainText('Room 101');
     await expect(next).toContainText(/M[SD]T/);
+    await expect(next.locator('.home-next-label')).toHaveText('Next up');
     await expect(next).toHaveAttribute('href', '/agenda');
   });
 
   test('Next up says Happening now for a session in progress', async ({ page }) => {
-    const s = futureSession();
-    s.startsAt = new Date(Date.now() - 10 * 60_000).toISOString();
-    s.endsAt = new Date(Date.now() + 20 * 60_000).toISOString();
-    await stubAgenda(page, [s]);
+    const session = futureSession();
+    session.startsAt = new Date(Date.now() - 10 * 60_000).toISOString();
+    session.endsAt = new Date(Date.now() + 20 * 60_000).toISOString();
+    await stubAgenda(page, [session]);
     await page.goto('/');
-    await expect(page.getByTestId('home-next')).toContainText('Happening now');
+    const next = page.getByTestId('home-next');
+    await expect(next.locator('.home-next-label')).toHaveText('Happening now');
+    await expect(next.locator('.home-next-label')).not.toHaveText('Next up');
+    await expect(next).toContainText('Accessible observability for everyone');
   });
 
   test('200% text: no horizontal scroll, no mid-word breaks', async ({ page }) => {

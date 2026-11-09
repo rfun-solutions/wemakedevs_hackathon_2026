@@ -1,5 +1,6 @@
 {
   "app.home.next.title": "A seguir",
+  "app.home.next.unavailable": "Sua agenda está temporariamente indisponível.",
   "app.home.next.empty": "Adicione sessões à sua agenda",
   "app.home.next.emptyHint": "Veja a programação e salve as palestras que quiser.",
   "app.home.go": "Ir para",
