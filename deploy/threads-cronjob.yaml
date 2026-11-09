@@ -1,6 +1,6 @@
 # c-evening-threads: nightly threading for every device with notes that day.
 # Suspended by default so the demo is deterministic; use Radar's manage_cronjob tool to run it manually.
-# THREADS_CRON_TOKEN comes from the shared Secret kc-secrets (created out of band, never in git).
+# THREADS_CRON_TOKEN is an optional key of the shared Secret kc-secrets (created out of band, never in git).
 apiVersion: batch/v1
 kind: CronJob
 metadata:
@@ -31,42 +31,7 @@ spec:
                 - node
                 - --import
                 - ./api/dist/telemetry.js
-                - --input-type=module
-                - -e
-                - |
-                  import { SpanStatusCode, trace } from '@opentelemetry/api';
-                  import { shutdownTelemetry } from './api/dist/telemetry.js';
-
-                  let exitCode = 0;
-                  try {
-                    await trace.getTracer('kubecompanion').startActiveSpan('kc.threads.cron_fetch', async (span) => {
-                      try {
-                        const response = await fetch('http://app/api/threads/run', {
-                          method: 'POST',
-                          headers: { 'content-type': 'application/json', 'x-cron-token': process.env.THREADS_CRON_TOKEN },
-                          body: JSON.stringify({ allDevices: true }),
-                          signal: AbortSignal.timeout(100000),
-                        });
-                        span.setAttribute('http.request.method', 'POST');
-                        span.setAttribute('http.response.status_code', response.status);
-                        console.log(response.status, await response.text());
-                        if (!response.ok) {
-                          span.setStatus({ code: SpanStatusCode.ERROR, message: `HTTP ${response.status}` });
-                          exitCode = 1;
-                        }
-                      } catch (error) {
-                        span.recordException(error);
-                        span.setStatus({ code: SpanStatusCode.ERROR });
-                        console.error(error instanceof Error ? error.message : String(error));
-                        exitCode = 1;
-                      } finally {
-                        span.end();
-                      }
-                    });
-                  } finally {
-                    await shutdownTelemetry();
-                  }
-                  process.exitCode = exitCode;
+                - api/dist/services/threads/cronMain.js
               env:
                 - name: DASH0_TOKEN
                   valueFrom:
