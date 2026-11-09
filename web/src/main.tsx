@@ -4,7 +4,8 @@ import { initTelemetry } from './telemetry';
 import { registerServiceWorker } from './sw-register';
 import './styles/tokens.css';
 import './styles/base.css';
-import './styles/global.css'; // >> d-access-kit
+// >> d-access-kit
+import './styles/global.css';
 
 void initTelemetry();
 render(<App />, document.getElementById('app')!);
