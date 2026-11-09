@@ -16,7 +16,6 @@
       "sponsor": "dash0",
       "kind": "trace",
       "label": "POST /api/translate with GenAI span (kc.translate.request)",
-      "ref": "api/src/routes/translate.ts",
       "live": "promise:P5"
     },
     {
