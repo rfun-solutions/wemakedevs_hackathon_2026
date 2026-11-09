@@ -78,6 +78,15 @@ test.describe('home', () => {
     await expect(next).toHaveAttribute('href', '/agenda');
   });
 
+  test('Next up says Happening now for a session in progress', async ({ page }) => {
+    const s = futureSession();
+    s.startsAt = new Date(Date.now() - 10 * 60_000).toISOString();
+    s.endsAt = new Date(Date.now() + 20 * 60_000).toISOString();
+    await stubAgenda(page, [s]);
+    await page.goto('/');
+    await expect(page.getByTestId('home-next')).toContainText('Happening now');
+  });
+
   test('200% text: no horizontal scroll, no mid-word breaks', async ({ page }) => {
     await stubAgenda(page, [futureSession()]);
     await page.goto('/');

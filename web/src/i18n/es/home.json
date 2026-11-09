@@ -14,5 +14,7 @@
   "app.home.tile.threads": "Hilos",
   "app.home.tile.threads.desc": "Tu día, todo conectado",
   "app.home.tile.status": "Estado",
-  "app.home.tile.status.desc": "¿La app funciona bien?"
+  "app.home.tile.status.desc": "¿La app funciona bien?",
+  "app.home.next.now": "Ahora mismo",
+  "app.home.next.loading": "Revisando tu agenda…"
 }

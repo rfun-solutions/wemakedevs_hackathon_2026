@@ -14,5 +14,7 @@
   "app.home.tile.threads": "السلاسل",
   "app.home.tile.threads.desc": "يومك، مترابط بالكامل",
   "app.home.tile.status": "الحالة",
-  "app.home.tile.status.desc": "هل يعمل التطبيق جيدًا؟"
+  "app.home.tile.status.desc": "هل يعمل التطبيق جيدًا؟",
+  "app.home.next.now": "يحدث الآن",
+  "app.home.next.loading": "جارٍ التحقق من جدولك…"
 }
