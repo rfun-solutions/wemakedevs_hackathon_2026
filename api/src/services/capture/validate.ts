@@ -123,6 +123,7 @@ export function validatePromise(raw: unknown): Result<PromiseInput> {
   let due: string | null = null;
   if (raw.due !== undefined && raw.due !== null) {
     const ms = typeof raw.due === 'string' && DATE_RE.test(raw.due) ? Date.parse(raw.due) : NaN;
+    // Round-trip so days that roll over (2026-02-30) are a 400, not a 500 from Postgres.
     if (Number.isNaN(ms) || new Date(ms).toISOString().slice(0, 10) !== raw.due)
       return fail('due must be a YYYY-MM-DD date');
     due = raw.due as string;
