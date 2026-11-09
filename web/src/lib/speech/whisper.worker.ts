@@ -20,6 +20,7 @@ async function load(): Promise<void> {
   const started = performance.now();
   const bytesByFile = new Map<string, number>();
   const loadedByFile = new Map<string, number>();
+  let lastProgressBucket = -1;
   const progress_callback = (p: {
     status: string;
     file?: string;
@@ -30,7 +31,14 @@ async function load(): Promise<void> {
       bytesByFile.set(p.file, p.total);
       loadedByFile.set(p.file, p.loaded ?? 0);
       const sum = (m: Map<string, number>) => [...m.values()].reduce((a, b) => a + b, 0);
-      post({ type: 'progress', loaded: sum(loadedByFile), total: sum(bytesByFile) });
+      const loaded = sum(loadedByFile);
+      const total = sum(bytesByFile);
+      const percent = total > 0 ? Math.min(100, Math.floor((loaded / total) * 100)) : 0;
+      const bucket = Math.floor(percent / 10);
+      if (bucket > lastProgressBucket) {
+        lastProgressBucket = bucket;
+        post({ type: 'progress', loaded, total });
+      }
     }
   };
   let backend: 'webgpu' | 'wasm' = 'wasm';

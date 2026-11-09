@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fetchCaptionsHealth } from './health';
+import { span } from './telemetry';
+import { fetchCaptionsHealth, HEALTH_TIMEOUT_MS } from './health';
 
 const json = (b: unknown, status = 200) =>
   Promise.resolve(new Response(JSON.stringify(b), { status }));
@@ -55,14 +56,23 @@ describe('fetchCaptionsHealth', () => {
       ),
     ).toEqual(none);
   });
-  it('times out after the given limit', async () => {
-    const hang = ((_: string, init?: RequestInit) =>
-      new Promise((_res, rej) =>
-        init?.signal?.addEventListener('abort', () => rej(new Error('abort'))),
-      )) as unknown as typeof fetch;
-    expect(await fetchCaptionsHealth('desktop', hang, 20)).toEqual({
-      fasterEngine: null,
-      lagging: false,
-    });
+  it('times out even when fetch ignores abort and records the result', async () => {
+    vi.useFakeTimers();
+    const spanSpy = vi.spyOn(span, 'healthFetch');
+    let signal: AbortSignal | undefined;
+    const hang = ((_url: string, init?: RequestInit) => {
+      signal = init?.signal ?? undefined;
+      return new Promise<Response>(() => undefined);
+    }) as typeof fetch;
+    try {
+      const pending = fetchCaptionsHealth('desktop', hang, HEALTH_TIMEOUT_MS);
+      await vi.advanceTimersByTimeAsync(HEALTH_TIMEOUT_MS);
+      expect(await pending).toEqual({ fasterEngine: null, lagging: false });
+      expect(signal?.aborted).toBe(true);
+      expect(spanSpy).toHaveBeenCalledWith(expect.objectContaining({ outcome: 'timeout' }));
+    } finally {
+      vi.useRealTimers();
+      spanSpy.mockRestore();
+    }
   });
 });

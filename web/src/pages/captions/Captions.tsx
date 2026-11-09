@@ -59,10 +59,19 @@ export function Captions() {
   const [consentAsk, setConsentAsk] = useState<((ok: boolean) => void) | null>(null);
   const session = useRef<CaptionSession | null>(null);
   const abort = useRef<AbortController | null>(null);
+  const mounted = useRef(true);
+  const lastProgressBucket = useRef(-1);
   const dialog = useRef<HTMLDialogElement>(null);
   const typedInput = useRef<HTMLInputElement>(null);
 
-  useEffect(() => () => session.current?.stop(), []);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      abort.current?.abort();
+      session.current?.stop();
+    };
+  }, []);
   useEffect(() => {
     const d = dialog.current;
     if (!d) return;
@@ -70,7 +79,8 @@ export function Captions() {
     if (!consentAsk && d.open) d.close();
   }, [consentAsk]);
 
-  const onSegment = (seg: CaptionSegment) =>
+  const onSegment = (seg: CaptionSegment) => {
+    if (!mounted.current) return;
     setLines((prev) => {
       const i = prev.findIndex((l) => l.id === seg.id);
       const next: Line = { id: seg.id, kind: 'caption', text: seg.text, final: seg.final };
@@ -79,13 +89,28 @@ export function Captions() {
       copy[i] = next;
       return copy;
     });
+  };
 
   const onStatus = (s: CaptionStatus) => {
+    if (!mounted.current) return;
     if (s.type === 'engine') setEngine(s.engine);
     if (s.type === 'switched') setEngine(s.to);
-    if (s.type === 'downloading') setDownloading(true);
-    if (s.type === 'engine' || s.type === 'download_cancelled' || s.type === 'gave_up')
+    if (s.type === 'downloading') {
+      setDownloading(true);
+      const percent = s.total > 0 ? Math.min(100, Math.round((s.loaded / s.total) * 100)) : 0;
+      const bucket = Math.floor(percent / 10);
+      if (bucket <= lastProgressBucket.current) return;
+      lastProgressBucket.current = bucket;
+    }
+    if (
+      s.type === 'engine' ||
+      s.type === 'switched' ||
+      s.type === 'download_cancelled' ||
+      s.type === 'gave_up'
+    ) {
       setDownloading(false);
+      lastProgressBucket.current = -1;
+    }
     if (s.type === 'unsupported') setTypedMode(true);
     const m = statusMessage(s);
     if (m) setMessage(m);
@@ -100,6 +125,10 @@ export function Captions() {
       signal: abort.current.signal,
       requestConsent: () => new Promise<boolean>((resolve) => setConsentAsk(() => resolve)),
     });
+    if (!mounted.current) {
+      s.stop();
+      return;
+    }
     setStarting(false);
     setDownloading(false);
     session.current = s;

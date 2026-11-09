@@ -1,8 +1,10 @@
 import { getDeviceId } from '../device';
+import { span } from './telemetry';
 import type { DeviceClass, EngineId } from './types';
 
 export const SLI_URL = '/api/captions/sli';
 export const MAX_SAMPLES = 20;
+export const SLI_TIMEOUT_MS = 1500;
 const MAX_SAMPLE_MS = 120_000;
 
 export interface ReporterOptions {
@@ -43,17 +45,36 @@ export function createSliReporter(opts: ReporterOptions): SliReporter {
     batch = [];
     batchEngine = null;
     const f = opts.fetchFn ?? globalThis.fetch;
+    const started = performance.now();
+    const ctrl = new AbortController();
+    let timeout: ReturnType<typeof setTimeout> | undefined;
     try {
-      void Promise.resolve(
+      const request = Promise.resolve(
         f(SLI_URL, {
           method: 'POST',
           keepalive: true,
           headers: { 'Content-Type': 'application/json', 'X-Device-Id': getDeviceId() },
           body,
+          signal: ctrl.signal,
         }),
-      ).catch(() => undefined); // telemetry must never break captions
+      ).then(
+        () => 'ok' as const,
+        () => 'error' as const,
+      );
+      const timedOut = new Promise<'timeout'>((resolve) => {
+        timeout = setTimeout(() => {
+          ctrl.abort();
+          resolve('timeout');
+        }, SLI_TIMEOUT_MS);
+      });
+      void Promise.race([request, timedOut])
+        .then((outcome) => span.sliPost({ outcome, ms: Math.round(performance.now() - started) }))
+        .finally(() => {
+          if (timeout) clearTimeout(timeout);
+        });
     } catch {
-      /* ignore */
+      if (timeout) clearTimeout(timeout);
+      span.sliPost({ outcome: 'error', ms: Math.round(performance.now() - started) });
     }
   }
 

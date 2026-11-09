@@ -120,6 +120,8 @@ export async function startCaptionsWith(
 
   let stopped = false;
   let current: Engine | null = null;
+  let pending: EngineId | null = null;
+  let consentDeclined = false;
   const session: CaptionSession = {
     supported: true,
     stop() {
@@ -133,12 +135,13 @@ export async function startCaptionsWith(
   const sli = createSliMonitor(() => order.some((e) => e !== session.engine));
 
   function callbacks(id: EngineId): EngineCallbacks {
+    const accepts = () => !stopped && (session.engine === id || pending === id);
     return {
       onSegment: (seg) => {
-        if (!stopped && session.engine === id) onSegment(seg);
+        if (accepts()) onSegment(seg);
       },
       onLag: (ms) => {
-        if (stopped || session.engine !== id) return;
+        if (!accepts() || session.engine !== id) return;
         metric.lag(ms, id);
         reporter.add(id, ms);
         const action = sli.record(ms);
@@ -146,7 +149,7 @@ export async function startCaptionsWith(
         else if (action === 'switch') void switchEngine('slow');
       },
       onGiveUp: (reason) => {
-        if (!stopped && session.engine === id) status({ type: 'gave_up', reason });
+        if (accepts()) status({ type: 'gave_up', reason });
       },
     };
   }
@@ -157,8 +160,12 @@ export async function startCaptionsWith(
     try {
       if (id === 'whisper') {
         if (!deps.hasConsent()) {
+          if (consentDeclined) return false;
           const ok = (await options.requestConsent?.()) === true;
-          if (!ok) return false;
+          if (!ok) {
+            consentDeclined = true;
+            return false;
+          }
           deps.saveConsent();
         }
         engine = deps.makeWhisper(callbacks(id), {
@@ -168,17 +175,20 @@ export async function startCaptionsWith(
       } else {
         engine = deps.makeWebSpeech(callbacks(id));
       }
-      session.engine = id; // set before start so early callbacks pass the guard
+      pending = id;
       await engine.start();
     } catch {
+      pending = null;
       if (options.signal?.aborted) status({ type: 'download_cancelled' });
       return false;
     }
+    pending = null;
     if (stopped) {
       engine.stop();
       return true;
     }
     current = engine;
+    session.engine = id;
     return true;
   }
 

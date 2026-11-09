@@ -142,6 +142,38 @@ describe('Captions screen', () => {
     expect(screen.getByRole('status').textContent).toMatch(/slow for everyone/);
   });
 
+  it('coarsens download progress updates in the polite status region', async () => {
+    render(<Captions />);
+    await turnOn();
+    act(() => onStatus({ type: 'downloading', loaded: 1, total: 100 }));
+    const status = screen.getByRole('status');
+    expect(status.textContent).toBe('Downloading the captions model: 1%');
+    act(() => onStatus({ type: 'downloading', loaded: 9, total: 100 }));
+    expect(status.textContent).toBe('Downloading the captions model: 1%');
+    act(() => onStatus({ type: 'downloading', loaded: 11, total: 100 }));
+    expect(status.textContent).toBe('Downloading the captions model: 11%');
+  });
+
+  it('clears the download cancel button after switching engines', async () => {
+    render(<Captions />);
+    await turnOn();
+    act(() => onStatus({ type: 'downloading', loaded: 10, total: 100 }));
+    expect(screen.getByRole('button', { name: 'Cancel download' })).toBeTruthy();
+    act(() => onStatus({ type: 'switched', from: 'whisper', to: 'webspeech' }));
+    expect(screen.queryByRole('button', { name: 'Cancel download' })).toBeNull();
+  });
+
+  it('stops a session that resolves after the captions screen unmounts', async () => {
+    let resolveStart!: (value: { supported: boolean; stop: () => void }) => void;
+    startCaptions.mockImplementation(() => new Promise((resolve) => (resolveStart = resolve)));
+    const { unmount } = render(<Captions />);
+    fireEvent.click(screen.getByRole('button', { name: 'Turn on captions' }));
+    await waitFor(() => expect(startCaptions).toHaveBeenCalled());
+    unmount();
+    await act(async () => resolveStart({ supported: true, stop }));
+    expect(stop).toHaveBeenCalledTimes(1);
+  });
+
   it('unsupported shows the typed-caption field feeding the same log', async () => {
     startCaptions.mockImplementation(async (_s, opts) => {
       opts.onStatus({ type: 'unsupported' });
