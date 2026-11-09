@@ -1,0 +1,161 @@
+/* How it works page. Colours, type and spacing come from tokens.css (copied next to this file). */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+:root {
+  color-scheme: light dark;
+}
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  overflow-wrap: anywhere;
+}
+.site-header,
+main,
+.site-footer {
+  max-inline-size: 46rem;
+  margin-inline: auto;
+  padding-inline: var(--space-4);
+}
+h1 {
+  font-size: var(--text-2xl);
+  line-height: var(--leading-tight);
+}
+h2 {
+  margin-block-start: var(--space-6);
+  font-size: var(--text-xl);
+  line-height: var(--leading-tight);
+}
+h3 {
+  margin-block: 0 var(--space-2);
+  font-size: var(--text-lg);
+  line-height: var(--leading-tight);
+}
+h4 {
+  margin-block: var(--space-3) var(--space-1);
+  font-size: var(--text-md);
+  color: var(--color-text-muted);
+}
+a {
+  color: var(--color-link);
+}
+:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+.skip-link {
+  position: absolute;
+  inset-inline-start: var(--space-2);
+  inset-block-start: -100px;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-surface);
+}
+.skip-link:focus {
+  inset-block-start: var(--space-2);
+}
+.promises,
+.chips,
+.entry ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.promises li {
+  padding-block: var(--space-2);
+  border-block-start: 1px solid var(--color-border);
+}
+.entry {
+  margin-block: var(--space-4);
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--elevation-1);
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.chip {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-sm);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-full);
+}
+.tech {
+  padding-block: var(--space-2);
+  border-block-start: 1px solid var(--color-border);
+}
+.tech a {
+  display: inline-block;
+  min-block-size: var(--target-min);
+}
+code {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+.note {
+  display: block;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+.button {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--target-comfort);
+  padding-inline: var(--space-4);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-on-accent);
+  background: var(--color-accent);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+}
+.site-footer {
+  padding-block: var(--space-6);
+  font-size: var(--text-sm);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #12163a;
+    --color-surface: #1b2352;
+    --color-text: #fbf8f1;
+    --color-text-muted: #cfd2ea;
+    --color-link: #b4c2ff;
+    --color-border: #3d4478;
+    --color-border-strong: #9aa0cf;
+    --color-focus-ring: #7fe0e8;
+  }
+}
+
+@media print {
+  :root {
+    --color-bg: #fff;
+    --color-surface: #fff;
+    --color-text: #000;
+    --color-text-muted: #222;
+    --color-link: #000;
+  }
+  .skip-link,
+  #live-title,
+  #live-title + p,
+  #live-title + p + p {
+    display: none;
+  }
+  .entry {
+    break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #000;
+  }
+  a[href^='http']::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.8em;
+  }
+}

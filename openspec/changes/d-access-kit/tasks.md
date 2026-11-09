@@ -15,41 +15,41 @@ Edits: `web/index.html` (pre-paint prefs script), app shell (mount live regions)
 ## 1. Design direction and tokens (PR 1, merge first)
 - [ ] 1.1 (D0, outside the repo in `.scratch/kubecompanion/design/`, from 11:00) Run the Impeccable skill for KubeCompanion (mobile-first, Kay's context: bright screen, noisy hall, one-handed). Produce 2-3 directions (palette, type pairing, density, shape) with a small preview each; present them and wait for the user's pick (target about 11:05, decision by 11:20, neutral default); record the pick as token names and values, and hand the names to C0w by 11:30
 - [x] 1.2 Apply the picked direction in `tokens.css` by changing values only; the names were fixed in PR 0 (task 0.2a)
-- [ ] 1.3 Write `global.css` (reset, base type, focus-visible, `.btn`, `.visually-hidden`, logical properties only)
+- [x] 1.3 Write `global.css` (reset, base type, focus-visible, `.btn`, `.visually-hidden`, logical properties only)
 - [x] 1.4 `web/src/styles/token-pairs.ts` (`TOKEN_PAIRS`); unit test: contrast ratios of token pairs for default and high-contrast sets, failure message names the pair, the ratio, the minimum and the computed colours
-- [ ] 1.5 Confirm C0's lint config (which installs and enables `eslint-plugin-jsx-a11y`; it works with Preact JSX) flags `div`/`span` click handlers; add a lint fixture test. Only tighten C0's rules, never remove them
-- [ ] 1.6 Write `docs/accessibility.md` (rules, checklist, token and `t()` usage)
+- [x] 1.5 Confirm C0's lint config (which installs and enables `eslint-plugin-jsx-a11y`; it works with Preact JSX) flags `div`/`span` click handlers; add a lint fixture test. Only tighten C0's rules, never remove them
+- [x] 1.6 Write `docs/accessibility.md` (rules, checklist, token and `t()` usage)
 
 ## 2. i18n framework (PR 1)
-- [ ] 2.1 Implement `t()`, `useLang()`, `setLang()`, EN fallback, `{param}` interpolation, `Intl` helpers with explicit time zone; set `<html lang dir>`
-- [ ] 2.2 Registry loading via `import.meta.glob` of `web/src/i18n/<lang>/*.json`, merged by key, never by file name (split agents own separate files such as `access-cards.json`, `translate.json`, `status-health.json`); unit test: a key defined in two files fails
-- [ ] 2.3 Language switcher in Settings; persist; announce change; AI-assisted disclosure text
-- [ ] 2.4 Claude-assisted strings in `access.json`: EN and ES complete for D1's `access.*` keys (C0 ships EN/ES `app.*`); PT-BR and AR for `app.*` and D1's `access.*` keys (display settings, promises). Cards, badge and calm-places strings are D2's, in `access-cards.json`
-- [ ] 2.5 Unit tests: fallback, missing key, interpolation, ES-covers-EN, RTL attribute switching
+- [x] 2.1 Implement `t()`, `useLang()`, `setLang()`, EN fallback, `{param}` interpolation, `Intl` helpers with explicit time zone; set `<html lang dir>`
+- [x] 2.2 Registry loading via `import.meta.glob` of `web/src/i18n/<lang>/*.json`, merged by key, never by file name (split agents own separate files such as `access-cards.json`, `translate.json`, `status-health.json`); unit test: a key defined in two files fails
+- [x] 2.3 Language switcher in Settings; persist; announce change; AI-assisted disclosure text
+- [x] 2.4 Claude-assisted strings in `access.json`: EN and ES complete for D1's `access.*` keys (C0 ships EN/ES `app.*`); PT-BR and AR for `app.*` and D1's `access.*` keys (display settings, promises). Cards, badge and calm-places strings are D2's, in `access-cards.json`
+- [x] 2.5 Unit tests: fallback, missing key, interpolation, ES-covers-EN, RTL attribute switching
 
 ## 3. Display modes and a11y plumbing (PR 2)
-- [ ] 3.1 `prefs/display.ts`: type scale, font, contrast, motion; export `PREFS_STORAGE_KEYS` (F's Synthetic Kay seeds through it); localStorage in try/catch; honour `prefers-contrast` and `prefers-reduced-motion` as defaults
-- [ ] 3.2 Pre-paint inline script in `index.html`
-- [ ] 3.3 Self-host Atkinson Hyperlegible (woff2 plus OFL licence), lazy load on selection
-- [ ] 3.4 Settings screen controls (slider, three toggles) with labels, keyboard support and announcements; insert its route and nav line under the `// >> d-access-kit` marker
-- [ ] 3.5 `announce()` helper and shell live regions
-- [ ] 3.6 Unit tests for prefs and announce; Playwright mobile: 200% has no horizontal scroll, prefs persist across reload, storage-blocked fallback
+- [x] 3.1 `prefs/display.ts`: type scale, font, contrast, motion; export `PREFS_STORAGE_KEYS` (F's Synthetic Kay seeds through it); localStorage in try/catch; honour `prefers-contrast` and `prefers-reduced-motion` as defaults
+- [x] 3.2 Pre-paint inline script in `index.html`
+- [x] 3.3 Self-host Atkinson Hyperlegible (woff2 plus OFL licence), lazy load on selection
+- [x] 3.4 Settings screen controls (slider, three toggles) with labels, keyboard support and announcements; insert its route and nav line under the `// >> d-access-kit` marker
+- [x] 3.5 `announce()` helper and shell live regions
+- [x] 3.6 Unit tests for prefs and announce; Playwright mobile: 200% has no horizontal scroll, prefs persist across reload, storage-blocked fallback
 
 ## 4. Communication cards and badge (PR 3)
-- [ ] 4.1 Cards screen with presets from i18n (`access.card.*` in `web/src/i18n/{en,es,pt-BR,ar}/access-cards.json`), custom text card, card-language selector; insert its route and nav line under the `// >> d-access-kit-cards` marker
-- [ ] 4.2 `<ShowToPerson>`: full-screen, fit-text, wake lock when available, Close and Escape, focus return, `lang` tagging
-- [ ] 4.3 Optional TTS with feature detection and voice picking by language; no autoplay
-- [ ] 4.4 Badge screen: pronouns, name, preference toggles, localStorage `kc.badge.v1`, show in `<ShowToPerson>`; strings in `access-cards.json` (EN, ES, PT-BR, AR); route and nav line under `// >> d-access-kit-cards`
+- [x] 4.1 Cards screen with presets from i18n (`access.card.*` in `web/src/i18n/{en,es,pt-BR,ar}/access-cards.json`), custom text card, card-language selector; insert its route and nav line under the `// >> d-access-kit-cards` marker
+- [x] 4.2 `<ShowToPerson>`: full-screen, fit-text, wake lock when available, Close and Escape, focus return, `lang` tagging
+- [x] 4.3 Optional TTS with feature detection and voice picking by language; no autoplay
+- [x] 4.4 Badge screen: pronouns, name, preference toggles, localStorage `kc.badge.v1`, show in `<ShowToPerson>`; strings in `access-cards.json` (EN, ES, PT-BR, AR); route and nav line under `// >> d-access-kit-cards`
 - [ ] 4.5 Browser telemetry events `kc.access.card_shown`, `kc.access.display_mode_changed`, `kc.access.lang_changed` with no free text or badge data
-- [ ] 4.6 Playwright mobile (iPhone 15 and Pixel 7): open preset, custom card, close restores focus, badge persists, no network request carries badge fields
-- [ ] 4.7 axe matrix: shell, Cards, Settings, Badge in default, 200%, high contrast and AR RTL; confirm the `a11y` job runs it
+- [x] 4.6 Playwright mobile (iPhone 15 and Pixel 7): open preset, custom card, close restores focus, badge persists, no network request carries badge fields
+- [x] 4.7 axe matrix: shell, Cards, Settings, Badge in default, 200%, high contrast and AR RTL; confirm the `a11y` job runs it
 - [ ] 4.8 Manual check on a real iPhone in Safari: card legibility, TTS, 200% type
-- [ ] 4.9 Stutter preset `access.card.stutter` ("I stutter. Please give me time to finish.") in EN and ES (PT-BR, AR smoke) in `access-cards.json`; add it to the Playwright preset test
-- [ ] 4.10 Calm places: `calm-places.ts` and `CalmPlaces.tsx` exactly as design "Calm places", route `/calm` and one nav line under `// >> d-access-kit-cards`, `access.calm.*` EN and ES in `access-cards.json`, source link and checked date; event `kc.access.calm_places_viewed`; Playwright mobile (iPhone 15, Pixel 7): 260A listed, offline reload still lists it, no request carries location; axe clean
-- [ ] 4.11 Add your registry entry: `web/src/under-the-hood/entries/d-access-kit.json` (cards, display modes, promises, calm places; tech: `inclusion.md` IN-2, G5 token rule, `a11y` axe check, Synthetic Kay `live: promise:P3` and `promise:P4`) with `access.hood.*` EN and ES in `access-cards.json`
+- [x] 4.9 Stutter preset `access.card.stutter` ("I stutter. Please give me time to finish.") in EN and ES (PT-BR, AR smoke) in `access-cards.json`; add it to the Playwright preset test
+- [x] 4.10 Calm places: `calm-places.ts` and `CalmPlaces.tsx` exactly as design "Calm places", route `/calm` and one nav line under `// >> d-access-kit-cards`, `access.calm.*` EN and ES in `access-cards.json`, source link and checked date; event `kc.access.calm_places_viewed`; Playwright mobile (iPhone 15, Pixel 7): 260A listed, offline reload still lists it, no request carries location; axe clean
+- [x] 4.11 Add your registry entry: `web/src/under-the-hood/entries/d-access-kit.json` (cards, display modes, promises, calm places; tech: `inclusion.md` IN-2, G5 token rule, `a11y` axe check, Synthetic Kay `live: promise:P3` and `promise:P4`) with `access.hood.*` EN and ES in `access-cards.json`
 
 ## 5. Staged accessibility regression (G5, after group 4; branch only; THE on-stage Gitar fix, decided 2026-11-08; G3 is a prepared evidence PR)
-- [ ] 5.1 Make the axe e2e failure in `web/e2e/access/` print the failing element's `TOKEN_PAIRS` name and computed colours
+- [x] 5.1 Make the axe e2e failure in `web/e2e/access/` print the failing element's `TOKEN_PAIRS` name and computed colours
 - [ ] 5.2 Create branch `bugfix/KC-<n>-card-contrast` from `main`: change one `<ShowToPerson>` token so the pair is 3.9:1; confirm locally that the contrast test and `a11y` fail with the token named; push the branch, do NOT open the PR. Push an identical second branch `bugfix/KC-<n>-card-contrast-rehearsal` for G's dress rehearsal, so the stage branch is still broken on stage
 - [ ] 5.3 Hand the branch name to G's `docs/runbooks/a11y-regression.md`; after the stage run, confirm Gitar's fix touched only `tokens.css`
 

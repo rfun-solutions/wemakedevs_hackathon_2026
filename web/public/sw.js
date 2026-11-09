@@ -1,15 +1,16 @@
 /* KubeCompanion service worker (hand-written, no Workbox).
    precache shell on install; cache-first for hashed assets; network-first for navigations with an
    offline fallback; /api/* and *.dash0.com are never touched. */
-importScripts('/sw-should-handle.js');
+importScripts('/sw-should-handle.js', '/sw-capture-sync.js');
 
-var CACHE = 'kc-shell-v1';
+var CACHE = 'kc-shell-v2';
 var SHELL = [
   '/',
   '/offline.html',
   '/manifest.webmanifest',
   '/icons/icon.svg',
   '/sw-should-handle.js',
+  '/sw-capture-sync.js',
 ];
 
 self.addEventListener('install', function (event) {
@@ -99,6 +100,21 @@ self.addEventListener('fetch', function (event) {
   event.respondWith(
     caches.match(req).then(function (hit) {
       return hit || fetch(req);
+    }),
+  );
+});
+
+// Background Sync (Chromium; absent on iOS Safari, where the page flushes on online / foreground / start).
+self.addEventListener('sync', function (event) {
+  if (event.tag !== 'kc-capture-flush') return;
+  event.waitUntil(
+    kcCaptureFlush(self.indexedDB, self.fetch.bind(self)).then(function (synced) {
+      if (!synced) return;
+      return self.clients.matchAll({ type: 'window' }).then(function (clients) {
+        clients.forEach(function (c) {
+          c.postMessage({ type: 'kc-capture-flushed' });
+        });
+      });
     }),
   );
 });

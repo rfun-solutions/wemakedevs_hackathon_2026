@@ -1,0 +1,25 @@
+# Dash0 synthetic check: public URL must answer /healthz with 200 and body "ok".
+# URL is the team host from deploy/httproute.yaml. Applied by observability.yml.
+apiVersion: operator.dash0.com/v1alpha1
+kind: Dash0SyntheticCheck
+metadata:
+  name: kubecompanion-healthz
+spec:
+  enabled: true
+  plugin:
+    kind: http
+    spec:
+      request:
+        method: get
+        url: https://kubecompanion2026.cnh.radarhq.io/healthz
+        redirects: follow
+      assertions:
+        criticalAssertions:
+          - kind: status_code
+            spec: { operator: is, value: '200' }
+          - kind: text_body
+            spec: { operator: contains, value: ok }
+  schedule:
+    interval: 1m
+    locations: [de-frankfurt, us-oregon]
+    strategy: all_locations

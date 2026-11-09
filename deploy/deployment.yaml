@@ -48,7 +48,20 @@ spec:
             - name: KC_DEMO_SEED
               value: "0"
             # >> f-observability-product
+            - name: CHAOS_FILE
+              value: /etc/kc-chaos/flags.json
             # >> c-evening-threads
+            - name: THREADS_MODEL
+              value: "claude-haiku-5-5"
+            - name: THREADS_DAILY_CAP_USD
+              value: "0.05"
+            # Optional key of kc-secrets (AGENTS.md Secrets); the cron path stays 401 until it is set.
+            - name: THREADS_CRON_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: kc-secrets
+                  key: THREADS_CRON_TOKEN
+                  optional: true
           resources:
             requests:
               cpu: 100m
@@ -58,6 +71,9 @@ spec:
               memory: 384Mi
           volumeMounts:
             # >> f-observability-product
+            - name: kc-chaos
+              mountPath: /etc/kc-chaos
+              readOnly: true
             # >> f-observability-product-health
           readinessProbe:
             httpGet:
@@ -79,4 +95,8 @@ spec:
       # Pod-level volumes (each entry goes under its own marker).
       volumes:
         # >> f-observability-product
+        - name: kc-chaos
+          configMap:
+            name: kc-chaos
+            optional: true
         # >> f-observability-product-health

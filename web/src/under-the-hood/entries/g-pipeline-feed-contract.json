@@ -1,0 +1,27 @@
+{
+  "id": "g-pipeline-feed-contract",
+  "order": 3,
+  "titleKey": "pipeline.hood.title",
+  "whatKey": "pipeline.hood.what",
+  "promises": [],
+  "tech": [
+    {
+      "sponsor": "gitar",
+      "kind": "check",
+      "label": "feed-contract check: schema and mapper tests against the schedule feed",
+      "ref": ".github/workflows/feed-contract.yml"
+    },
+    {
+      "sponsor": "gitar",
+      "kind": "rule",
+      "label": "rules-from-prod: HP-1 and CAP-1, p95 from fixture data until the production rules run",
+      "ref": ".gitar/review/hot-paths.md"
+    },
+    {
+      "sponsor": "gitar",
+      "kind": "workflow",
+      "label": "rules-from-prod generator",
+      "ref": "scripts/rules-from-prod.mjs"
+    }
+  ]
+}

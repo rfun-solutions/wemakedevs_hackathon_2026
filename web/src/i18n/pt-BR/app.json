@@ -1,0 +1,14 @@
+{
+  "app.name": "KubeCompanion",
+  "app.skip": "Pular para o conteúdo principal",
+  "app.nav.label": "Principal",
+  "app.nav.home": "Início",
+  "app.home.title": "Boas-vindas",
+  "app.home.intro": "Seu companheiro de conferência. Ele continua funcionando quando a rede cai.",
+  "app.lang.switch": "Português (Brasil)",
+  "app.offline.notice": "Você está sem conexão. O que você salvar fica neste celular até a rede voltar.",
+  "app.notFound.title": "Página não encontrada",
+  "app.notFound.back": "Voltar ao início",
+  "app.hood.title": "Base sempre ativa",
+  "app.hood.what": "O app carrega em qualquer celular, funciona sem conexão, e cada toque é rastreado para provarmos que continua rápido."
+}

@@ -1,0 +1,39 @@
+{
+  "id": "d-access-kit",
+  "order": 2,
+  "titleKey": "access.hood.title",
+  "whatKey": "access.hood.what",
+  "promises": ["P3", "P4"],
+  "tech": [
+    {
+      "sponsor": "gitar",
+      "kind": "rule",
+      "label": "inclusion.md IN-2 (every key in en and es)",
+      "ref": ".gitar/review/inclusion.md"
+    },
+    {
+      "sponsor": "gitar",
+      "kind": "rule",
+      "label": "accessibility.md A11Y-2 (fix the token, never the test)",
+      "ref": ".gitar/review/accessibility.md"
+    },
+    {
+      "sponsor": "gitar",
+      "kind": "check",
+      "label": "a11y axe check on Cards, Badge, Calm places",
+      "ref": "web/e2e/access/cards.spec.ts"
+    },
+    {
+      "sponsor": "dash0",
+      "kind": "check",
+      "label": "Synthetic Kay: 200% type and high contrast (P3)",
+      "live": "promise:P3"
+    },
+    {
+      "sponsor": "dash0",
+      "kind": "check",
+      "label": "Synthetic Kay: Spanish interface (P4)",
+      "live": "promise:P4"
+    }
+  ]
+}

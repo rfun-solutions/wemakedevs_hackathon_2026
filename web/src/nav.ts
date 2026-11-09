@@ -9,11 +9,22 @@ export interface NavItem {
 export const navItems: NavItem[] = [
   { path: '/', labelKey: 'app.nav.home' },
   // >> d-access-kit
+  { path: '/settings', labelKey: 'access.nav.settings' },
   // >> d-access-kit-cards
+  { path: '/cards', labelKey: 'access.nav.cards' },
+  { path: '/badge', labelKey: 'access.nav.badge' },
+  { path: '/calm', labelKey: 'access.nav.calm' },
   // >> a-schedule-agenda
+  { path: '/schedule', labelKey: 'schedule.nav.schedule' },
+  { path: '/agenda', labelKey: 'schedule.nav.agenda' },
   // >> b-capture
+  { path: '/capture', labelKey: 'capture.nav' },
   // >> f-observability-product
+  { path: '/status', labelKey: 'status.nav' },
   // >> e-captions-translation
+  { path: '/captions', labelKey: 'captions.nav' },
   // >> c-evening-threads
+  { path: '/threads', labelKey: 'threads.nav' },
   // >> h-under-the-hood
+  { path: '/under-the-hood', labelKey: 'hood.nav' },
 ];

@@ -1,0 +1,9 @@
+{
+  "status.agent0.title": "Lo que ve nuestro asistente de IA",
+  "status.agent0.line": "Agent0, hace {ago}: {text}",
+  "status.agent0.label": "Generado por IA",
+  "status.agent0.none": "La explicación no está disponible ahora mismo.",
+  "status.agent0.ago.s": "{n} s",
+  "status.agent0.ago.m": "{n} min",
+  "status.agent0.ago.h": "{n} h"
+}
