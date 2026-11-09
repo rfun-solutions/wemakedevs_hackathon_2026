@@ -1,0 +1,38 @@
+name: build-image
+permissions:
+  contents: read
+on:
+  pull_request:
+  merge_group:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  build-image:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: docker/setup-buildx-action@v4
+      - name: Build image (no push; push stays in deploy.yaml)
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: false
+          load: true
+          tags: kubecompanion:ci
+          build-args: APP_VERSION=ci
+      - name: Token-leak guard (no secret values baked into the image)
+        run: |
+          set -euo pipefail
+          # Only an ingest-only Dash0 token may ship in the web bundle (VITE_DASH0_INGEST_TOKEN).
+          # Server secrets must never appear in the image filesystem.
+          cid=$(docker create kubecompanion:ci)
+          mkdir -p image-fs
+          docker export "$cid" | tar -x -C image-fs --exclude='node_modules' 2>/dev/null || true
+          docker rm "$cid" >/dev/null
+          if grep -rIlE 'sk-ant-[A-Za-z0-9_-]{10,}|ANTHROPIC_API_KEY=[^[:space:]]+|DASH0_TOKEN=[^[:space:]]+' image-fs; then
+            echo "::error::Possible secret found in the built image"
+            exit 1
+          fi
+          echo "No secret patterns found in the image."

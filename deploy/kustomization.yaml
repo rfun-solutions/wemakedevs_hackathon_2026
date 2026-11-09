@@ -1,6 +1,7 @@
 # Argo CD deploys this folder to your team's namespace. The GitHub Action
-# sets the image below on every push to main; don't edit newName or newTag
-# by hand.
+# (deploy.yaml) sets the image below on every push to main; the images: block is
+# bot-owned: only the newTag line ever changes, never edit it by hand.
+# resources: entries go directly under your own change's marker (one per change id).
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: team-kubecompanion2026
@@ -8,6 +9,11 @@ resources:
   - deployment.yaml
   - service.yaml
   - httproute.yaml
+  # >> c0-scaffold
+  - postgres.yaml
+  # >> a-schedule-agenda
+  # >> f-observability-product
+  # >> c-evening-threads
 images:
   - name: app
     newName: ghcr.io/rfun-solutions/wemakedevs_hackathon_2026
