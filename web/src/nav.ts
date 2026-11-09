@@ -18,6 +18,7 @@ export const navItems: NavItem[] = [
   { path: '/schedule', labelKey: 'schedule.nav.schedule' },
   { path: '/agenda', labelKey: 'schedule.nav.agenda' },
   // >> b-capture
+  { path: '/capture', labelKey: 'capture.nav' },
   // >> f-observability-product
   { path: '/status', labelKey: 'status.nav' },
   // >> e-captions-translation

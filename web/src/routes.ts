@@ -13,6 +13,7 @@ import { CalmPlaces } from './features/access/CalmPlaces';
 import { Schedule } from './pages/Schedule';
 import { Agenda } from './pages/Agenda';
 // >> import:b-capture
+import { Capture } from './screens/capture/Capture';
 // >> import:f-observability-product
 import { Status } from './screens/status/Status';
 // >> import:e-captions-translation
@@ -39,6 +40,7 @@ export const routes: AppRoute[] = [
   { path: '/schedule', component: Schedule },
   { path: '/agenda', component: Agenda },
   // >> b-capture
+  { path: '/capture', component: Capture },
   // >> f-observability-product
   { path: '/status', component: Status },
   // >> e-captions-translation
