@@ -121,3 +121,15 @@ video {
   min-inline-size: 0;
   overflow-wrap: anywhere;
 }
+
+/* Bottom nav at large text sizes: items size to their label and wrap onto extra rows instead of
+   squeezing to a few pixels (words broke per character at 200%) or overflowing the viewport. */
+.shell-nav ul {
+  flex-wrap: wrap;
+}
+.shell-nav li {
+  flex: 1 1 auto;
+}
+.shell-nav a {
+  text-align: center;
+}
