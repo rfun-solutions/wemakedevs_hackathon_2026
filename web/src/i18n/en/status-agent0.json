@@ -1,0 +1,9 @@
+{
+  "status.agent0.title": "What our AI assistant sees",
+  "status.agent0.line": "Agent0, {ago} ago: {text}",
+  "status.agent0.label": "AI-generated",
+  "status.agent0.none": "Explanation not available right now.",
+  "status.agent0.ago.s": "{n} s",
+  "status.agent0.ago.m": "{n} min",
+  "status.agent0.ago.h": "{n} h"
+}

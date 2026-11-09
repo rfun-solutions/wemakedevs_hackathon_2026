@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>KubeCompanion: how it works</title>
+    <meta
+      name="description"
+      content="Every KubeCompanion feature, what it does for conference attendees, and the Gitar, Dash0 and Radar checks behind it."
+    />
+    <link rel="stylesheet" href="tokens.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <header class="site-header">
+      <h1>How KubeCompanion works</h1>
+      <p>
+        KubeCompanion helps conference attendees who need captions, translation and calm places. Each
+        feature below says what it does and which check backs it, so you can look for yourself.
+      </p>
+    </header>
+    <main id="main" tabindex="-1">
+      <section aria-labelledby="promises-title">
+        <h2 id="promises-title">Our promises to Kay</h2>
+        <p>Kay is a conference attendee. These five promises are what every feature is checked against.</p>
+        <ul id="promises" class="promises"></ul>
+      </section>
+      <section aria-labelledby="features-title">
+        <h2 id="features-title">Features and the checks behind them</h2>
+        <p id="status" role="status">Loading features.</p>
+        <div id="features"></div>
+      </section>
+      <section aria-labelledby="live-title">
+        <h2 id="live-title">See it live</h2>
+        <p>
+          The running app shows live values (promise lights, response times, the last release) on its
+          own Under the hood screen.
+        </p>
+        <p>
+          <a class="button" href="https://kubecompanion2026.cnh.radarhq.io/under-the-hood"
+            >Open the live Under the hood screen</a
+          >
+        </p>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <p>
+        Source:
+        <a href="https://github.com/rfun-solutions/wemakedevs_hackathon_2026">the public repository</a>.
+        Dash0 and Radar items are named, not linked, because they need a sign-in.
+      </p>
+    </footer>
+    <script src="app.js" defer></script>
+  </body>
+</html>
