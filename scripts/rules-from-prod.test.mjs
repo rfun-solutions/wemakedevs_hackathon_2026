@@ -115,7 +115,7 @@ describe('shouldCommit', () => {
     expect(shouldCommit(a, a, true)).toBe(true);
   });
   it('summarize reads routes and breach back from the text', () => {
-    expect(summarize(renderHotPaths(input([['/api/agenda', 2.1], ['/api/notes', 0.8]], [['w', 9000]]), NOW))).toEqual({ routes: ['/api/agenda', '/api/notes'], breached: true });
+    expect(summarize(renderHotPaths(input([['/api/agenda', 2.1], ['/api/notes', 0.8]], [['w', 9000]]), NOW))).toEqual({ routes: ['/api/agenda', '/api/notes'], breached: true, fixture: false });
   });
 });
 
@@ -177,6 +177,30 @@ describe('main', () => {
     await main(['--force'], env, { fetchImpl: fetchOk, now: new Date('2026-11-09T23:52:00Z'), repoRoot: dir });
     expect(fs.readFileSync(outFile(), 'utf8')).toContain('as of 16:52');
     expect(first).toBeGreaterThan(0);
+  });
+  it('caption query failure writes nothing, even when route data is fine', async () => {
+    setup();
+    const f = async (url) => (url.includes('kc_captions') ? status(500) : ok(routesResult([['/api/agenda', 2.1]])));
+    expect(await main([], { DASH0_API_TOKEN: 't' }, { fetchImpl: f, now: NOW, repoRoot: dir })).toBe(0);
+    expect(fs.existsSync(outFile())).toBe(false);
+  });
+  it('all-NaN route series count as no series and write nothing', async () => {
+    setup();
+    const f = async () => ok(routesResult([['/api/agenda', 'NaN']]));
+    expect(await main([], { DASH0_API_TOKEN: 't' }, { fetchImpl: f, now: NOW, repoRoot: dir })).toBe(0);
+    expect(fs.existsSync(outFile())).toBe(false);
+  });
+  it('a non-JSON 200 body is skipped, not thrown', async () => {
+    setup();
+    const f = async () => ({ ok: true, status: 200, json: async () => { throw new SyntaxError('x'); } });
+    expect(await main([], { DASH0_API_TOKEN: 't' }, { fetchImpl: f, now: NOW, repoRoot: dir })).toBe(0);
+    expect(fs.existsSync(outFile())).toBe(false);
+  });
+  it('a live run replaces a fixture file even when the hot set is unchanged', async () => {
+    setup();
+    await main(['--fixture'], {}, { now: NOW, repoRoot: dir });
+    await main([], { DASH0_API_TOKEN: 't' }, { fetchImpl: fetchOk, now: NOW, repoRoot: dir });
+    expect(fs.readFileSync(outFile(), 'utf8')).toContain('Generated from Dash0');
   });
   it('--fixture writes the fixture file with no network', async () => {
     setup();
