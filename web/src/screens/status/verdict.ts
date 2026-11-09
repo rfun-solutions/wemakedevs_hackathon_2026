@@ -23,3 +23,10 @@ export function savedLabel(ms: number | null): { shown: boolean; ms: number | nu
     ? { shown: false, ms: null }
     : { shown: true, ms: Math.round(ms) };
 }
+
+/** "Schedule updated N min ago" label key and params from the feed age in seconds. */
+export function feedLabel(ageS: number | null): { key: string; params?: { min: number } } {
+  if (ageS === null || !Number.isFinite(ageS) || ageS < 0) return { key: 'status.feed.unknown' };
+  if (ageS < 60) return { key: 'status.feed.now' };
+  return { key: 'status.feed.age', params: { min: Math.floor(ageS / 60) } };
+}

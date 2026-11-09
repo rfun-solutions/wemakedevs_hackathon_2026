@@ -10,7 +10,7 @@ export const DEFAULT_CHAOS: ChaosFlags = Object.freeze({
 
 /** Routes (and prefixes) chaos never touches, whatever flags.json says. */
 const PROTECTED_EXACT = ['/healthz', '/readyz', '/api/status', '/api/ping', '/api/translate'];
-const PROTECTED_PREFIX = ['/api/status/', '/api/translate/', '/api/threads', '/api/llm'];
+const PROTECTED_PREFIX = ['/api/status', '/api/translate', '/api/threads', '/api/llm'];
 
 const MAX_LATENCY_MS = 10_000;
 
@@ -53,12 +53,9 @@ export function isRouteKey(key: string): boolean {
 }
 
 export function isProtectedRoute(path: string): boolean {
-  const p = path.split('?')[0].replace(/\/+$/, '') || '/';
+  const p = (path.split('?', 1)[0] ?? '').replace(/\/+$/, '') || '/';
   if (PROTECTED_EXACT.includes(p)) return true;
-  return PROTECTED_PREFIX.some(
-    (prefix) =>
-      (p + '/').startsWith(prefix.endsWith('/') ? prefix : prefix + '/') || p.startsWith(prefix),
-  );
+  return PROTECTED_PREFIX.some((prefix) => p === prefix || p.startsWith(`${prefix}/`));
 }
 
 export function flagsActive(f: ChaosFlags): boolean {
@@ -76,7 +73,7 @@ export function decideInjection(
   path: string,
   rand: () => number = Math.random,
 ): { latencyMs: number; error: boolean } | null {
-  const route = path.split('?')[0];
+  const route = path.split('?', 1)[0] ?? '';
   if (isProtectedRoute(route) || !isRouteKey(route)) return null;
   const f = all[route];
   if (!f || !flagsActive(f)) return null;

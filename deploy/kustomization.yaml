@@ -13,6 +13,7 @@ resources:
   - postgres.yaml
   # >> a-schedule-agenda
   # >> f-observability-product
+  - chaos-configmap.yaml
   # >> c-evening-threads
 images:
   - name: app

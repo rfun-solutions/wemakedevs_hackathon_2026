@@ -23,7 +23,7 @@ export class RollingWindow {
     if (this.buf.length === 0) return null;
     const sorted = [...this.buf].sort((a, b) => a - b);
     const rank = Math.ceil((p / 100) * sorted.length);
-    return sorted[Math.min(sorted.length - 1, Math.max(0, rank - 1))];
+    return sorted[Math.min(sorted.length - 1, Math.max(0, rank - 1))] ?? null;
   }
 
   p95(): number | null {
@@ -73,7 +73,7 @@ export function medianRtt(samples: number[]): number | null {
   const s = samples.filter((n) => Number.isFinite(n) && n >= 0).sort((a, b) => a - b);
   if (!s.length) return null;
   const mid = Math.floor(s.length / 2);
-  return s.length % 2 ? s[mid] : (s[mid - 1] + s[mid]) / 2;
+  return s.length % 2 ? (s[mid] ?? null) : ((s[mid - 1] ?? 0) + (s[mid] ?? 0)) / 2;
 }
 
 /** Validate POST /api/status/rtt body: { rtt_ms: number } within 0..60000. */

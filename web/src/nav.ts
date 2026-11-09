@@ -13,6 +13,7 @@ export const navItems: NavItem[] = [
   // >> a-schedule-agenda
   // >> b-capture
   // >> f-observability-product
+  { path: '/status', labelKey: 'status.nav' },
   // >> e-captions-translation
   // >> c-evening-threads
   // >> h-under-the-hood

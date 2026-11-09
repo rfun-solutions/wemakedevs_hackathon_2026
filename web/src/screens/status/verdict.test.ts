@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { computeVerdict, savedLabel } from './verdict';
+import { computeVerdict, feedLabel, savedLabel } from './verdict';
 
 const base = { online: true, rttMs: 50, serverP95: 120, sloMs: 500 };
 
@@ -30,5 +30,13 @@ describe('savedLabel', () => {
   it('rejects negatives/NaN', () => {
     expect(savedLabel(-1).shown).toBe(false);
     expect(savedLabel(NaN).shown).toBe(false);
+  });
+});
+
+describe('feedLabel', () => {
+  it('says just now under a minute, minutes after, unknown when null', () => {
+    expect(feedLabel(30)).toEqual({ key: 'status.feed.now' });
+    expect(feedLabel(240)).toEqual({ key: 'status.feed.age', params: { min: 4 } });
+    expect(feedLabel(null)).toEqual({ key: 'status.feed.unknown' });
   });
 });
