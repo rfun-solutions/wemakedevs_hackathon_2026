@@ -131,6 +131,17 @@ describe('Captions screen', () => {
     expect(screen.getByRole('status').textContent).toMatch(/slow for everyone/);
   });
 
+  it('keeps the "slow for everyone" message when the engine then starts', async () => {
+    startCaptions.mockImplementation(async (_s, opts) => {
+      opts.onStatus({ type: 'slow_everyone' });
+      opts.onStatus({ type: 'engine', engine: 'webspeech', fallback: false });
+      return { supported: true, engine: 'webspeech', stop() {} };
+    });
+    render(<Captions />);
+    await turnOn();
+    expect(screen.getByRole('status').textContent).toMatch(/slow for everyone/);
+  });
+
   it('unsupported shows the typed-caption field feeding the same log', async () => {
     startCaptions.mockImplementation(async (_s, opts) => {
       opts.onStatus({ type: 'unsupported' });

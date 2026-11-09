@@ -89,7 +89,6 @@ export function Captions() {
     if (s.type === 'unsupported') setTypedMode(true);
     const m = statusMessage(s);
     if (m) setMessage(m);
-    else if (s.type === 'engine') setMessage(null);
   };
 
   async function turnOn() {
