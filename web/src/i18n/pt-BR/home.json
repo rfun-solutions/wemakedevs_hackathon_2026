@@ -14,5 +14,7 @@
   "app.home.tile.threads": "Fios",
   "app.home.tile.threads.desc": "Seu dia, tudo conectado",
   "app.home.tile.status": "Status",
-  "app.home.tile.status.desc": "O app está funcionando bem?"
+  "app.home.tile.status.desc": "O app está funcionando bem?",
+  "app.home.next.now": "Acontecendo agora",
+  "app.home.next.loading": "Verificando sua agenda…"
 }
