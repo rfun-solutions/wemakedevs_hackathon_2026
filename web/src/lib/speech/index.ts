@@ -148,7 +148,7 @@ export async function startCaptionsWith(
         if (!stopped && accepts(id)) onSegment(seg);
       },
       onLag: (ms) => {
-        if (stopped || !accepts(id)) return;
+        if (stopped || !accepts(id) || session.engine !== id) return;
         metric.lag(ms, id);
         reporter.add(id, ms);
         const action = sli.record(ms);
@@ -175,11 +175,12 @@ export async function startCaptionsWith(
           }
           deps.saveConsent();
         }
+        lastPercentStep = -1;
         engine = deps.makeWhisper(callbacks(id), {
           signal: options.signal,
           // Throttled to 10% steps so the polite live region is not flooded.
           onProgress: (loaded, total) => {
-            const step = total > 0 ? Math.floor((loaded / total) * 10) : 0;
+            const step = total > 0 ? Math.min(10, Math.floor((loaded / total) * 10)) : 0;
             if (step === lastPercentStep) return;
             lastPercentStep = step;
             status({ type: 'downloading', loaded, total });

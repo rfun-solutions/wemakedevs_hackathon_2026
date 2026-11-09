@@ -1,9 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { getDeviceId } from '../device';
-import { createSliReporter } from './reporter';
+import { span } from './telemetry';
+import { createSliReporter, SLI_TIMEOUT_MS } from './reporter';
 
 beforeEach(() => vi.useFakeTimers());
-afterEach(() => vi.useRealTimers());
+afterEach(() => {
+  vi.useRealTimers();
+  vi.restoreAllMocks();
+});
 
 function setup() {
   const fetchFn = vi.fn().mockResolvedValue(new Response(null, { status: 204 }));
@@ -69,6 +73,25 @@ describe('sli reporter', () => {
     r.add('webspeech', 400);
     expect(fetchFn).toHaveBeenCalledTimes(1);
     expect(JSON.parse(fetchFn.mock.calls[0]![1].body).engine).toBe('whisper');
+  });
+  it('aborts a hanging fetch at its timeout and records the result', async () => {
+    let signal: AbortSignal | undefined;
+    const fetchFn = vi.fn((_url: string, init?: RequestInit) => {
+      signal = init?.signal ?? undefined;
+      return new Promise<Response>(() => undefined);
+    });
+    const spanSpy = vi.spyOn(span, 'sliPost');
+    const r = createSliReporter({
+      deviceClass: 'ios',
+      fetchFn: fetchFn as unknown as typeof fetch,
+      target: new EventTarget(),
+    });
+    r.add('webspeech', 1);
+    r.flush();
+    expect(signal?.aborted).toBe(false);
+    await vi.advanceTimersByTimeAsync(SLI_TIMEOUT_MS);
+    expect(signal?.aborted).toBe(true);
+    expect(spanSpy).toHaveBeenCalledWith(expect.objectContaining({ outcome: 'timeout' }));
   });
   it('a failing fetch never throws', () => {
     const fetchFn = vi.fn().mockRejectedValue(new Error('net'));

@@ -1,5 +1,5 @@
 import { getDeviceId } from '../device';
-import { emit } from './telemetry';
+import { span } from './telemetry';
 import type { DeviceClass, EngineId } from './types';
 
 export const HEALTH_TIMEOUT_MS = 1500;
@@ -20,28 +20,43 @@ export async function fetchCaptionsHealth(
   fetchFn: typeof fetch = globalThis.fetch,
   timeoutMs = HEALTH_TIMEOUT_MS,
 ): Promise<CaptionsHealth> {
-  emit('kc.captions.health_fetch', { deviceClass });
+  const started = performance.now();
   const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+  let timedOut = false;
+  let outcome = 'unavailable';
+  let timer: ReturnType<typeof setTimeout> | undefined;
   try {
-    const res = await fetchFn(`/api/status/health?deviceClass=${deviceClass}`, {
-      signal: ctrl.signal,
-      headers: { 'X-Device-Id': getDeviceId() },
+    const timeout = new Promise<never>((_resolve, reject) => {
+      timer = setTimeout(() => {
+        timedOut = true;
+        ctrl.abort();
+        reject(new Error('health request timed out'));
+      }, timeoutMs);
     });
-    if (!res.ok) return NONE;
-    const body = (await res.json()) as {
-      source?: string;
-      captions?: { fasterEngine?: unknown; lagging?: unknown };
-    };
-    if (body.source === 'unavailable' || !body.captions) return NONE;
-    const fe = body.captions.fasterEngine;
-    return {
-      fasterEngine: fe === 'whisper' || fe === 'webspeech' ? fe : null,
-      lagging: body.captions.lagging === true,
-    };
+    const request = (async (): Promise<CaptionsHealth> => {
+      const res = await fetchFn(`/api/status/health?deviceClass=${deviceClass}`, {
+        signal: ctrl.signal,
+        headers: { 'X-Device-Id': getDeviceId() },
+      });
+      if (!res.ok) return NONE;
+      const body = (await res.json()) as {
+        source?: string;
+        captions?: { fasterEngine?: unknown; lagging?: unknown };
+      };
+      if (body.source === 'unavailable' || !body.captions) return NONE;
+      const fe = body.captions.fasterEngine;
+      outcome = 'ok';
+      return {
+        fasterEngine: fe === 'whisper' || fe === 'webspeech' ? fe : null,
+        lagging: body.captions.lagging === true,
+      };
+    })();
+    return await Promise.race([request, timeout]);
   } catch {
+    outcome = timedOut ? 'timeout' : 'error';
     return NONE;
   } finally {
-    clearTimeout(timer);
+    if (timer) clearTimeout(timer);
+    span.healthFetch({ outcome, ms: Math.round(performance.now() - started), deviceClass });
   }
 }

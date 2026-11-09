@@ -68,16 +68,21 @@ describe('startCaptionsWith', () => {
     expect(s.engine).toBe('whisper');
     expect(status).toContainEqual({ type: 'engine', engine: 'whisper', fallback: false });
   });
-  it('declined consent falls back to webspeech without making the model loader', async () => {
-    const { d } = deps({ hasConsent: vi.fn().mockReturnValue(false) });
+  it('declined consent is remembered for the session and does not prompt on a switch', async () => {
+    const { d, ws } = deps({ hasConsent: vi.fn().mockReturnValue(false) });
+    const requestConsent = vi.fn().mockResolvedValue(false);
     const status: CaptionStatus[] = [];
     const s = await startCaptionsWith(d, vi.fn(), {
-      requestConsent: async () => false,
+      requestConsent,
       onStatus: (x) => status.push(x),
     });
     expect(s.engine).toBe('webspeech');
     expect(d.makeWhisper).not.toHaveBeenCalled();
     expect(status).toContainEqual({ type: 'engine', engine: 'webspeech', fallback: true });
+    for (let i = 0; i < 3; i++) ws.e.cb().onLag?.(5000);
+    await vi.waitFor(() => expect(d.reporter.flush).toHaveBeenCalled());
+    expect(requestConsent).toHaveBeenCalledTimes(1);
+    expect(d.makeWhisper).not.toHaveBeenCalled();
   });
   it('accepted consent is saved and no request is made without it', async () => {
     const { d } = deps({ hasConsent: vi.fn().mockReturnValue(false) });
@@ -141,6 +146,29 @@ describe('startCaptionsWith', () => {
     for (let i = 0; i < 6; i++) ws.e.cb().onLag?.(9000);
     expect(status.filter((x) => x.type === 'switched')).toHaveLength(1);
     expect(d.reporter.add).toHaveBeenCalledWith('whisper', 5000);
+  });
+  it('keeps the active engine and its captions while a replacement engine starts', async () => {
+    const { d, wh, ws } = deps();
+    let resolveStart!: () => void;
+    (ws.e.start as ReturnType<typeof vi.fn>).mockImplementation(
+      () => new Promise<void>((resolve) => (resolveStart = resolve)),
+    );
+    const onSeg = vi.fn();
+    const status: CaptionStatus[] = [];
+    const s = await startCaptionsWith(d, onSeg, { onStatus: (x) => status.push(x) });
+
+    for (let i = 0; i < 3; i++) wh.e.cb().onLag?.(5000);
+    await vi.waitFor(() => expect(ws.e.start).toHaveBeenCalled());
+    expect(s.engine).toBe('whisper');
+    expect(wh.e.stop).not.toHaveBeenCalled();
+    wh.e.cb().onSegment({ id: 'old', text: 'still here', lang: 'en', final: true });
+    ws.e.cb().onSegment({ id: 'pending', text: 'new engine', lang: 'en', final: true });
+    expect(onSeg.mock.calls.map(([segment]) => segment.id)).toEqual(['old', 'pending']);
+
+    resolveStart();
+    await vi.waitFor(() => expect(status.some((x) => x.type === 'switched')).toBe(true));
+    expect(s.engine).toBe('webspeech');
+    expect(wh.e.stop).toHaveBeenCalled();
   });
   it('3 slow chunks on iOS: message only, no switch', async () => {
     const { d, ws } = deps({ platform: 'ios' });

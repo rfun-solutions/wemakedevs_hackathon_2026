@@ -1,5 +1,5 @@
 import { getDeviceId } from '../device';
-import { emit } from './telemetry';
+import { span } from './telemetry';
 import type { DeviceClass, EngineId } from './types';
 
 export const SLI_URL = '/api/captions/sli';
@@ -37,6 +37,7 @@ export function createSliReporter(opts: ReporterOptions): SliReporter {
 
   function flush(): void {
     if (!batchEngine || batch.length === 0) return;
+    const sampleCount = batch.length;
     const body = JSON.stringify({
       engine: batchEngine,
       deviceClass: opts.deviceClass,
@@ -45,19 +46,46 @@ export function createSliReporter(opts: ReporterOptions): SliReporter {
     batch = [];
     batchEngine = null;
     const f = opts.fetchFn ?? globalThis.fetch;
-    emit('kc.captions.sli_post', { samples: JSON.parse(body).samples.length });
+    const started = performance.now();
+    const ctrl = new AbortController();
+    let timeout: ReturnType<typeof setTimeout> | undefined;
     try {
-      void Promise.resolve(
+      const request = Promise.resolve(
         f(SLI_URL, {
           method: 'POST',
           keepalive: true,
-          signal: AbortSignal.timeout?.(SLI_TIMEOUT_MS),
           headers: { 'Content-Type': 'application/json', 'X-Device-Id': getDeviceId() },
           body,
+          signal: ctrl.signal,
         }),
-      ).catch(() => undefined); // telemetry must never break captions
+      ).then(
+        () => 'ok' as const,
+        () => 'error' as const,
+      );
+      const timedOut = new Promise<'timeout'>((resolve) => {
+        timeout = setTimeout(() => {
+          ctrl.abort();
+          resolve('timeout');
+        }, SLI_TIMEOUT_MS);
+      });
+      void Promise.race([request, timedOut])
+        .then((outcome) =>
+          span.sliPost({
+            outcome,
+            ms: Math.round(performance.now() - started),
+            samples: sampleCount,
+          }),
+        )
+        .finally(() => {
+          if (timeout) clearTimeout(timeout);
+        });
     } catch {
-      /* ignore */
+      if (timeout) clearTimeout(timeout);
+      span.sliPost({
+        outcome: 'error',
+        ms: Math.round(performance.now() - started),
+        samples: sampleCount,
+      });
     }
   }
 
