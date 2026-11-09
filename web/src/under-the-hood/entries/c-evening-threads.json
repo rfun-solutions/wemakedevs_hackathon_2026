@@ -1,0 +1,27 @@
+{
+  "id": "c-evening-threads",
+  "order": 8,
+  "titleKey": "threads.hood.title",
+  "whatKey": "threads.hood.what",
+  "promises": [],
+  "tech": [
+    {
+      "sponsor": "dash0",
+      "kind": "trace",
+      "label": "GenAI span kc.threads.llm with tokens and cost",
+      "ref": "api/src/services/threads/run.ts"
+    },
+    {
+      "sponsor": "dash0",
+      "kind": "query",
+      "label": "kc_threads_runs_total{mode}",
+      "ref": "api/src/services/threads/run.ts"
+    },
+    {
+      "sponsor": "gitar",
+      "kind": "rule",
+      "label": "daily cost cap with heuristic fallback",
+      "ref": "api/src/services/threads/costGuard.ts"
+    }
+  ]
+}

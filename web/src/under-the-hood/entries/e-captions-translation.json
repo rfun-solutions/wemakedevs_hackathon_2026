@@ -1,0 +1,46 @@
+{
+  "id": "e-captions-translation",
+  "order": 7,
+  "titleKey": "captions.hood.title",
+  "whatKey": "captions.hood.what",
+  "promises": [],
+  "tech": [
+    {
+      "sponsor": "dash0",
+      "kind": "query",
+      "label": "kc_captions_segment_ms p95 by engine",
+      "ref": "api/src/routes/captions.ts",
+      "live": "promise:P1"
+    },
+    {
+      "sponsor": "dash0",
+      "kind": "trace",
+      "label": "POST /api/translate with GenAI span (kc.translate.request)",
+      "live": "promise:P5"
+    },
+    {
+      "sponsor": "dash0",
+      "kind": "trace",
+      "label": "kc.captions.model_load, chunk_decode, restart (browser spans)",
+      "ref": "web/src/lib/speech/telemetry.ts"
+    },
+    {
+      "sponsor": "gitar",
+      "kind": "rule",
+      "label": "inclusion.md IN-10",
+      "ref": ".gitar/review/inclusion.md"
+    },
+    {
+      "sponsor": "gitar",
+      "kind": "rule",
+      "label": "inclusion.md IN-12",
+      "ref": ".gitar/review/inclusion.md"
+    },
+    {
+      "sponsor": "gitar",
+      "kind": "rule",
+      "label": "hot-paths.md CAP-1",
+      "ref": ".gitar/review/hot-paths.md"
+    }
+  ]
+}

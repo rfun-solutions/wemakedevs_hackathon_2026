@@ -1,9 +1,9 @@
 ## 1. Design and screen (PR 1)
 - [ ] 1.1 Run the Impeccable skill for the How it works page and screen (inputs: D's picked direction in `tokens.css`, mobile first, "teachers, not magicians" tone from research/11); produce one direction with a small preview; the user glances at it, no blocking wait
-- [ ] 1.2 `web/src/screens/under-the-hood/live.ts` `resolveLive()` exactly as design decision 1; unit tests: promise ok, degraded, unknown; route present and absent; release full, partial and 204; health 404, error, timeout, `unavailable`
-- [ ] 1.3 `UnderTheHood.tsx` and its parts (design decision 3): sections in merge order from `ENTRIES`, promise chips from D's `PROMISES`, Gitar/Dash0/Radar lists, repo links (design decision 2), 30 s refresh only while visible; insert its route and one secondary nav line under the `// >> h-under-the-hood` marker
-- [ ] 1.4 `web/src/i18n/{en,es}/hood.json` (headings, states, "Dash0 sign-in needed", "No live data right now"), plain language (IN-6); event `kc.hood.viewed`
-- [ ] 1.5 Playwright mobile (iPhone 15, Pixel 7) in `web/e2e/hood/`: entries render, ES strings, live values from a stubbed snapshot, offline shows "No live data right now", 200% text has no horizontal scroll; axe clean
+- [x] 1.2 `web/src/screens/under-the-hood/live.ts` `resolveLive()` exactly as design decision 1; unit tests: promise ok, degraded, unknown; route present and absent; release full, partial and 204; health 404, error, timeout, `unavailable`
+- [x] 1.3 `UnderTheHood.tsx` and its parts (design decision 3): sections in merge order from `ENTRIES`, promise chips from D's `PROMISES`, Gitar/Dash0/Radar lists, repo links (design decision 2), 30 s refresh only while visible; insert its route and one secondary nav line under the `// >> h-under-the-hood` marker
+- [x] 1.4 `web/src/i18n/{en,es}/hood.json` (headings, states, "Dash0 sign-in needed", "No live data right now"), plain language (IN-6); event `kc.hood.viewed`
+- [x] 1.5 Playwright mobile (iPhone 15, Pixel 7) in `web/e2e/hood/`: entries render, ES strings, live values from a stubbed snapshot, offline shows "No live data right now", 200% text has no horizontal scroll; axe clean
 
 ## 2. Static page and Pages (PR 2)
 - [ ] 2.1 `scripts/build-how-it-works.mjs` exactly as design decision 5; Vitest with fixture entries: clean build, invalid entry, missing EN key, promises included, no write outside the output folder; append `.pages-build/` to `.gitignore`

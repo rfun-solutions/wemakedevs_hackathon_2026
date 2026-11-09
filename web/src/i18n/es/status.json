@@ -1,0 +1,20 @@
+{
+  "status.nav": "Estado",
+  "status.title": "¿Es el Wi-Fi o somos nosotros?",
+  "status.loading": "Comprobando...",
+  "status.error": "No pudimos conectar con la app ahora. Tus notas están a salvo en este teléfono.",
+  "status.saved": "Guardado en {ms} ms",
+  "status.saved.none": "Aún no hay ninguna nota guardada en este teléfono",
+  "status.feed.age": "Programa actualizado hace {min} min",
+  "status.feed.now": "Programa actualizado hace un momento",
+  "status.feed.unknown": "Aún no se sabe cuándo se actualizó el programa",
+  "status.rtt": "Tu conexión: {ms} ms",
+  "status.server": "Nuestro tiempo de guardado: {ms} ms (objetivo: menos de {slo} ms)",
+  "status.chaos": "Hay una ralentización de prueba programada.",
+  "status.verdict.title": "Lo que vemos",
+  "status.verdict.offline": "Estás sin conexión. Tus notas esperan en este teléfono.",
+  "status.verdict.server_slow": "Vamos lentos ahora mismo, no es tu Wi-Fi.",
+  "status.verdict.connection_slow": "Tu conexión parece lenta, no nosotros.",
+  "status.verdict.all_good": "Todo bien.",
+  "status.verdict.unknown": "Todavía no hay suficiente información."
+}
