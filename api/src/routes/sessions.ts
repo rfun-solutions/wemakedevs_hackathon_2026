@@ -10,6 +10,8 @@ export interface SessionsRouteOptions {
 }
 
 const DAY_RE = /^\d{4}-\d{2}-\d{2}$/;
+const isCalendarDay = (d: string) =>
+  DAY_RE.test(d) && new Date(`${d}T00:00:00Z`).toISOString().slice(0, 10) === d;
 
 /** Returns undefined when absent, null when present but invalid. */
 function optionalText(v: unknown, max = 200): string | undefined | null {
@@ -30,7 +32,7 @@ export const sessionRoutes: FastifyPluginAsync<SessionsRouteOptions> = async (ap
     const track = optionalText(q.track);
     if (
       day === null ||
-      (day !== undefined && !DAY_RE.test(day)) ||
+      (day !== undefined && !isCalendarDay(day)) ||
       room === null ||
       track === null
     ) {

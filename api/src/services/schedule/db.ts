@@ -6,11 +6,12 @@ export interface ScheduleDb {
 }
 
 let shared: Pool | undefined;
+const SCHEDULE_STATEMENT_TIMEOUT_MS = 2_000;
 
 /** Routes use the injected db (tests), otherwise one shared pool from DATABASE_URI. */
 export function resolveScheduleDb(injected?: ScheduleDb): ScheduleDb | undefined {
   if (injected) return injected;
-  shared ??= createPool();
+  shared ??= createPool(process.env, { statementTimeoutMs: SCHEDULE_STATEMENT_TIMEOUT_MS });
   return shared;
 }
 

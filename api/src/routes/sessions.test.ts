@@ -78,6 +78,16 @@ describe('GET /api/sessions', () => {
     expect(res.statusCode).toBe(400);
   });
 
+  it('rejects a well-formed but impossible calendar day', async () => {
+    await build({ query: async () => ({ rows: [] }) });
+    const res = await app.inject({
+      method: 'GET',
+      url: '/api/sessions?day=2026-02-30',
+      headers: { 'x-device-id': DEV },
+    });
+    expect(res.statusCode).toBe(400);
+  });
+
   it('requires X-Device-Id', async () => {
     await build({ query: async () => ({ rows: [] }) });
     expect((await app.inject({ method: 'GET', url: '/api/sessions' })).statusCode).toBe(400);
