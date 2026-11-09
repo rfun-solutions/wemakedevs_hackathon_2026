@@ -29,8 +29,13 @@ describe('i18n framework (D)', () => {
   });
 
   it('falls back to EN for a key missing in PT-BR, then to the key', () => {
+    const pt = new Set(allKeys('pt-BR'));
+    const enOnly = allKeys('en').find((k) => !pt.has(k));
+    setLang('en');
+    const expected = enOnly ? t(enOnly) : undefined;
     setLang('pt-BR');
     expect(t('app.nav.home')).toBe('Início');
+    if (enOnly) expect(t(enOnly)).toBe(expected);
     expect(t('no.such.key')).toBe('no.such.key');
   });
 
