@@ -92,6 +92,7 @@ h2 {
   padding-block: var(--space-2);
 }
 .shell-nav {
+  position: relative;
   border-top: var(--border-width) solid var(--color-border);
   padding-bottom: env(safe-area-inset-bottom);
 }
@@ -99,20 +100,51 @@ h2 {
   list-style: none;
   margin: 0;
   padding: 0;
+}
+/* Bar items wrap by row at large text instead of shrinking, so words never break mid-word. */
+.nav-bar {
   display: flex;
+  flex-wrap: wrap;
 }
-.shell-nav li {
-  flex: 1;
+.nav-bar li {
+  flex: 1 0 auto;
 }
-.shell-nav a {
+.shell-nav a,
+.nav-more-btn {
   display: flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
   min-height: var(--target-comfort);
-  padding: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  background: transparent;
+  color: var(--color-link);
+  font: inherit;
+  text-align: center;
   text-decoration: none;
   font-weight: var(--weight-medium);
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
 }
+.nav-more {
+  position: absolute;
+  inset-inline-end: 0;
+  bottom: 100%;
+  min-width: 50%;
+  background: var(--color-surface-raised);
+  box-shadow: var(--elevation-2);
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+.nav-more[hidden] {
+  display: none;
+}
+.nav-more a {
+  justify-content: flex-start;
+}
+.nav-more-btn[data-active='true'],
 .shell-nav a[aria-current='page'] {
   box-shadow: inset 0 calc(-1 * var(--focus-ring-width)) 0 var(--color-accent-strong);
 }

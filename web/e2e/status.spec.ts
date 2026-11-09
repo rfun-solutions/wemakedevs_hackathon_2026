@@ -11,7 +11,10 @@ const status = {
   chaos_active: false,
 };
 
+let health: object = { source: 'unavailable', routes: [], captions: { lagging: false } };
+
 async function stubApi(page: Page, body: object = status, explain: object = NO_EXPLAIN) {
+  await page.route('**/api/status/health', (r) => r.fulfill({ json: health }));
   await page.route('**/api/status/explain**', (r) => r.fulfill({ json: explain }));
   await page.route('**/api/status', (r) => r.fulfill({ json: body }));
   await page.route('**/api/status/rtt', (r) => r.fulfill({ status: 204 }));
@@ -51,6 +54,10 @@ test.describe('status screen', () => {
   test('nav link to Status meets the 24 px target minimum', async ({ page }) => {
     await stubApi(page);
     await page.goto('/');
+    await page
+      .getByRole('navigation')
+      .getByRole('button', { name: /More|Más/ })
+      .click(); // Status lives under More
     const link = page.getByRole('navigation').getByRole('link', { name: /Status|Estado/ });
     const box = await link.boundingBox();
     expect(box!.width).toBeGreaterThanOrEqual(24);
@@ -88,5 +95,26 @@ test.describe('status screen', () => {
       .withTags(['wcag2a', 'wcag2aa', 'wcag22aa'])
       .analyze();
     expect(results.violations).toEqual([]);
+  });
+});
+
+test.describe('health banner', () => {
+  test('says the agenda is slow for everyone and is axe clean', async ({ page }) => {
+    health = {
+      source: 'dash0',
+      routes: [{ route: '/api/agenda', p95Ms: 2000, slow: true }],
+      captions: { lagging: true },
+    };
+    await stubApi(page);
+    await page.goto('/status');
+    await expect(page.locator('#status-health')).toContainText(
+      /agenda is slow for everyone|agenda va lenta para todos/,
+    );
+    await expect(page.locator('#status-health')).toHaveAttribute('aria-live', 'polite');
+    const results = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag22aa'])
+      .analyze();
+    expect(results.violations).toEqual([]);
+    health = { source: 'unavailable', routes: [], captions: { lagging: false } };
   });
 });

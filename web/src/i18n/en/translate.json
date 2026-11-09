@@ -1,0 +1,8 @@
+{
+  "translate.toggle.on": "Translate captions",
+  "translate.toggle.off": "Stop translating",
+  "translate.label": "Translated captions",
+  "translate.empty": "Translations will appear here as captions are finished.",
+  "translate.unavailable": "Translation is not available right now. The original caption is still shown.",
+  "translate.pending": "Translating…"
+}

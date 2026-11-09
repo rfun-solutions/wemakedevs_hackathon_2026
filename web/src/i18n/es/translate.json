@@ -1,0 +1,8 @@
+{
+  "translate.toggle.on": "Traducir subtítulos",
+  "translate.toggle.off": "Dejar de traducir",
+  "translate.label": "Subtítulos traducidos",
+  "translate.empty": "Las traducciones aparecerán aquí cuando terminen los subtítulos.",
+  "translate.unavailable": "La traducción no está disponible ahora. El subtítulo original sigue visible.",
+  "translate.pending": "Traduciendo…"
+}
