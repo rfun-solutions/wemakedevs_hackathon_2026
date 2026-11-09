@@ -30,9 +30,39 @@ describe('mapFeed (v1)', () => {
     expect(first().categories).toHaveLength(2);
   });
   it('has no speaker fields', () => expect(Object.keys(first()).join()).not.toMatch(/speaker/i));
-  it('throws FeedShapeError naming the drifted fields on v2', () => {
+  it('throws FeedShapeError naming the missing required fields on v2', () => {
     expect(() => mapFeed(load('sessionize-v2'))).toThrow(FeedShapeError);
-    expect(() => mapFeed(load('sessionize-v2'))).toThrow(/starts_at/);
+    expect(() => mapFeed(load('sessionize-v2'))).toThrow(/startsAt/);
   });
   it('throws on non-object input', () => expect(() => mapFeed(null)).toThrow(FeedShapeError));
+
+  describe('tolerant reader (incident: upstream added session fields)', () => {
+    const withExtras = () => {
+      const feed = load('sessionize-v1');
+      feed.sessions = feed.sessions.map((s: object, i: number) => ({
+        ...s,
+        isServiceSession: false,
+        isPlenumSession: i === 0,
+        speakers: [`fictional-speaker-${i}`],
+      }));
+      return feed;
+    };
+    it('accepts unknown session properties and maps the same sessions', () => {
+      const out = mapFeed(withExtras());
+      expect(out).toEqual(mapped);
+    });
+    it('does not leak speaker data into the mapped output', () =>
+      expect(JSON.stringify(mapFeed(withExtras()))).not.toMatch(/speaker|isPlenum|isService/i));
+    it('still rejects a feed missing a required session field', () => {
+      const feed = withExtras();
+      delete feed.sessions[0].startsAt;
+      expect(() => mapFeed(feed)).toThrow(FeedShapeError);
+      expect(() => mapFeed(feed)).toThrow(/startsAt/);
+    });
+    it('still rejects a wrongly typed required field', () => {
+      const feed = withExtras();
+      feed.sessions[0].roomId = 'one';
+      expect(() => mapFeed(feed)).toThrow(FeedShapeError);
+    });
+  });
 });
