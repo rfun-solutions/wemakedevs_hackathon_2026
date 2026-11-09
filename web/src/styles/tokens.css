@@ -1,0 +1,107 @@
+/* PLACEHOLDER token values (column B "Kay Sunrise"). Token NAMES are final (design/token-names.md);
+   D1 owns and overwrites the VALUES. Text sizes scale with --type-scale (1 to 2). */
+:root {
+  --color-bg: #fbf8f1;
+  --color-surface: #ffffff;
+  --color-surface-raised: #ffffff;
+  --color-text: #1b2352;
+  --color-text-muted: #454c73;
+  --color-text-on-accent: #1b2352;
+  --color-accent: #f2b13d;
+  --color-accent-strong: #db9a22;
+  --color-link: #1f3a93;
+  --color-border: #d8d0bc;
+  --color-border-strong: #6b7099;
+  --color-focus-ring: #0b6b75;
+  --color-success: #17603a;
+  --color-success-bg: #e1f2e6;
+  --color-warning: #8a4b00;
+  --color-warning-bg: #ffefc9;
+  --color-danger: #b3261e;
+  --color-danger-bg: #fce4e1;
+  --color-info: #0b6b75;
+  --color-info-bg: #ddf1f2;
+  --color-unknown: #4a4f6b;
+  --color-unknown-bg: #ece9e0;
+  --show-fg: #fff6e0;
+  --show-bg: #1b2352;
+
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-reading: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --weight-regular: 400;
+  --weight-medium: 700;
+  --weight-bold: 700;
+
+  --type-scale: 1;
+  --text-sm: calc(0.9375rem * var(--type-scale));
+  --text-base: calc(1.0625rem * var(--type-scale));
+  --text-md: calc(1.1875rem * var(--type-scale));
+  --text-lg: calc(1.375rem * var(--type-scale));
+  --text-xl: calc(1.625rem * var(--type-scale));
+  --text-2xl: calc(2rem * var(--type-scale));
+  --text-show: clamp(2rem, 9vw, 4.5rem);
+  --leading-tight: 1.25;
+  --leading-normal: 1.55;
+  --leading-loose: 1.7;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 14px;
+  --space-4: 20px;
+  --space-5: 28px;
+  --space-6: 36px;
+  --space-7: 52px;
+  --space-8: 72px;
+
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-full: 999px;
+  --border-width: 2px;
+  --elevation-0: none;
+  --elevation-1: 0 0 0 1px var(--color-border);
+  --elevation-2: 0 0 0 2px var(--color-border-strong);
+  --focus-ring-width: 3px;
+  --focus-ring-offset: 2px;
+
+  --target-min: 24px;
+  --target-comfort: 44px;
+  --target-primary: 52px;
+  --motion-fast: 150ms;
+  --motion-base: 250ms;
+}
+
+html[data-motion='reduced'] {
+  --motion-fast: 0ms;
+  --motion-base: 0ms;
+}
+
+html[data-contrast='high'] {
+  --color-bg: #ffffff;
+  --color-text: #0a0f2e;
+  --color-text-muted: #1f2547;
+  --color-text-on-accent: #000000;
+  --color-accent: #ffc940;
+  --color-accent-strong: #f2b000;
+  --color-link: #0a1f8a;
+  --color-border: #0a0f2e;
+  --color-border-strong: #0a0f2e;
+  --color-focus-ring: #0a0f2e;
+  --color-success: #0f4a28;
+  --color-success-bg: #e6f4ea;
+  --color-warning: #5e3200;
+  --color-warning-bg: #fff1cc;
+  --color-danger: #8c1710;
+  --color-danger-bg: #fbe4e2;
+  --color-info: #07525a;
+  --color-unknown: #2a2f4a;
+  --color-unknown-bg: #ece9e0;
+  --show-fg: #ffffff;
+  --show-bg: #0a0f2e;
+  --border-width: 3px;
+  --elevation-1: 0 0 0 2px var(--color-border-strong);
+  --elevation-2: 0 0 0 3px var(--color-border-strong);
+  --focus-ring-width: 4px;
+  --focus-ring-offset: 3px;
+}
