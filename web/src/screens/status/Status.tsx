@@ -6,6 +6,8 @@ import { computeVerdict, feedLabel, savedLabel } from './verdict';
 import { medianOf, type StatusPayload } from './status-client';
 
 const POLL_MS = 30_000;
+const STATUS_TIMEOUT_MS = 5000;
+const PING_TIMEOUT_MS = 3000;
 
 function useOnline(): boolean {
   const [online, setOnline] = useState(() => navigator.onLine);
@@ -28,7 +30,7 @@ async function measureRtt(): Promise<number | null> {
   for (let i = 0; i < 3; i++) {
     const start = performance.now();
     try {
-      const res = await api('/api/ping', { signal: AbortSignal.timeout(5000) });
+      const res = await api('/api/ping', { signal: AbortSignal.timeout(PING_TIMEOUT_MS) });
       if (res.ok) samples.push(performance.now() - start);
     } catch {
       /* a failed ping is simply not a sample */
@@ -39,7 +41,7 @@ async function measureRtt(): Promise<number | null> {
     void api('/api/status/rtt', {
       method: 'POST',
       body: JSON.stringify({ rtt_ms: Math.round(median) }),
-      signal: AbortSignal.timeout(5000),
+      signal: AbortSignal.timeout(PING_TIMEOUT_MS),
     }).catch(() => undefined);
   }
   return median;
@@ -62,7 +64,7 @@ export function Status() {
     let cancelled = false;
     const load = async () => {
       try {
-        const res = await api('/api/status', { signal: AbortSignal.timeout(5000) });
+        const res = await api('/api/status', { signal: AbortSignal.timeout(STATUS_TIMEOUT_MS) });
         if (!res.ok) throw new Error(String(res.status));
         const body = (await res.json()) as StatusPayload;
         if (!cancelled) {
