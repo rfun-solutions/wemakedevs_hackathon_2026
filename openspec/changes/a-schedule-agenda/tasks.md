@@ -24,6 +24,7 @@
 - [ ] 3.6 axe check on both screens; verify 24 px targets
 - [ ] 3.7 Confirm locally, with `getChaos` mocked, that naive mode yields N+1 `pg.query` spans under `kc.agenda.get`. The end-to-end ConfigMap check is F's task 2.4
 - [ ] 3.8 Add your registry entry: `web/src/under-the-hood/entries/a-schedule-agenda.json` (agenda in venue time, building-change warning; tech: Gitar `time-zones.md`, `feed-contract` check, span `kc.agenda.get` with `live: route:GET /api/agenda`, the Agent0 N+1 story) with `schedule.hood.*` EN and ES
+- [ ] 3.9 (Added 2026-11-09, user: Field Notes parity) "Jump to now" on `Schedule.tsx` and `Agenda.tsx`: a button that scrolls to and focuses the session in progress, or the next one, in venue time (America/Denver), with a visible "Now" marker; pure function `currentOrNextSession(items, now)` in `api`-free web code with unit tests (during a talk, between talks, after the last talk, empty day); Playwright check on iPhone 15; EN and ES strings in your `schedule.json`. Each agenda item also gets a "Take a note" link to B's capture route with `?session=<session id>` (path read from `web/src/routes.ts`; do not edit B's files)
 
 ## Split option (proposed by cross-change review)
 If A is behind at about 13:30, a second agent takes group 3 (UI) against the API contract in design.md, while the first finishes groups 1-2.
