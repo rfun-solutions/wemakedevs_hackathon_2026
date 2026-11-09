@@ -4,6 +4,7 @@ import { getLastSaveMs } from '../../lib/capture/queue';
 import { t } from '../../i18n';
 import { computeVerdict, feedLabel, savedLabel } from './verdict';
 import { medianOf, type StatusPayload } from './status-client';
+import { Agent0Line } from './Agent0Line';
 
 const POLL_MS = 30_000;
 const STATUS_TIMEOUT_MS = 5000;
@@ -122,6 +123,7 @@ export function Status() {
 
       {/* >> f-observability-product-health */}
       {/* >> f-observability-product */}
+      <Agent0Line />
     </section>
   );
 }
