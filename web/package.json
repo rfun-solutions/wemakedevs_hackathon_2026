@@ -1,0 +1,19 @@
+{
+  "name": "@kc/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@dash0/sdk-web": "^0.30.0",
+    "@huggingface/transformers": "^4.3.2",
+    "idb-keyval": "^6.3.0",
+    "preact": "^11.2.0",
+    "preact-iso": "^2.12.2"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.10.6",
+    "@testing-library/preact": "^3.2.6",
+    "fake-indexeddb": "^6.2.8",
+    "happy-dom": "^21.0.4"
+  }
+}
