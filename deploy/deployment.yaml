@@ -80,6 +80,14 @@ spec:
               path: /readyz
               port: http
             periodSeconds: 5
+          # Startup grace before liveness counts (KC-1). Boot to listen measured 6-7s normally and 38s on a
+          # busy node (app-6774dd4f85-t78nt, 2045a0d); liveness alone killed it after ~30s. 2s x 45 = 90s.
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 2
+            failureThreshold: 45
           livenessProbe:
             httpGet:
               path: /healthz
