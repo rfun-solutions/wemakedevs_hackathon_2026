@@ -15,6 +15,9 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
 
   // >> a-schedule-agenda
   // >> b-capture
+  await app.register((await import('./notes.js')).default);
+  await app.register((await import('./people.js')).default);
+  await app.register((await import('./promises.js')).default);
   // >> f-observability-product
   // >> f-observability-product-health
   // >> f-observability-product-kay
