@@ -32,6 +32,9 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v7
+        with:
+          # Do not persist GITHUB_TOKEN: its extraheader would override the deploy-bot App token on push.
+          persist-credentials: false
 
       - name: Image name and tag
         id: meta
