@@ -2,9 +2,16 @@
 // Never edit another change's lines or markers (AGENTS.md rule 5). Markers are in merge order.
 import type { ComponentType } from 'preact';
 import { Home } from './screens/Home';
-
-// b-capture import (a static import cannot live under a marker inside the array)
+// Imports: add YOUR import line directly under YOUR OWN `>> import:<change-id>` marker (prevents merge conflicts).
+// >> import:d-access-kit
+// >> import:d-access-kit-cards
+// >> import:a-schedule-agenda
+// >> import:b-capture
 import { Capture } from './screens/capture/Capture';
+// >> import:f-observability-product
+// >> import:e-captions-translation
+// >> import:c-evening-threads
+// >> import:h-under-the-hood
 
 export interface AppRoute {
   path: string;
