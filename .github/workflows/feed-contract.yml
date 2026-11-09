@@ -39,4 +39,4 @@ jobs:
       - name: Mapper and fetch tests
         run: npx vitest run --project api api/src/services/sessionize
       - name: Fixture and mock upstream tests
-        run: npx vitest run --root feed-contract
+        run: npx vitest run --config feed-contract/vitest.config.mjs
