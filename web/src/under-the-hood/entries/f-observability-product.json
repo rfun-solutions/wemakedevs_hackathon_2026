@@ -1,0 +1,33 @@
+{
+  "id": "f-observability-product",
+  "order": 6,
+  "titleKey": "status.hood.title",
+  "whatKey": "status.hood.what",
+  "promises": [],
+  "tech": [
+    {
+      "sponsor": "dash0",
+      "kind": "query",
+      "label": "PromQL poll every 30 s: agenda p95 against 300 ms, caption lag against 4000 ms",
+      "ref": "api/src/services/health/poller.ts"
+    },
+    {
+      "sponsor": "dash0",
+      "kind": "query",
+      "label": "same route and caption queries as the pipeline's rules-from-prod",
+      "ref": "scripts/rules-from-prod.mjs"
+    },
+    {
+      "sponsor": "dash0",
+      "kind": "trace",
+      "label": "Agent0 task on a healthy-to-breached change, cached and labelled AI-generated",
+      "ref": "api/src/services/health/agent0.ts"
+    },
+    {
+      "sponsor": "dash0",
+      "kind": "check",
+      "label": "health banner and Status screen under test, axe clean on two phones",
+      "ref": "web/e2e/status.spec.ts"
+    }
+  ]
+}

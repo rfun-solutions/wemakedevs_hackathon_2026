@@ -1,4 +1,6 @@
 {
   "status.health.agenda": "The agenda is slow for everyone right now (about {s} s), not your Wi-Fi. Your notes still save.",
-  "status.health.captions": "Captions are slow for everyone right now, not your phone."
+  "status.health.captions": "Captions are slow for everyone right now, not your phone.",
+  "status.hood.title": "What the Status screen tells you",
+  "status.hood.what": "The Status screen says whether a slow moment is your Wi-Fi or us, shows a banner when the app is slow for everyone, and gives one plain sentence from an AI assistant, labelled as AI-generated."
 }
