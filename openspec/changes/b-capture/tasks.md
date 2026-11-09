@@ -16,10 +16,10 @@
 - [x] 2.9 (Added 2026-11-09, user: Field Notes parity) "From this session": add optional `session_id` query filter to `GET /api/notes` (update the contract in design.md, integration test for filtered and unfiltered lists); the capture screen reads `?session=<id>` and sends it as `session_id` via `enqueueNote({ body, source, session_id })`; the notes list gets a "From this session" filter (using `GET /api/notes?session_id=`) and shows the session id label when present; tests for the query param, the filter and notes without a session; EN and ES strings in your `capture.json`
 
 ## 3. PR 3: polish
-- [ ] 3.1 "Needs attention" state with Delete and Retry; verify no duplicates after lost response
-- [ ] 3.2 Add your registry entry: `web/src/under-the-hood/entries/b-capture.json` (capture in seconds, offline queue, promises; tech: span `kc.capture.save`, `kc_capture_saved_ms` p95 with `live: promise:P2`, Gitar rule IN-11, `api-contract.md` AC-1) with `capture.hood.*` EN and ES
-- [ ] 3.3 Write `docs/demo-seeding.md`: `KC_DEMO_SEED=1` is set only for rehearsal and the demo, with the set and unset commands and a check that the endpoint returns 404 afterwards
-- [ ] 3.4 Run `openspec validate b-capture --strict` and lint-unit, e2e-mobile, a11y locally
+- [x] 3.1 "Needs attention" state with Delete and Retry; verify no duplicates after lost response
+- [x] 3.2 Add your registry entry: `web/src/under-the-hood/entries/b-capture.json` (capture in seconds, offline queue, promises; tech: span `kc.capture.save`, `kc_capture_saved_ms` p95 with `live: promise:P2`, Gitar rule IN-11, `api-contract.md` AC-1) with `capture.hood.*` EN and ES
+- [x] 3.3 Write `docs/demo-seeding.md`: `KC_DEMO_SEED=1` is set only for rehearsal and the demo, with the set and unset commands and a check that the endpoint returns 404 afterwards
+- [x] 3.4 Run `openspec validate b-capture --strict` and lint-unit, e2e-mobile, a11y locally
 
 ## Ownership
 Creates: `api/migrations/200-202*`, `api/src/routes/{notes,people,promises}.ts`, `api/src/services/capture/`, `web/src/lib/capture/` (replaces C0's `queue.ts` stub), `web/src/screens/capture/`, `web/src/i18n/{en,es}/capture.json`, `api/src/services/capture/seed.ts` and `seed-data.ts`, `web/src/under-the-hood/entries/b-capture.json`, `docs/demo-seeding.md`, tests. Inserts under its `>> b-capture` marker only: `api/src/routes/index.ts`, `web/src/routes.ts`, `web/src/nav.ts`. Edits: the Background Sync handler in C0's `web/public/sw.js` (B is its only editor after C0). Uses but never creates or edits C0's speech stub `web/src/lib/speech/index.ts` (E replaces it).
