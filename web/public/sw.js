@@ -56,11 +56,14 @@ self.addEventListener('fetch', function (event) {
     event.respondWith(
       fetch(req)
         .then(function (res) {
-          var copy = res.clone();
-          if (res.ok)
-            caches.open(CACHE).then(function (c) {
-              return c.put('/', copy);
-            });
+          if (res.ok) {
+            var copy = res.clone();
+            event.waitUntil(
+              caches.open(CACHE).then(function (c) {
+                return c.put('/', copy);
+              }),
+            );
+          }
           return res;
         })
         .catch(function () {
@@ -77,11 +80,14 @@ self.addEventListener('fetch', function (event) {
       caches.match(req).then(function (hit) {
         if (hit) return hit;
         return fetch(req).then(function (res) {
-          var copy = res.clone();
-          if (res.ok)
-            caches.open(CACHE).then(function (c) {
-              return c.put(req, copy);
-            });
+          if (res.ok) {
+            var copy = res.clone();
+            event.waitUntil(
+              caches.open(CACHE).then(function (c) {
+                return c.put(req, copy);
+              }),
+            );
+          }
           return res;
         });
       }),
