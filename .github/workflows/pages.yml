@@ -6,8 +6,10 @@ on:
     branches:
       - main
     paths:
-      - web/src/under-the-hood/entries/**
+      - web/src/under-the-hood/**
       - web/src/i18n/en/**
+      - web/src/i18n/es/**
+      - web/src/styles/tokens.css
       - docs/how-it-works/**
       - web/src/features/access/promises.ts
       - scripts/build-how-it-works.mjs
