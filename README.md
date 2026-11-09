@@ -25,17 +25,6 @@ Kay is our design persona: a hard-of-hearing attendee whose first language is Sp
 | **Status, explained plainly** | See whether the app is healthy right now. When something breaks, Dash0's Agent0 explains it in one plain sentence, labelled AI-generated. |
 | **Under the hood** | A screen that lists every feature, what it does and the checks behind it, with live values where we measure them and never an invented number. |
 
-<!-- >> c0-scaffold -->
-<!-- >> d-access-kit -->
-<!-- >> d-access-kit-cards -->
-<!-- >> g-pipeline-feed-contract -->
-<!-- >> a-schedule-agenda -->
-<!-- >> b-capture -->
-<!-- >> f-observability-product -->
-<!-- >> e-captions-translation -->
-<!-- >> c-evening-threads -->
-<!-- >> h-under-the-hood -->
-
 ## Five promises we hold ourselves to
 
 1. Captions reach your screen within 4 seconds, or we switch and tell you.
@@ -87,5 +76,20 @@ kubectl kustomize deploy/   # render the Kubernetes manifests
 | `observability/` | Dash0 dashboards, check rules and synthetic checks as code |
 | `docs/runbooks/` | Runbooks for incidents and demo steps |
 | `.gitar/` | Gitar review rules |
+
+## Links
+
+<!-- >> c0-scaffold -->
+- [Agent rules](AGENTS.md), [AI disclosure](AI-DISCLOSURE.md), [OpenSpec changes](openspec/changes/)
+<!-- >> d-access-kit -->
+<!-- >> d-access-kit-cards -->
+<!-- >> g-pipeline-feed-contract -->
+<!-- >> a-schedule-agenda -->
+<!-- >> b-capture -->
+<!-- >> f-observability-product -->
+<!-- >> e-captions-translation -->
+<!-- >> c-evening-threads -->
+<!-- >> h-under-the-hood -->
+- [How it works](https://rfun-solutions.github.io/wemakedevs_hackathon_2026/): every feature and the Gitar, Dash0 and Radar checks behind it
 
 Built at the [Cloud Native Hackathon](https://www.wemakedevs.org/hackathons/cnh) (WeMakeDevs and Radar), starting from [skyhook-io/cnh-starter](https://github.com/skyhook-io/cnh-starter).

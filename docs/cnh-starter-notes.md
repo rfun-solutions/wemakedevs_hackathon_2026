@@ -77,7 +77,7 @@ Your repo and your image are public, so an API key for a hosted AI model, or any
    ```
    If you change the key later, restart the app so it reads the new value.
 
-Argo CD leaves this Secret alone, even with `prune: true`: it only prunes what it deployed from git. Never put a key in the code, the Dockerfile, a build argument or a commit, and don't log it. If one does reach GitHub or your image, revoke it with the provider and make a new one. Your agent's recipe for this, plus one-off Jobs, dependencies and checking the running app, is in [`examples/agent-workflows`](examples/agent-workflows/README.md).
+Argo CD leaves this Secret alone, even with `prune: true`: it only prunes what it deployed from git. Never put a key in the code, the Dockerfile, a build argument or a commit, and don't log it. If one does reach GitHub or your image, revoke it with the provider and make a new one. Your agent's recipe for this, plus one-off Jobs, dependencies and checking the running app, is in [`examples/agent-workflows`](../examples/agent-workflows/README.md).
 
 ## What Radar can do for you
 
@@ -98,7 +98,7 @@ Pick what your project needs. None of it is required, and more doesn't score hig
 
 **Going further:** Radar also understands OpenTelemetry, Sealed Secrets, Argo Workflows and Argo Rollouts analysis, among others. You're cluster-admin, so install what your project needs (see [Your cluster](#your-cluster)).
 
-For credentials, one-off Jobs, dependencies and checking the running app, see [the optional agent workflows](examples/agent-workflows/README.md).
+For credentials, one-off Jobs, dependencies and checking the running app, see [the optional agent workflows](../examples/agent-workflows/README.md).
 
 Replace `app/` with your own project whenever you like. Keep it listening on `$PORT` (8080) with `/healthz` and `/readyz`, or update the probes in `deploy/`. The Dockerfile installs the dependencies in `app/package.json`; for another language, change the Dockerfile too.
 
