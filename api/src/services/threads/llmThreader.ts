@@ -16,6 +16,7 @@ import {
 export const MAX_LLM_NOTES = 40;
 export const MAX_NOTE_CHARS_TOTAL = 6000;
 export const MAX_TOKENS = 2048;
+export const MAX_ATTEMPTS = 2;
 export const DEFAULT_THREADS_MODEL = 'claude-haiku-5-5';
 
 export interface ThreaderUsage {
@@ -167,7 +168,7 @@ export async function llmGroup(input: LlmGroupInput, deps: LlmGroupDeps): Promis
 
   let usage: ThreaderUsage | undefined;
   let lastTrace: string | undefined;
-  for (let attempt = 0; attempt < 2; attempt++) {
+  for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
     let res: CompleteResult;
     try {
       res = await complete({

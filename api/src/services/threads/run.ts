@@ -7,6 +7,7 @@ import {
   buildUserMessage,
   DEFAULT_THREADS_MODEL,
   llmGroup,
+  MAX_ATTEMPTS,
   MAX_TOKENS,
   SYSTEM_PROMPT,
   ThreadingFallback,
@@ -120,7 +121,7 @@ export async function runThreading(opts: RunOptions): Promise<RunResult> {
       const { content } = buildUserMessage({ notes, openThreads, promises });
       const cap = decideCap(
         await spentOnDay(tx, opts.deviceId, await denverToday(tx)),
-        worstCaseCostUsd(model, content.length + SYSTEM_PROMPT.length, MAX_TOKENS),
+        MAX_ATTEMPTS * worstCaseCostUsd(model, content.length + SYSTEM_PROMPT.length, MAX_TOKENS),
         dailyCapUsd(env),
       );
       if (!cap.allowed) {
