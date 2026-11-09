@@ -65,4 +65,56 @@ describe('mapFeed (v1)', () => {
       expect(() => mapFeed(feed)).toThrow(FeedShapeError);
     });
   });
+
+  describe('tolerant reader (incident 2: live feed shape, sanitised)', () => {
+    // Structure of the live Sessionize schedule feed checked 2026-11-09: extra top-level keys
+    // (speakers, questions), and sort/type on rooms, categories and category items. All values
+    // here are fictional; no real names, emails or text.
+    const liveShape = () => {
+      const feed = load('sessionize-v1');
+      feed.speakers = [{ id: 'fictional-speaker-0', fullName: 'Fictional Person' }];
+      feed.questions = [{ id: 1, question: 'Fictional question?', questionType: 'Short_Text' }];
+      feed.rooms = feed.rooms.map((r: object, i: number) => ({ ...r, sort: i }));
+      feed.categories = feed.categories.map((c: { items: object[] }, i: number) => ({
+        ...c,
+        sort: i,
+        type: 'Session',
+        items: c.items.map((it, j) => ({ ...it, sort: j })),
+      }));
+      feed.sessions = feed.sessions.map((s: object) => ({
+        ...s,
+        isServiceSession: false,
+        isPlenumSession: false,
+        speakers: ['fictional-speaker-0'],
+        questionAnswers: [],
+        liveUrl: null,
+        recordingUrl: null,
+        status: 'Accepted',
+        isInformed: true,
+        isConfirmed: true,
+      }));
+      return feed;
+    };
+    it('accepts sort/type on rooms, categories and category items plus extra top-level keys', () =>
+      expect(mapFeed(liveShape())).toEqual(mapped));
+    it('stores no speaker or question data', () =>
+      expect(JSON.stringify(mapFeed(liveShape()))).not.toMatch(
+        /fictional-speaker|Fictional Person|Fictional question|speaker/i,
+      ));
+    it('still rejects a room without a name', () => {
+      const feed = liveShape();
+      delete feed.rooms[0].name;
+      expect(() => mapFeed(feed)).toThrow(/name/);
+    });
+    it('still rejects a category item without a name', () => {
+      const feed = liveShape();
+      delete feed.categories[0].items[0].name;
+      expect(() => mapFeed(feed)).toThrow(FeedShapeError);
+    });
+    it('still rejects a wrongly typed room id', () => {
+      const feed = liveShape();
+      feed.rooms[0].id = 'x';
+      expect(() => mapFeed(feed)).toThrow(FeedShapeError);
+    });
+  });
 });
