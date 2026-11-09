@@ -1,8 +1,8 @@
 ## 1. Repo base and workspaces (PR "C0-base", C0a; merges alone first, before C0w and C0b branch)
 - [ ] 1.1 Copy `cnh-starter` clean (no `.git`), run `scripts/setup.sh <team>`, keep `.agents/` and Radar guidance
-- [ ] 1.2 Root `package.json` with workspaces `api/`, `web/`; shared `tsconfig.base.json`, eslint (with `eslint-plugin-jsx-a11y` recommended rules), prettier, `.gitignore`, `.nvmrc` 22
-- [ ] 1.3 Install the full known dependency set (design D1, including `happy-dom` and `@testing-library/preact`) and commit `package-lock.json`. After C0-base no other agent changes `dependencies`, `devDependencies` or `package-lock.json`; a new dependency is a request to the orchestrator, who lands a `build: [KC-1] add <pkg>` PR from `main`
-- [ ] 1.4 Multi-stage `Dockerfile`; verify `docker build` and `docker run` serve `/healthz`
+- [x] 1.2 Root `package.json` with workspaces `api/`, `web/`; shared `tsconfig.base.json`, eslint (with `eslint-plugin-jsx-a11y` recommended rules), prettier, `.gitignore`, `.nvmrc` 22
+- [x] 1.3 Install the full known dependency set (design D1, including `happy-dom` and `@testing-library/preact`) and commit `package-lock.json`. After C0-base no other agent changes `dependencies`, `devDependencies` or `package-lock.json`; a new dependency is a request to the orchestrator, who lands a `build: [KC-1] add <pkg>` PR from `main`
+- [x] 1.4 Multi-stage `Dockerfile`; verify `docker build` and `docker run` serve `/healthz`
 
 ## 2. API foundation
 - [ ] 2.1 Fastify app, static serving of `web/dist` with SPA fallback, `api/src/routes/index.ts` registry with `GET /api/ping` (204; the shared RTT probe F consumes) and one pre-written marker comment per change id in merge order (design D3 "Registry markers")
