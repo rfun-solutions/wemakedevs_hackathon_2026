@@ -1,0 +1,61 @@
+# c-evening-threads: nightly threading for every device with notes that day.
+# Suspended by default so the demo is deterministic; use Radar's manage_cronjob tool to run it manually.
+# THREADS_CRON_TOKEN is an optional key of the shared Secret kc-secrets (created out of band, never in git).
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: threads-nightly
+  labels:
+    app: threads-nightly
+spec:
+  schedule: "0 2 * * *"
+  timeZone: America/Denver
+  suspend: true
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 2
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      activeDeadlineSeconds: 120
+      template:
+        metadata:
+          labels:
+            app: threads-nightly
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: run
+              image: app
+              command:
+                - node
+                - --import
+                - ./api/dist/telemetry.js
+                - api/dist/services/threads/cronMain.js
+              env:
+                - name: DASH0_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: kc-secrets
+                      key: DASH0_TOKEN
+                      optional: true
+                - name: THREADS_CRON_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: kc-secrets
+                      key: THREADS_CRON_TOKEN
+                      optional: true
+              resources:
+                requests:
+                  cpu: 50m
+                  memory: 64Mi
+                limits:
+                  cpu: 200m
+                  memory: 128Mi
+              securityContext:
+                runAsNonRoot: true
+                allowPrivilegeEscalation: false
+                seccompProfile:
+                  type: RuntimeDefault
+                capabilities:
+                  drop: ["ALL"]
