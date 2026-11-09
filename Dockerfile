@@ -9,6 +9,11 @@ RUN npm ci --no-audit --no-fund
 COPY tsconfig.base.json ./
 COPY api/ api/
 COPY web/ web/
+# Browser telemetry: the ingest-only Dash0 token is baked into the web bundle at build time (build stage only,
+# never the runtime stage). Empty for PR builds; the app works without it. Passed by deploy.yaml.
+ARG VITE_DASH0_INGEST_TOKEN=""
+ARG VITE_DASH0_ENDPOINT=""
+ENV VITE_DASH0_INGEST_TOKEN=$VITE_DASH0_INGEST_TOKEN VITE_DASH0_ENDPOINT=$VITE_DASH0_ENDPOINT
 # Workspaces without a build script are skipped; ensure the output dirs exist for the COPY below.
 RUN npm run build && mkdir -p api/dist web/dist
 
@@ -27,12 +32,12 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY package.json ./
 COPY api/package.json api/
 COPY --from=build /build/api/dist api/dist
+COPY api/migrations api/migrations
 COPY --from=build /build/web/dist web/dist
-# The starter app is kept until the Fastify server lands (c0-scaffold group 2); it serves /healthz.
-COPY app/ app/
 ARG APP_VERSION=dev
 ENV PORT=8080 APP_VERSION=$APP_VERSION NODE_ENV=production
 # The node image's "node" user, by number so runAsNonRoot can check it.
 USER 1000
 EXPOSE 8080
-CMD ["sh", "-c", "if [ -f api/dist/server.js ]; then exec node api/dist/server.js; else exec node app/server.js; fi"]
+# telemetry.js is preloaded so OTel instruments http/pg/pino before the app imports them (design D3).
+CMD ["node", "--import", "./api/dist/telemetry.js", "api/dist/server.js"]
