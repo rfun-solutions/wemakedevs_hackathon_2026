@@ -528,7 +528,7 @@
       "description": "Fictional service session.",
       "startsAt": "2026-11-10T08:00:00",
       "endsAt": "2026-11-10T09:00:00",
-      "roomId": 5,
+      "roomId": 4,
       "categoryItems": [15, 20]
     },
     {
@@ -544,27 +544,27 @@
   "rooms": [
     {
       "id": 1,
-      "name": "Hyatt Regency | Level 2 | 260A"
+      "name": "Salt Palace | 260A"
     },
     {
       "id": 2,
-      "name": "Hyatt Regency | Level 2 | 260B"
+      "name": "Salt Palace | 260B"
     },
     {
       "id": 3,
-      "name": "Hyatt Regency | Level 3 | Mesa Ballroom"
+      "name": "Salt Palace | 151G"
     },
     {
       "id": 4,
-      "name": "Hyatt Regency | Level 3 | 301"
+      "name": "Salt Palace | 200 South Entrance (South)"
     },
     {
       "id": 5,
-      "name": "Colorado Convention Center | Level 1 | Hall A"
+      "name": "Salt Palace | Hall DE"
     },
     {
       "id": 6,
-      "name": "Colorado Convention Center | Level 4 | 405"
+      "name": "Hyatt Regency | Grand Ballroom"
     }
   ],
   "categories": [
