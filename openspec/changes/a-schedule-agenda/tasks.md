@@ -1,11 +1,11 @@
 ## 1. Data and ingest (PR 1)
-- [ ] 1.1 Migrations `api/migrations/100_sessions.sql`, `101_agenda_items.sql`, `102_feed_runs.sql`
-- [ ] 1.2 Reuse G's fixture `feed-contract/fixtures/sessionize-v1.json` (60 sessions; no speakers); add no second copy
-- [ ] 1.3 `time.ts`: naive Denver wall time to UTC; unit tests incl. MST and MDT dates
-- [ ] 1.4 `rooms.ts` mapper (building/level/room, irregular names) with unit tests
-- [ ] 1.5 `access-tags.ts` heuristics with unit tests
-- [ ] 1.6 `api/src/services/schedule/derive.ts` wraps G's `mapFeed` and adds the derived fields (building, level and room via `rooms.ts`, UTC instants via `time.ts`, access tags); never edit G's `api/src/services/sessionize/*` files (Gitar's on-stage feed fix edits `mapper.ts`). `ingest.ts` `runIngest()` calls G's `fetchFeed`, then `derive.ts` (no retry, no v2), with validation, transactional upsert, `feed_runs`; drift test; span `kc.schedule.ingest`; metrics `kc_schedule_ingest_runs_total`, `kc_schedule_feed_age_seconds`
-- [ ] 1.7 Startup hook, `jobs/ingest.ts` entry and `deploy/cronjob-ingest.yaml` (every 30 min; no secrets needed), listed under the `# >> a-schedule-agenda` marker in `deploy/kustomization.yaml` `resources:`
+- [x] 1.1 Migrations `api/migrations/100_sessions.sql`, `101_agenda_items.sql`, `102_feed_runs.sql`
+- [x] 1.2 Reuse G's fixture `feed-contract/fixtures/sessionize-v1.json` (60 sessions; no speakers); add no second copy
+- [x] 1.3 `time.ts`: naive Denver wall time to UTC; unit tests incl. MST and MDT dates
+- [x] 1.4 `rooms.ts` mapper (building/level/room, irregular names) with unit tests
+- [x] 1.5 `access-tags.ts` heuristics with unit tests
+- [x] 1.6 `api/src/services/schedule/derive.ts` wraps G's `mapFeed` and adds the derived fields (building, level and room via `rooms.ts`, UTC instants via `time.ts`, access tags); never edit G's `api/src/services/sessionize/*` files (Gitar's on-stage feed fix edits `mapper.ts`). `ingest.ts` `runIngest()` calls G's `fetchFeed`, then `derive.ts` (no retry, no v2), with validation, transactional upsert, `feed_runs`; drift test; span `kc.schedule.ingest`; metrics `kc_schedule_ingest_runs_total`, `kc_schedule_feed_age_seconds`
+- [x] 1.7 Startup hook, `jobs/ingest.ts` entry and `deploy/cronjob-ingest.yaml` (every 30 min; no secrets needed), listed under the `# >> a-schedule-agenda` marker in `deploy/kustomization.yaml` `resources:`
 
 ## 2. API (PR 2)
 - [ ] 2.1 `GET /api/sessions` (day, room, track filters, `is_service` hidden) with span `kc.schedule.sessions_list` and tests
