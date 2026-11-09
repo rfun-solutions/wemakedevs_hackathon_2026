@@ -130,9 +130,9 @@ describe('Agent0 service', () => {
     const secondExplain = svc.explain('es');
     expect(translate).toHaveBeenNthCalledWith(2, 'second', 'es');
 
-    translations[0].resolve('ES:first');
+    translations[0]?.resolve('ES:first');
     await expect(firstExplain).resolves.toMatchObject({ text: 'ES:first', lang: 'es' });
-    translations[1].resolve('ES:second');
+    translations[1]?.resolve('ES:second');
     await expect(secondExplain).resolves.toMatchObject({ text: 'ES:second', lang: 'es' });
   });
 
