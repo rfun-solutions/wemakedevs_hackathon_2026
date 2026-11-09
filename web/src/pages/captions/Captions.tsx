@@ -62,7 +62,15 @@ export function Captions() {
   const dialog = useRef<HTMLDialogElement>(null);
   const typedInput = useRef<HTMLInputElement>(null);
 
-  useEffect(() => () => session.current?.stop(), []);
+  const mounted = useRef(true);
+  useEffect(
+    () => () => {
+      mounted.current = false;
+      abort.current?.abort();
+      session.current?.stop();
+    },
+    [],
+  );
   useEffect(() => {
     const d = dialog.current;
     if (!d) return;
@@ -84,7 +92,12 @@ export function Captions() {
     if (s.type === 'engine') setEngine(s.engine);
     if (s.type === 'switched') setEngine(s.to);
     if (s.type === 'downloading') setDownloading(true);
-    if (s.type === 'engine' || s.type === 'download_cancelled' || s.type === 'gave_up')
+    if (
+      s.type === 'engine' ||
+      s.type === 'switched' ||
+      s.type === 'download_cancelled' ||
+      s.type === 'gave_up'
+    )
       setDownloading(false);
     if (s.type === 'unsupported') setTypedMode(true);
     const m = statusMessage(s);
@@ -100,6 +113,11 @@ export function Captions() {
       signal: abort.current.signal,
       requestConsent: () => new Promise<boolean>((resolve) => setConsentAsk(() => resolve)),
     });
+    if (!mounted.current) {
+      // Left the page while starting (mic prompt, health, consent, download): do not leave the mic running.
+      s.stop();
+      return;
+    }
     setStarting(false);
     setDownloading(false);
     session.current = s;

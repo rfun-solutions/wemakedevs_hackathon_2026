@@ -120,6 +120,10 @@ export async function startCaptionsWith(
 
   let stopped = false;
   let current: Engine | null = null;
+  /** Engine being started; its callbacks are accepted while the previous engine keeps captioning. */
+  let pending: EngineId | null = null;
+  let consentDeclined = false;
+  let lastPercentStep = -1;
   const session: CaptionSession = {
     supported: true,
     stop() {
@@ -132,13 +136,15 @@ export async function startCaptionsWith(
 
   const sli = createSliMonitor(() => order.some((e) => e !== session.engine));
 
+  const accepts = (id: EngineId) => session.engine === id || pending === id;
+
   function callbacks(id: EngineId): EngineCallbacks {
     return {
       onSegment: (seg) => {
-        if (!stopped && session.engine === id) onSegment(seg);
+        if (!stopped && accepts(id)) onSegment(seg);
       },
       onLag: (ms) => {
-        if (stopped || session.engine !== id) return;
+        if (stopped || !accepts(id)) return;
         metric.lag(ms, id);
         reporter.add(id, ms);
         const action = sli.record(ms);
@@ -146,7 +152,7 @@ export async function startCaptionsWith(
         else if (action === 'switch') void switchEngine('slow');
       },
       onGiveUp: (reason) => {
-        if (!stopped && session.engine === id) status({ type: 'gave_up', reason });
+        if (!stopped && accepts(id)) status({ type: 'gave_up', reason });
       },
     };
   }
@@ -157,28 +163,41 @@ export async function startCaptionsWith(
     try {
       if (id === 'whisper') {
         if (!deps.hasConsent()) {
+          if (consentDeclined) return false; // never re-ask mid-talk after a "no"
           const ok = (await options.requestConsent?.()) === true;
-          if (!ok) return false;
+          if (!ok) {
+            consentDeclined = true;
+            return false;
+          }
           deps.saveConsent();
         }
         engine = deps.makeWhisper(callbacks(id), {
           signal: options.signal,
-          onProgress: (loaded, total) => status({ type: 'downloading', loaded, total }),
+          // Throttled to 10% steps so the polite live region is not flooded.
+          onProgress: (loaded, total) => {
+            const step = total > 0 ? Math.floor((loaded / total) * 10) : 0;
+            if (step === lastPercentStep) return;
+            lastPercentStep = step;
+            status({ type: 'downloading', loaded, total });
+          },
         });
       } else {
         engine = deps.makeWebSpeech(callbacks(id));
       }
-      session.engine = id; // set before start so early callbacks pass the guard
+      pending = id;
       await engine.start();
     } catch {
+      pending = null;
       if (options.signal?.aborted) status({ type: 'download_cancelled' });
       return false;
     }
+    pending = null;
     if (stopped) {
       engine.stop();
       return true;
     }
     current = engine;
+    session.engine = id;
     return true;
   }
 
@@ -193,7 +212,6 @@ export async function startCaptionsWith(
         status({ type: 'switched', from, to: next });
         return;
       }
-      session.engine = from;
     }
   }
 
@@ -204,7 +222,6 @@ export async function startCaptionsWith(
       status({ type: 'engine', engine: id, fallback: i > 0 });
       return session;
     }
-    session.engine = undefined;
   }
   reporter.stop();
   status({ type: 'unsupported' });

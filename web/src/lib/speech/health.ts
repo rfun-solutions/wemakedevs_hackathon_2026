@@ -1,4 +1,5 @@
 import { getDeviceId } from '../device';
+import { emit } from './telemetry';
 import type { DeviceClass, EngineId } from './types';
 
 export const HEALTH_TIMEOUT_MS = 1500;
@@ -19,6 +20,7 @@ export async function fetchCaptionsHealth(
   fetchFn: typeof fetch = globalThis.fetch,
   timeoutMs = HEALTH_TIMEOUT_MS,
 ): Promise<CaptionsHealth> {
+  emit('kc.captions.health_fetch', { deviceClass });
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), timeoutMs);
   try {

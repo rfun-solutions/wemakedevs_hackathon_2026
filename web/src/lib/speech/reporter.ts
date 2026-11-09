@@ -1,8 +1,10 @@
 import { getDeviceId } from '../device';
+import { emit } from './telemetry';
 import type { DeviceClass, EngineId } from './types';
 
 export const SLI_URL = '/api/captions/sli';
 export const MAX_SAMPLES = 20;
+export const SLI_TIMEOUT_MS = 5000;
 const MAX_SAMPLE_MS = 120_000;
 
 export interface ReporterOptions {
@@ -43,11 +45,13 @@ export function createSliReporter(opts: ReporterOptions): SliReporter {
     batch = [];
     batchEngine = null;
     const f = opts.fetchFn ?? globalThis.fetch;
+    emit('kc.captions.sli_post', { samples: JSON.parse(body).samples.length });
     try {
       void Promise.resolve(
         f(SLI_URL, {
           method: 'POST',
           keepalive: true,
+          signal: AbortSignal.timeout?.(SLI_TIMEOUT_MS),
           headers: { 'Content-Type': 'application/json', 'X-Device-Id': getDeviceId() },
           body,
         }),
