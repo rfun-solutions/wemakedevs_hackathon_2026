@@ -1,6 +1,6 @@
 # KubeCompanion
 
-At a conference you have more conversations and ideas per hour than you can remember ("I forget every conversation I had an hour ago"). KubeCompanion lets anyone capture a note, a person or a promise in seconds, and lets AI organise the week into threads that end in actions you can take later. This is for everyone.
+At a conference you have more conversations and ideas per hour than you can remember ("I forget every conversation I had an hour ago"). KubeCompanion lets anyone capture a note, a person or a promise in seconds, and lets AI organize the week into threads that end in actions you can take later. This is for everyone.
 
 On top of that, Deaf, hard-of-hearing and ESL attendees lose access at the talk-room door: captions, communication cards and translation carry into the hallway. Every access feature is reviewed for inclusion before it ships (Gitar), measured live (Dash0) and kept healthy on the cluster (Radar).
 
