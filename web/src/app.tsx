@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'preact/hooks';
 import { LocationProvider, Router, Route, useLocation } from 'preact-iso';
 import { routes } from './routes';
-import { navItems } from './nav';
+import { NavBar } from './nav-bar';
 import { NotFound } from './screens/NotFound';
 import { LANGS, LANG_NAMES, setLang, t, useLang } from './i18n';
 import { LiveRegions } from './a11y/LiveRegions'; // >> d-access-kit
@@ -60,17 +60,7 @@ function Shell() {
       <div class="live" role="status" aria-live="polite">
         {online ? '' : t('app.offline.notice')}
       </div>
-      <nav class="shell-nav" aria-label={t('app.nav.label')}>
-        <ul>
-          {navItems.map((n) => (
-            <li key={n.path}>
-              <a href={n.path} aria-current={path === n.path ? 'page' : undefined}>
-                {t(n.labelKey)}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </nav>
+      <NavBar path={path} />
     </div>
   );
 }

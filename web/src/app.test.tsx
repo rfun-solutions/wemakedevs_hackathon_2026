@@ -8,7 +8,7 @@ describe('shell', () => {
   it('renders the app name, a real button, a live region and the nav', () => {
     render(<App />);
     expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('KubeCompanion');
-    expect(screen.getByRole('button')).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Español' })).toBeTruthy();
     expect(screen.getByRole('status')).toBeTruthy();
     expect(screen.getByRole('navigation')).toBeTruthy();
   });
