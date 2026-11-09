@@ -48,6 +48,10 @@ test.describe('status screen', () => {
   test('nav link to Status meets the 24 px target minimum', async ({ page }) => {
     await stubApi(page);
     await page.goto('/');
+    await page
+      .getByRole('navigation')
+      .getByRole('button', { name: /More|Más/ })
+      .click(); // Status lives under More
     const link = page.getByRole('navigation').getByRole('link', { name: /Status|Estado/ });
     const box = await link.boundingBox();
     expect(box!.width).toBeGreaterThanOrEqual(24);
