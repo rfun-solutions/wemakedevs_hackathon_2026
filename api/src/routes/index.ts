@@ -14,7 +14,11 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
   app.get('/api/ping', async (_req, reply) => reply.code(204).send());
 
   // >> a-schedule-agenda
+  await app.register((await import('../services/schedule/startup.js')).default);
   // >> b-capture
+  await app.register((await import('./notes.js')).default);
+  await app.register((await import('./people.js')).default);
+  await app.register((await import('./promises.js')).default);
   // >> f-observability-product
   // >> f-observability-product-health
   // >> f-observability-product-kay

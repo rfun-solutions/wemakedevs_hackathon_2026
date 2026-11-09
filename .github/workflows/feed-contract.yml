@@ -10,7 +10,7 @@ concurrency:
 jobs:
   feed-contract:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     env:
       FIXTURE: ${{ vars.FEED_FIXTURE || 'sessionize-v1' }}
       MODE: ${{ vars.FEED_MODE || 'ok' }}
@@ -42,3 +42,5 @@ jobs:
         run: npx vitest run --config feed-contract/vitest.config.mjs
       - name: Rules-from-production tests
         run: npx vitest run --config scripts/vitest.config.mjs
+      - name: Deploy bump changes exactly one line
+        run: scripts/test-set-image-tag.sh
