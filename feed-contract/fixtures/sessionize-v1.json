@@ -1,0 +1,620 @@
+{
+  "sessions": [
+    {
+      "id": "100000",
+      "title": "Scaling Ingress Traffic in Practice",
+      "description": "A fictional walkthrough of ingress traffic for demo purposes.",
+      "startsAt": "2026-11-10T09:00:00",
+      "endsAt": "2026-11-10T09:35:00",
+      "roomId": 1,
+      "categoryItems": [10, 20]
+    },
+    {
+      "id": "100001",
+      "title": "Debugging Pipelines in Practice",
+      "description": "A fictional walkthrough of pipelines for demo purposes.",
+      "startsAt": "2026-11-10T09:00:00",
+      "endsAt": "2026-11-10T09:35:00",
+      "roomId": 4,
+      "categoryItems": [11, 21]
+    },
+    {
+      "id": "100002",
+      "title": "Securing Workloads in Practice",
+      "description": "A fictional walkthrough of workloads for demo purposes.",
+      "startsAt": "2026-11-10T09:00:00",
+      "endsAt": "2026-11-10T09:35:00",
+      "roomId": 1,
+      "categoryItems": [12, 22]
+    },
+    {
+      "id": "100003",
+      "title": "Observing Service Meshes in Practice",
+      "description": "A fictional walkthrough of service meshes for demo purposes.",
+      "startsAt": "2026-11-10T10:00:00",
+      "endsAt": "2026-11-10T10:35:00",
+      "roomId": 4,
+      "categoryItems": [13, 20]
+    },
+    {
+      "id": "100004",
+      "title": "Upgrading Storage in Practice",
+      "description": "A fictional walkthrough of storage for demo purposes.",
+      "startsAt": "2026-11-10T10:00:00",
+      "endsAt": "2026-11-10T10:35:00",
+      "roomId": 1,
+      "categoryItems": [14, 21]
+    },
+    {
+      "id": "100005",
+      "title": "Costing Clusters in Practice",
+      "description": "A fictional walkthrough of clusters for demo purposes.",
+      "startsAt": "2026-11-10T10:00:00",
+      "endsAt": "2026-11-10T10:35:00",
+      "roomId": 4,
+      "categoryItems": [15, 22]
+    },
+    {
+      "id": "100006",
+      "title": "Testing Operators in Practice",
+      "description": "A fictional walkthrough of operators for demo purposes.",
+      "startsAt": "2026-11-10T11:00:00",
+      "endsAt": "2026-11-10T11:35:00",
+      "roomId": 1,
+      "categoryItems": [10, 20]
+    },
+    {
+      "id": "100007",
+      "title": "Operating Telemetry in Practice",
+      "description": "A fictional walkthrough of telemetry for demo purposes.",
+      "startsAt": "2026-11-10T11:00:00",
+      "endsAt": "2026-11-10T11:35:00",
+      "roomId": 4,
+      "categoryItems": [11, 21]
+    },
+    {
+      "id": "100008",
+      "title": "Scaling Ingress Traffic in Practice",
+      "description": "A fictional walkthrough of ingress traffic for demo purposes.",
+      "startsAt": "2026-11-10T11:00:00",
+      "endsAt": "2026-11-10T11:35:00",
+      "roomId": 1,
+      "categoryItems": [12, 22]
+    },
+    {
+      "id": "100009",
+      "title": "Debugging Pipelines in Practice",
+      "description": "A fictional walkthrough of pipelines for demo purposes.",
+      "startsAt": "2026-11-10T13:00:00",
+      "endsAt": "2026-11-10T13:35:00",
+      "roomId": 4,
+      "categoryItems": [13, 20]
+    },
+    {
+      "id": "100010",
+      "title": "Securing Workloads in Practice",
+      "description": "A fictional walkthrough of workloads for demo purposes.",
+      "startsAt": "2026-11-10T13:00:00",
+      "endsAt": "2026-11-10T13:35:00",
+      "roomId": 1,
+      "categoryItems": [14, 21]
+    },
+    {
+      "id": "100011",
+      "title": "Observing Service Meshes in Practice",
+      "description": "A fictional walkthrough of service meshes for demo purposes.",
+      "startsAt": "2026-11-10T13:00:00",
+      "endsAt": "2026-11-10T13:35:00",
+      "roomId": 4,
+      "categoryItems": [15, 22]
+    },
+    {
+      "id": "100012",
+      "title": "Upgrading Storage in Practice",
+      "description": "A fictional walkthrough of storage for demo purposes.",
+      "startsAt": "2026-11-10T14:00:00",
+      "endsAt": "2026-11-10T14:35:00",
+      "roomId": 1,
+      "categoryItems": [10, 20]
+    },
+    {
+      "id": "100013",
+      "title": "Costing Clusters in Practice",
+      "description": "A fictional walkthrough of clusters for demo purposes.",
+      "startsAt": "2026-11-10T14:00:00",
+      "endsAt": "2026-11-10T14:35:00",
+      "roomId": 4,
+      "categoryItems": [11, 21]
+    },
+    {
+      "id": "100014",
+      "title": "Testing Operators in Practice",
+      "description": "A fictional walkthrough of operators for demo purposes.",
+      "startsAt": "2026-11-10T14:00:00",
+      "endsAt": "2026-11-10T14:35:00",
+      "roomId": 1,
+      "categoryItems": [12, 22]
+    },
+    {
+      "id": "100015",
+      "title": "Operating Telemetry in Practice",
+      "description": "A fictional walkthrough of telemetry for demo purposes.",
+      "startsAt": "2026-11-10T15:00:00",
+      "endsAt": "2026-11-10T15:35:00",
+      "roomId": 4,
+      "categoryItems": [13, 20]
+    },
+    {
+      "id": "100016",
+      "title": "Scaling Ingress Traffic in Practice",
+      "description": "A fictional walkthrough of ingress traffic for demo purposes.",
+      "startsAt": "2026-11-10T15:00:00",
+      "endsAt": "2026-11-10T15:35:00",
+      "roomId": 1,
+      "categoryItems": [14, 21]
+    },
+    {
+      "id": "100017",
+      "title": "Debugging Pipelines in Practice",
+      "description": "A fictional walkthrough of pipelines for demo purposes.",
+      "startsAt": "2026-11-10T15:00:00",
+      "endsAt": "2026-11-10T15:35:00",
+      "roomId": 4,
+      "categoryItems": [15, 22]
+    },
+    {
+      "id": "100018",
+      "title": "Securing Workloads in Practice",
+      "description": "A fictional walkthrough of workloads for demo purposes.",
+      "startsAt": "2026-11-10T16:00:00",
+      "endsAt": "2026-11-10T16:35:00",
+      "roomId": 1,
+      "categoryItems": [10, 20]
+    },
+    {
+      "id": "100019",
+      "title": "Observing Service Meshes in Practice",
+      "description": "A fictional walkthrough of service meshes for demo purposes.",
+      "startsAt": "2026-11-10T16:00:00",
+      "endsAt": "2026-11-10T16:35:00",
+      "roomId": 4,
+      "categoryItems": [11, 21]
+    },
+    {
+      "id": "100020",
+      "title": "Upgrading Storage in Practice",
+      "description": "A fictional walkthrough of storage for demo purposes.",
+      "startsAt": "2026-11-10T16:00:00",
+      "endsAt": "2026-11-10T16:35:00",
+      "roomId": 1,
+      "categoryItems": [12, 22]
+    },
+    {
+      "id": "100021",
+      "title": "Costing Clusters in Practice",
+      "description": "A fictional walkthrough of clusters for demo purposes.",
+      "startsAt": "2026-11-11T09:00:00",
+      "endsAt": "2026-11-11T09:35:00",
+      "roomId": 4,
+      "categoryItems": [13, 20]
+    },
+    {
+      "id": "100022",
+      "title": "Testing Operators in Practice",
+      "description": "A fictional walkthrough of operators for demo purposes.",
+      "startsAt": "2026-11-11T09:00:00",
+      "endsAt": "2026-11-11T09:35:00",
+      "roomId": 1,
+      "categoryItems": [14, 21]
+    },
+    {
+      "id": "100023",
+      "title": "Operating Telemetry in Practice",
+      "description": "A fictional walkthrough of telemetry for demo purposes.",
+      "startsAt": "2026-11-11T09:00:00",
+      "endsAt": "2026-11-11T09:35:00",
+      "roomId": 4,
+      "categoryItems": [15, 22]
+    },
+    {
+      "id": "100024",
+      "title": "Scaling Ingress Traffic in Practice",
+      "description": "A fictional walkthrough of ingress traffic for demo purposes.",
+      "startsAt": "2026-11-11T10:00:00",
+      "endsAt": "2026-11-11T10:35:00",
+      "roomId": 1,
+      "categoryItems": [10, 20]
+    },
+    {
+      "id": "100025",
+      "title": "Debugging Pipelines in Practice",
+      "description": "A fictional walkthrough of pipelines for demo purposes.",
+      "startsAt": "2026-11-11T10:00:00",
+      "endsAt": "2026-11-11T10:35:00",
+      "roomId": 4,
+      "categoryItems": [11, 21]
+    },
+    {
+      "id": "100026",
+      "title": "Securing Workloads in Practice",
+      "description": "A fictional walkthrough of workloads for demo purposes.",
+      "startsAt": "2026-11-11T10:00:00",
+      "endsAt": "2026-11-11T10:35:00",
+      "roomId": 1,
+      "categoryItems": [12, 22]
+    },
+    {
+      "id": "100027",
+      "title": "Observing Service Meshes in Practice",
+      "description": "A fictional walkthrough of service meshes for demo purposes.",
+      "startsAt": "2026-11-11T11:00:00",
+      "endsAt": "2026-11-11T11:35:00",
+      "roomId": 4,
+      "categoryItems": [13, 20]
+    },
+    {
+      "id": "100028",
+      "title": "Upgrading Storage in Practice",
+      "description": "A fictional walkthrough of storage for demo purposes.",
+      "startsAt": "2026-11-11T11:00:00",
+      "endsAt": "2026-11-11T11:35:00",
+      "roomId": 1,
+      "categoryItems": [14, 21]
+    },
+    {
+      "id": "100029",
+      "title": "Costing Clusters in Practice",
+      "description": "A fictional walkthrough of clusters for demo purposes.",
+      "startsAt": "2026-11-11T11:00:00",
+      "endsAt": "2026-11-11T11:35:00",
+      "roomId": 4,
+      "categoryItems": [15, 22]
+    },
+    {
+      "id": "100030",
+      "title": "Testing Operators in Practice",
+      "description": "A fictional walkthrough of operators for demo purposes.",
+      "startsAt": "2026-11-11T13:00:00",
+      "endsAt": "2026-11-11T13:35:00",
+      "roomId": 1,
+      "categoryItems": [10, 20]
+    },
+    {
+      "id": "100031",
+      "title": "Operating Telemetry in Practice",
+      "description": "A fictional walkthrough of telemetry for demo purposes.",
+      "startsAt": "2026-11-11T13:00:00",
+      "endsAt": "2026-11-11T13:35:00",
+      "roomId": 4,
+      "categoryItems": [11, 21]
+    },
+    {
+      "id": "100032",
+      "title": "Scaling Ingress Traffic in Practice",
+      "description": "A fictional walkthrough of ingress traffic for demo purposes.",
+      "startsAt": "2026-11-11T13:00:00",
+      "endsAt": "2026-11-11T13:35:00",
+      "roomId": 1,
+      "categoryItems": [12, 22]
+    },
+    {
+      "id": "100033",
+      "title": "Debugging Pipelines in Practice",
+      "description": "A fictional walkthrough of pipelines for demo purposes.",
+      "startsAt": "2026-11-11T14:00:00",
+      "endsAt": "2026-11-11T14:35:00",
+      "roomId": 4,
+      "categoryItems": [13, 20]
+    },
+    {
+      "id": "100034",
+      "title": "Securing Workloads in Practice",
+      "description": "A fictional walkthrough of workloads for demo purposes.",
+      "startsAt": "2026-11-11T14:00:00",
+      "endsAt": "2026-11-11T14:35:00",
+      "roomId": 1,
+      "categoryItems": [14, 21]
+    },
+    {
+      "id": "100035",
+      "title": "Observing Service Meshes in Practice",
+      "description": "A fictional walkthrough of service meshes for demo purposes.",
+      "startsAt": "2026-11-11T14:00:00",
+      "endsAt": "2026-11-11T14:35:00",
+      "roomId": 4,
+      "categoryItems": [15, 22]
+    },
+    {
+      "id": "100036",
+      "title": "Upgrading Storage in Practice",
+      "description": "A fictional walkthrough of storage for demo purposes.",
+      "startsAt": "2026-11-11T15:00:00",
+      "endsAt": "2026-11-11T15:35:00",
+      "roomId": 1,
+      "categoryItems": [10, 20]
+    },
+    {
+      "id": "100037",
+      "title": "Costing Clusters in Practice",
+      "description": "A fictional walkthrough of clusters for demo purposes.",
+      "startsAt": "2026-11-11T15:00:00",
+      "endsAt": "2026-11-11T15:35:00",
+      "roomId": 4,
+      "categoryItems": [11, 21]
+    },
+    {
+      "id": "100038",
+      "title": "Testing Operators in Practice",
+      "description": "A fictional walkthrough of operators for demo purposes.",
+      "startsAt": "2026-11-11T15:00:00",
+      "endsAt": "2026-11-11T15:35:00",
+      "roomId": 1,
+      "categoryItems": [12, 22]
+    },
+    {
+      "id": "100039",
+      "title": "Operating Telemetry in Practice",
+      "description": "A fictional walkthrough of telemetry for demo purposes.",
+      "startsAt": "2026-11-11T16:00:00",
+      "endsAt": "2026-11-11T16:35:00",
+      "roomId": 4,
+      "categoryItems": [13, 20]
+    },
+    {
+      "id": "100040",
+      "title": "Scaling Ingress Traffic in Practice",
+      "description": "A fictional walkthrough of ingress traffic for demo purposes.",
+      "startsAt": "2026-11-11T16:00:00",
+      "endsAt": "2026-11-11T16:35:00",
+      "roomId": 1,
+      "categoryItems": [14, 21]
+    },
+    {
+      "id": "100041",
+      "title": "Debugging Pipelines in Practice",
+      "description": "A fictional walkthrough of pipelines for demo purposes.",
+      "startsAt": "2026-11-11T16:00:00",
+      "endsAt": "2026-11-11T16:35:00",
+      "roomId": 4,
+      "categoryItems": [15, 22]
+    },
+    {
+      "id": "100042",
+      "title": "Securing Workloads in Practice",
+      "description": "A fictional walkthrough of workloads for demo purposes.",
+      "startsAt": "2026-11-12T09:00:00",
+      "endsAt": "2026-11-12T09:35:00",
+      "roomId": 1,
+      "categoryItems": [10, 20]
+    },
+    {
+      "id": "100043",
+      "title": "Observing Service Meshes in Practice",
+      "description": "A fictional walkthrough of service meshes for demo purposes.",
+      "startsAt": "2026-11-12T09:00:00",
+      "endsAt": "2026-11-12T09:35:00",
+      "roomId": 4,
+      "categoryItems": [11, 21]
+    },
+    {
+      "id": "100044",
+      "title": "Upgrading Storage in Practice",
+      "description": "A fictional walkthrough of storage for demo purposes.",
+      "startsAt": "2026-11-12T09:00:00",
+      "endsAt": "2026-11-12T09:35:00",
+      "roomId": 1,
+      "categoryItems": [12, 22]
+    },
+    {
+      "id": "100045",
+      "title": "Costing Clusters in Practice",
+      "description": "A fictional walkthrough of clusters for demo purposes.",
+      "startsAt": "2026-11-12T10:00:00",
+      "endsAt": "2026-11-12T10:35:00",
+      "roomId": 4,
+      "categoryItems": [13, 20]
+    },
+    {
+      "id": "100046",
+      "title": "Testing Operators in Practice",
+      "description": "A fictional walkthrough of operators for demo purposes.",
+      "startsAt": "2026-11-12T10:00:00",
+      "endsAt": "2026-11-12T10:35:00",
+      "roomId": 1,
+      "categoryItems": [14, 21]
+    },
+    {
+      "id": "100047",
+      "title": "Operating Telemetry in Practice",
+      "description": "A fictional walkthrough of telemetry for demo purposes.",
+      "startsAt": "2026-11-12T10:00:00",
+      "endsAt": "2026-11-12T10:35:00",
+      "roomId": 4,
+      "categoryItems": [15, 22]
+    },
+    {
+      "id": "100048",
+      "title": "Scaling Ingress Traffic in Practice",
+      "description": "A fictional walkthrough of ingress traffic for demo purposes.",
+      "startsAt": "2026-11-12T11:00:00",
+      "endsAt": "2026-11-12T11:35:00",
+      "roomId": 1,
+      "categoryItems": [10, 20]
+    },
+    {
+      "id": "100049",
+      "title": "Debugging Pipelines in Practice",
+      "description": "A fictional walkthrough of pipelines for demo purposes.",
+      "startsAt": "2026-11-12T11:00:00",
+      "endsAt": "2026-11-12T11:35:00",
+      "roomId": 4,
+      "categoryItems": [11, 21]
+    },
+    {
+      "id": "100050",
+      "title": "Securing Workloads in Practice",
+      "description": "A fictional walkthrough of workloads for demo purposes.",
+      "startsAt": "2026-11-12T11:00:00",
+      "endsAt": "2026-11-12T11:35:00",
+      "roomId": 1,
+      "categoryItems": [12, 22]
+    },
+    {
+      "id": "100051",
+      "title": "Observing Service Meshes in Practice",
+      "description": "A fictional walkthrough of service meshes for demo purposes.",
+      "startsAt": "2026-11-12T13:00:00",
+      "endsAt": "2026-11-12T13:35:00",
+      "roomId": 4,
+      "categoryItems": [13, 20]
+    },
+    {
+      "id": "100052",
+      "title": "Upgrading Storage in Practice",
+      "description": "A fictional walkthrough of storage for demo purposes.",
+      "startsAt": "2026-11-12T13:00:00",
+      "endsAt": "2026-11-12T13:35:00",
+      "roomId": 1,
+      "categoryItems": [14, 21]
+    },
+    {
+      "id": "100053",
+      "title": "Costing Clusters in Practice",
+      "description": "A fictional walkthrough of clusters for demo purposes.",
+      "startsAt": "2026-11-12T13:00:00",
+      "endsAt": "2026-11-12T13:35:00",
+      "roomId": 4,
+      "categoryItems": [15, 22]
+    },
+    {
+      "id": "100054",
+      "title": "Testing Operators in Practice",
+      "description": "A fictional walkthrough of operators for demo purposes.",
+      "startsAt": "2026-11-12T14:00:00",
+      "endsAt": "2026-11-12T14:35:00",
+      "roomId": 1,
+      "categoryItems": [10, 20]
+    },
+    {
+      "id": "100055",
+      "title": "Operating Telemetry in Practice",
+      "description": "A fictional walkthrough of telemetry for demo purposes.",
+      "startsAt": "2026-11-12T14:00:00",
+      "endsAt": "2026-11-12T14:35:00",
+      "roomId": 4,
+      "categoryItems": [11, 21]
+    },
+    {
+      "id": "100056",
+      "title": "Scaling Ingress Traffic in Practice",
+      "description": "A fictional walkthrough of ingress traffic for demo purposes.",
+      "startsAt": "2026-11-12T14:00:00",
+      "endsAt": "2026-11-12T14:35:00",
+      "roomId": 1,
+      "categoryItems": [12, 22]
+    },
+    {
+      "id": "100057",
+      "title": "Debugging Pipelines in Practice",
+      "description": "A fictional walkthrough of pipelines for demo purposes.",
+      "startsAt": "2026-11-12T15:00:00",
+      "endsAt": "2026-11-12T15:35:00",
+      "roomId": 4,
+      "categoryItems": [13, 20]
+    },
+    {
+      "id": "100900",
+      "title": "Registration and Badge Pickup",
+      "description": "Fictional service session.",
+      "startsAt": "2026-11-10T08:00:00",
+      "endsAt": "2026-11-10T09:00:00",
+      "roomId": 5,
+      "categoryItems": [15, 20]
+    },
+    {
+      "id": "100901",
+      "title": "Lunch Break",
+      "description": "Fictional service session.",
+      "startsAt": "2026-11-10T12:00:00",
+      "endsAt": "2026-11-10T13:00:00",
+      "roomId": 5,
+      "categoryItems": [15, 20]
+    }
+  ],
+  "rooms": [
+    {
+      "id": 1,
+      "name": "Hyatt Regency | Level 2 | 260A"
+    },
+    {
+      "id": 2,
+      "name": "Hyatt Regency | Level 2 | 260B"
+    },
+    {
+      "id": 3,
+      "name": "Hyatt Regency | Level 3 | Mesa Ballroom"
+    },
+    {
+      "id": 4,
+      "name": "Hyatt Regency | Level 3 | 301"
+    },
+    {
+      "id": 5,
+      "name": "Colorado Convention Center | Level 1 | Hall A"
+    },
+    {
+      "id": 6,
+      "name": "Colorado Convention Center | Level 4 | 405"
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "title": "Track",
+      "items": [
+        {
+          "id": 10,
+          "name": "Platform Engineering"
+        },
+        {
+          "id": 11,
+          "name": "Observability"
+        },
+        {
+          "id": 12,
+          "name": "Security"
+        },
+        {
+          "id": 13,
+          "name": "AI and Machine Learning"
+        },
+        {
+          "id": 14,
+          "name": "Operations"
+        },
+        {
+          "id": 15,
+          "name": "Community"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Level",
+      "items": [
+        {
+          "id": 20,
+          "name": "Beginner"
+        },
+        {
+          "id": 21,
+          "name": "Intermediate"
+        },
+        {
+          "id": 22,
+          "name": "Advanced"
+        }
+      ]
+    }
+  ]
+}
