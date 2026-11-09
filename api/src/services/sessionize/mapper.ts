@@ -1,6 +1,7 @@
 // Sessionize baseline owned by change g-pipeline-feed-contract.
 // A wraps mapFeed in schedule/derive.ts and never edits this file.
 // v1 only: naive local time strings, venue time zone America/Denver, no speaker fields.
+// Tolerant reader: unknown session properties are ignored (never mapped); required fields stay strict.
 import Ajv from 'ajv';
 import schema from './schema.json' with { type: 'json' };
 

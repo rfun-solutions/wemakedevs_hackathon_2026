@@ -15,7 +15,7 @@ the stage beat.
 | Time | Action |
 | --- | --- |
 | T0 | `gh variable set FEED_FIXTURE --body sessionize-v2`, then open the PR (the clock starts at PR open). |
-| T+1 min | `feed-contract` is red at "Validate feed against schema", naming `starts_at`, `ends_at` and the room fields. Gitar review appears. Narrate: "overnight the feed changed shape". |
+| T+1 min | `feed-contract` is red at "Validate feed against schema", naming the missing `startsAt` and `endsAt` and the room fields (unknown extra session fields are tolerated since KC-3 tolerant reader). Gitar review appears. Narrate: "overnight the feed changed shape". |
 | T+2.5 min | Gitar fix commit (mapper and schema accept v2); CI turns green. Show the Dash0 trace if CI traces are on. |
 | Nudge at T+4 | Comment `Gitar fix CI, keep fixtures unchanged`. |
 
