@@ -83,7 +83,7 @@ type NextState =
   | { kind: 'loading' }
   | { kind: 'none' }
   | { kind: 'error' }
-  | { kind: 'session'; session: Session; timing: 'current' | 'next' };
+  | { kind: 'session'; session: Session; now: boolean };
 
 /** Next (or current) session on Kay's agenda; any failure falls back calmly, never blocks the page. */
 function useNextSession(): NextState {
@@ -95,7 +95,9 @@ function useNextSession(): NextState {
         const hit = currentOrNextSession(res.items ?? [], new Date());
         if (!cancelled)
           setState(
-            hit ? { kind: 'session', session: hit.session, timing: hit.state } : { kind: 'none' },
+            hit
+              ? { kind: 'session', session: hit.session, now: hit.state === 'current' }
+              : { kind: 'none' },
           );
       })
       .catch(() => {
@@ -117,7 +119,7 @@ function NextUp({ state, lang }: { state: NextState; lang: string }) {
         {icons.next}
         <span class="home-next-body">
           <span class="home-next-label">
-            {t(state.timing === 'current' ? 'schedule.now.badge' : 'app.home.next.title')}
+            {t(state.now ? 'app.home.next.now' : 'app.home.next.title')}
           </span>
           <span class="home-next-time">{formatTimeRange(s, lang)}</span>
           <span class="home-next-name">{s.title}</span>
@@ -126,24 +128,24 @@ function NextUp({ state, lang }: { state: NextState; lang: string }) {
       </a>
     );
   }
+  if (state.kind === 'loading') {
+    return (
+      <p class="home-next" data-testid="home-next" aria-busy="true">
+        {icons.next}
+        <span class="home-next-body">
+          <span class="home-next-label">{t('app.home.next.title')}</span>
+          <span class="home-next-room">{t('app.home.next.loading')}</span>
+        </span>
+      </p>
+    );
+  }
   return (
-    <a
-      class="home-next"
-      href="/schedule"
-      data-testid="home-next"
-      aria-busy={state.kind === 'loading'}
-    >
+    <a class="home-next" href="/schedule" data-testid="home-next">
       {icons.next}
       <span class="home-next-body">
         <span class="home-next-label">{t('app.home.next.title')}</span>
         <span class="home-next-name">
-          {t(
-            state.kind === 'loading'
-              ? 'app.home.next.loading'
-              : state.kind === 'error'
-                ? 'app.home.next.unavailable'
-                : 'app.home.next.empty',
-          )}
+          {t(state.kind === 'error' ? 'app.home.next.unavailable' : 'app.home.next.empty')}
         </span>
         {state.kind === 'none' && (
           <span class="home-next-room">{t('app.home.next.emptyHint')}</span>

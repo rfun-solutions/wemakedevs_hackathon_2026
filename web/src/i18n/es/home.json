@@ -1,6 +1,5 @@
 {
   "app.home.next.title": "A continuación",
-  "app.home.next.loading": "Cargando tu agenda…",
   "app.home.next.unavailable": "Tu agenda no está disponible por el momento.",
   "app.home.next.empty": "Añade sesiones a tu agenda",
   "app.home.next.emptyHint": "Mira el programa y guarda las charlas que quieras.",
@@ -16,5 +15,7 @@
   "app.home.tile.threads": "Hilos",
   "app.home.tile.threads.desc": "Tu día, todo conectado",
   "app.home.tile.status": "Estado",
-  "app.home.tile.status.desc": "¿La app funciona bien?"
+  "app.home.tile.status.desc": "¿La app funciona bien?",
+  "app.home.next.now": "Ahora mismo",
+  "app.home.next.loading": "Revisando tu agenda…"
 }

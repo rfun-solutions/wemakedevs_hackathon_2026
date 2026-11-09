@@ -70,7 +70,7 @@ test.describe('home', () => {
     });
     await page.goto('/');
     const next = page.getByTestId('home-next');
-    await expect(next).toContainText('Loading your agenda…');
+    await expect(next).toContainText('Checking your agenda…');
     await expect(next).not.toContainText('Add sessions to your agenda');
   });
 
@@ -94,14 +94,14 @@ test.describe('home', () => {
     await expect(next).toHaveAttribute('href', '/agenda');
   });
 
-  test('an in-progress agenda session is labelled Now', async ({ page }) => {
+  test('Next up says Happening now for a session in progress', async ({ page }) => {
     const session = futureSession();
-    session.startsAt = new Date(Date.now() - 5 * 60_000).toISOString();
-    session.endsAt = new Date(Date.now() + 25 * 60_000).toISOString();
+    session.startsAt = new Date(Date.now() - 10 * 60_000).toISOString();
+    session.endsAt = new Date(Date.now() + 20 * 60_000).toISOString();
     await stubAgenda(page, [session]);
     await page.goto('/');
     const next = page.getByTestId('home-next');
-    await expect(next.locator('.home-next-label')).toHaveText('Now');
+    await expect(next.locator('.home-next-label')).toHaveText('Happening now');
     await expect(next.locator('.home-next-label')).not.toHaveText('Next up');
     await expect(next).toContainText('Accessible observability for everyone');
   });
