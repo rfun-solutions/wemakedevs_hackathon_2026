@@ -55,7 +55,7 @@ test.describe('under the hood', () => {
     await stubStatus(page, 'missing');
     await page.goto('/under-the-hood');
     await expect(page.getByText('No live data right now').first()).toBeVisible();
-    await expect(page.getByText(/p95 \d+ ms/)).toHaveCount(0);
+    await expect(page.getByText(/take \d+ ms or less/)).toHaveCount(0);
   });
 
   test('offline shows "No live data right now"', async ({ page, context }) => {
