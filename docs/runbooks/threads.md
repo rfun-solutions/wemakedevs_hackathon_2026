@@ -4,29 +4,25 @@ Owner: c-evening-threads. Credentialing-free; the end user is Kay, a conference 
 
 ## Secret for the nightly job (user runs this, never commit a token)
 
-The CronJob `threads-nightly` and the app read `THREADS_CRON_TOKEN` as an optional key of the Secret `kc-secrets`
-(AGENTS.md "Secrets"). Add the key when you create or recreate `kc-secrets` (generate the value in your shell,
-do not paste it into a file), then restart the app once so the pods pick it up:
+The CronJob `threads-nightly` and the app both read `THREADS_CRON_TOKEN` from the shared Secret `kc-secrets`.
+The Secret is created out of band and is never committed. Add this key when creating `kc-secrets`; if it already exists,
+add the key without replacing its other credentials. Until the key exists the cron path answers 401 and the app is unaffected.
 
 ```sh
-kubectl -n team-kubecompanion2026 create secret generic kc-secrets \
-  --from-literal=ANTHROPIC_API_KEY="$ANTHROPIC_API_KEY" \
-  --from-literal=DASH0_TOKEN="$DASH0_TOKEN" \
-  --from-literal=THREADS_CRON_TOKEN="$(openssl rand -hex 32)"
-kubectl -n team-kubecompanion2026 rollout restart deployment/app
+kubectl -n team-kubecompanion2026 patch secret kc-secrets --type=merge \
+  -p "{\"stringData\":{\"THREADS_CRON_TOKEN\":\"$(openssl rand -hex 32)\"}}"
 ```
 
-Until the key exists the cron path answers 401 and the CronJob job exits 1; the app is unaffected.
+After updating the Secret, restart `deployment/app` with Radar's `manage_workload` tool so its environment picks up the key.
 
-## Run the nightly job
+## Run the nightly job by hand
 
 The CronJob is suspended (`suspend: true`, 02:00 `America/Denver` when enabled) so the demo is deterministic.
 Argo CD self-heal manages it, so change it in git, not with `kubectl patch`:
 
-- To run once now (does not touch the manifest):
-  `kubectl -n team-kubecompanion2026 create job --from=cronjob/threads-nightly threads-manual-$(date +%H%M)`
-  then `kubectl -n team-kubecompanion2026 logs job/<name>`.
-- To enable the schedule: a PR flipping `suspend: false` in `deploy/threads-cronjob.yaml`.
+Use Radar's `manage_cronjob` tool to run `threads-nightly` now, then inspect the Job with `get_workload_logs`.
+To enable the recurring schedule, change `suspend` to `false` in `deploy/threads-cronjob.yaml` and push the change;
+Argo CD will sync it. Do not patch the live CronJob.
 
 ## Settings
 
