@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { backoffMs, classify, createQueue, type QueueItem, type QueueStore } from './queue-core.js';
+import {
+  backoffMs,
+  classify,
+  createQueue,
+  toRequest,
+  type QueueItem,
+  type QueueStore,
+} from './queue-core.js';
 
 function memStore(): QueueStore & { map: Map<string, QueueItem> } {
   const map = new Map<string, QueueItem>();
@@ -163,11 +170,107 @@ describe('queue', () => {
     expect(calls).toBe(1);
   });
 
+  it('an item enqueued while a flush is listing is still posted (no missed pass)', async () => {
+    const bodies: string[] = [];
+    const base = memStore();
+    // The first getAll takes its snapshot now but resolves only when the gate is released, so the
+    // flush is genuinely "listing" while the second item is enqueued and a second flush is requested.
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => (release = resolve));
+    let getAllCalls = 0;
+    const store: QueueStore = {
+      ...base,
+      getAll: async () => {
+        const isFirst = ++getAllCalls === 1;
+        const snapshot = await base.getAll();
+        if (isFirst) await gate;
+        return snapshot;
+      },
+    };
+    let n = 0;
+    const q = createQueue({
+      store,
+      post: async (i) => (bodies.push(i.body), { status: 201 }),
+      uuid: () => `00000000-0000-4000-8000-${String(++n).padStart(12, '0')}`,
+    });
+    await q.enqueue({ body: 'one', source: 'typed' });
+    const first = q.flush({ force: true });
+    expect(getAllCalls).toBe(1); // the first flush is parked inside getAll
+    await q.enqueue({ body: 'two', source: 'typed' });
+    const second = q.flush({ force: true }); // joins the in-flight run and must schedule another pass
+    release();
+    await Promise.all([first, second]);
+    expect(bodies).toEqual(['one', 'two']);
+    expect(base.map.size).toBe(0);
+  });
+
   it('nextDueAt reports the earliest pending item', async () => {
     const s = setup(async () => ({ status: 503 }));
     expect(await s.q.nextDueAt()).toBeNull();
     await s.q.enqueue({ body: 'x', source: 'typed' });
     await s.q.flush({ force: true });
     expect(await s.q.nextDueAt()).toBeGreaterThan(0);
+  });
+});
+
+describe('replay order', () => {
+  it('flushes in enqueue order even when created_at ties and client_ids sort the other way', async () => {
+    const ids = ['ffffffff-0000-4000-8000-000000000001', '00000000-0000-4000-8000-000000000002'];
+    const posted: string[] = [];
+    const q = createQueue({
+      store: memStore(),
+      post: async (i) => (posted.push(i.body), { status: 201 }),
+      now: () => 1_000, // frozen clock: every created_at is identical
+      perfNow: () => 0,
+      uuid: () => ids.shift()!,
+    });
+    await q.enqueue({ body: 'first', source: 'typed' });
+    await q.enqueue({ body: 'second', source: 'typed' });
+    await q.flush({ force: true });
+    expect(posted).toEqual(['first', 'second']);
+  });
+});
+
+describe('kinds and wire format', () => {
+  it('enqueueKind stores person/promise payloads and the device id', async () => {
+    const store = memStore();
+    const q = createQueue({
+      store,
+      post: async () => ({ status: 201 }),
+      uuid: () => '00000000-0000-4000-8000-000000000009',
+      deviceId: () => 'dev-1',
+    });
+    const { client_id } = await q.enqueueKind({
+      kind: 'promise',
+      body: 'send repo',
+      extra: { due: '2026-11-12' },
+    });
+    const item = store.map.get(client_id)!;
+    expect(item).toMatchObject({ kind: 'promise', device_id: 'dev-1' });
+    expect(toRequest(item)).toEqual({
+      path: '/api/promises',
+      body: { client_id, text: 'send repo', due: '2026-11-12' },
+    });
+  });
+
+  it('maps notes (default kind) and people', () => {
+    const base = {
+      client_id: 'c',
+      body: 'b',
+      source: 'dictated',
+      created_at: 'T',
+      saved_ms: 1,
+      status: 'pending',
+      attempts: 0,
+      next_attempt_at: 0,
+    } as const;
+    expect(toRequest({ ...base, session_id: 's1' })).toEqual({
+      path: '/api/notes',
+      body: { client_id: 'c', body: 'b', source: 'dictated', created_at: 'T', session_id: 's1' },
+    });
+    expect(toRequest({ ...base, kind: 'person', body: 'Ana', extra: { context: 'x' } })).toEqual({
+      path: '/api/people',
+      body: { client_id: 'c', name: 'Ana', context: 'x' },
+    });
   });
 });

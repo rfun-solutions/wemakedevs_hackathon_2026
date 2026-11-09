@@ -16,7 +16,7 @@ Creates: `.github/workflows/ci-traces.yml`, `.github/workflows/rules-from-prod.y
 ## 3. PR 3: CI traces and runbook
 - [ ] 3.1 `ci-traces.yml` on `workflow_run`, `actions: read`, ingest token Secret; export only runs whose triggering event is `merge_group` or a push to `main` (a PR-triggered export would double the job count; changing that needs the orchestrator's OK); confirm C0's `AGENTS.md` has the noreply `user.email` line
 - [ ] 3.2 Inspect first trace in Dash0 for author emails; disable or keep per spec; note result
-- [ ] 3.3 Write `docs/runbooks/feed-break.md`:
+- [x] 3.3 Write `docs/runbooks/feed-break.md`:
   - T-10 min: prepared harmless PR from branch `bugfix/KC-0-docs-typo` with label `gitar-managed` and auto-apply on, NOT yet opened
   - T0: `gh variable set FEED_FIXTURE --body sessionize-v2`, then open the PR (so the clock starts at PR open)
   - T+1 min: Gitar review appears; narrate "overnight the feed changed shape"
