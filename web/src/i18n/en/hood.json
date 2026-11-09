@@ -1,0 +1,22 @@
+{
+  "hood.nav": "How it works",
+  "hood.title": "Under the hood",
+  "hood.intro": "Every feature, what it does for you, and the checks behind it. Nothing here is needed to use the app.",
+  "hood.entry.promises": "Promises it serves",
+  "hood.sponsor.gitar": "Gitar",
+  "hood.sponsor.dash0": "Dash0",
+  "hood.sponsor.radar": "Radar",
+  "hood.signin": "Dash0 sign-in needed",
+  "hood.live.label": "Right now:",
+  "hood.live.ok": "Working",
+  "hood.live.degraded": "Slower than promised",
+  "hood.live.unknown": "Not measured right now",
+  "hood.live.none": "No live data right now",
+  "hood.live.route": "95 in 100 requests take {ms} ms or less, measured {time}",
+  "hood.live.route.notime": "95 in 100 requests take {ms} ms or less",
+  "hood.live.release.at": "Last release {time}",
+  "hood.live.release.gitar": "Gitar-reviewed",
+  "hood.live.release.radar": "Radar all-clear",
+  "hood.hood.title": "How it works",
+  "hood.hood.what": "A screen that lists every feature, what it does and the checks that back it, with live values where we measure them."
+}

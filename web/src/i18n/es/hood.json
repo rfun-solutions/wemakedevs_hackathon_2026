@@ -1,0 +1,22 @@
+{
+  "hood.nav": "Cómo funciona",
+  "hood.title": "Bajo el capó",
+  "hood.intro": "Cada función, lo que hace por ti y las comprobaciones que la respaldan. No necesitas nada de esto para usar la app.",
+  "hood.entry.promises": "Promesas que cumple",
+  "hood.sponsor.gitar": "Gitar",
+  "hood.sponsor.dash0": "Dash0",
+  "hood.sponsor.radar": "Radar",
+  "hood.signin": "Hace falta iniciar sesión en Dash0",
+  "hood.live.label": "Ahora mismo:",
+  "hood.live.ok": "Funciona",
+  "hood.live.degraded": "Más lento de lo prometido",
+  "hood.live.unknown": "No se mide ahora mismo",
+  "hood.live.none": "No hay datos en vivo ahora mismo",
+  "hood.live.route": "En la medición de las {time}, 95 de cada 100 solicitudes tardan {ms} ms o menos",
+  "hood.live.route.notime": "95 de cada 100 solicitudes tardan {ms} ms o menos",
+  "hood.live.release.at": "Última versión {time}",
+  "hood.live.release.gitar": "revisada por Gitar",
+  "hood.live.release.radar": "Radar sin alertas",
+  "hood.hood.title": "Cómo funciona",
+  "hood.hood.what": "Una pantalla que lista cada función, lo que hace y las comprobaciones que la respaldan, con valores en vivo donde los medimos."
+}

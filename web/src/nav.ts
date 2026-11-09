@@ -22,4 +22,5 @@ export const navItems: NavItem[] = [
   // >> c-evening-threads
   { path: '/threads', labelKey: 'threads.nav' },
   // >> h-under-the-hood
+  { path: '/under-the-hood', labelKey: 'hood.nav' },
 ];

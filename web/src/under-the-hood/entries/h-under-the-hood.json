@@ -1,0 +1,27 @@
+{
+  "id": "h-under-the-hood",
+  "order": 9,
+  "titleKey": "hood.hood.title",
+  "whatKey": "hood.hood.what",
+  "promises": [],
+  "tech": [
+    {
+      "sponsor": "gitar",
+      "kind": "check",
+      "label": "registry validator: every entry and its EN and ES strings, in lint-unit",
+      "ref": "web/src/under-the-hood/registry.test.ts"
+    },
+    {
+      "sponsor": "dash0",
+      "kind": "trace",
+      "label": "kc.hood.viewed browser event and fetch spans for the two status calls",
+      "ref": "web/src/screens/under-the-hood/UnderTheHood.tsx"
+    },
+    {
+      "sponsor": "radar",
+      "kind": "investigation",
+      "label": "release record: last release, Gitar review, Radar all-clear",
+      "live": "release"
+    }
+  ]
+}
