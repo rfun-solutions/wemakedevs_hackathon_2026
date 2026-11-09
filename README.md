@@ -33,6 +33,7 @@ CI checks (required on every PR and merge-queue run): `lint-unit`, `e2e-mobile`,
 <!-- >> e-captions-translation -->
 <!-- >> c-evening-threads -->
 <!-- >> h-under-the-hood -->
+- [How it works](https://rfun-solutions.github.io/wemakedevs_hackathon_2026/): every feature and the Gitar, Dash0 and Radar checks behind it
 
 ---
 
