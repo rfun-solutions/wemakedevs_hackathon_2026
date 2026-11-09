@@ -10,7 +10,11 @@ concurrency:
 jobs:
   e2e-mobile:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # Browsers and system deps are preinstalled; the version matches @playwright/test in package-lock.json.
+    container:
+      image: mcr.microsoft.com/playwright:v1.65.0-noble
+      options: --init --ipc=host
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -18,7 +22,6 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci --no-audit --no-fund
-      - run: npx playwright install --with-deps chromium webkit
       - name: Playwright (iPhone 15, Pixel 7)
         run: npx playwright test --project=iphone-15 --project=pixel-7 --grep-invert "axe clean"
         env:
