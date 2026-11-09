@@ -10,7 +10,7 @@ concurrency:
 jobs:
   build-image:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
       - uses: docker/setup-buildx-action@v4
@@ -29,8 +29,17 @@ jobs:
           # Server secrets must never appear in the image filesystem.
           cid=$(docker create kubecompanion:ci)
           mkdir -p image-fs
-          docker export "$cid" | tar -x -C image-fs --exclude='node_modules' 2>/dev/null || true
+          # No stderr swallow and no `|| true`: a failed export or extraction must fail the job
+          # (pipefail), otherwise the guard would pass while checking nothing.
+          docker export "$cid" | tar -x -C image-fs --exclude='node_modules'
           docker rm "$cid" >/dev/null
+          # The extracted tree must really contain the app, or there is nothing to scan.
+          for f in image-fs/app/api/dist/server.js image-fs/app/web/dist/index.html; do
+            if [ ! -s "$f" ]; then
+              echo "::error::Leak guard extracted no $f from the image; refusing to pass"
+              exit 1
+            fi
+          done
           if grep -rIlE 'sk-ant-[A-Za-z0-9_-]{10,}|ANTHROPIC_API_KEY=[^[:space:]]+|DASH0_TOKEN=[^[:space:]]+' image-fs; then
             echo "::error::Possible secret found in the built image"
             exit 1

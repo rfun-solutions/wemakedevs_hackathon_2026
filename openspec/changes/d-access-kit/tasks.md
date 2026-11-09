@@ -5,20 +5,20 @@ Also creates `web/src/styles/token-pairs.ts`, the unopened branch `bugfix/KC-<n>
 Edits: `web/index.html` (pre-paint prefs script), app shell (mount live regions), and the content of `.gitar/review/inclusion.md`, `demo-data.md` and `accessibility.md` (C0 creates these files; D creates no rule file). Inserts route and nav lines in `web/src/routes.ts` and `web/src/nav.ts` only under its own markers: `// >> d-access-kit` (D1: Settings) and `// >> d-access-kit-cards` (D2: Cards, Badge, Calm places). No API, database or migration changes. D never touches `web/public/sw.js` (cache-first hashed assets already cover calm places offline).
 
 ## 0. Inclusion review rules, promises and token names (PR 0, merge before PR 1; G1)
-- [ ] 0.0 Write `ACCESS-PROMISES.md` and `web/src/features/access/promises.ts` (`PROMISES`, P1-P5) exactly as design "Access promises", with `access.promise.*` in EN and ES; unit test: five ids in order, every `titleKey` exists in EN and ES, every `ruleIds` entry with prefix IN-, DD- or A11Y- appears in a `.gitar/review/` file next to its promise id (CAP- and HP- ids are G's generated rules and are skipped, because G merges after D)
-- [ ] 0.1 Write the IN-1 to IN-12 rules (each sentence naming its promise id) into `.gitar/review/inclusion.md` and DD-1 to DD-4 into `.gitar/review/demo-data.md` exactly as design "Inclusion rules"; keep C0's header line
-- [ ] 0.2 Add the "A11Y-2 (Promise P3) fix the token, never weaken the test" line to `.gitar/review/accessibility.md` (G5 steering)
-- [ ] 0.2a Write `web/src/styles/tokens.css` with the **complete token name set** (colour roles, type scale, spacing, radii, elevation, focus ring, `--target-min`, `--target-comfort`, `--type-scale`, high-contrast overrides) from D0's list, which C0w's placeholder already uses. Values are neutral, or the 11:20 pick if it is ready. After this PR merges (about 12:50) token names are frozen: later PRs, including the G5 branch, change values only, and a rename or new name needs the orchestrator
+- [x] 0.0 Write `ACCESS-PROMISES.md` and `web/src/features/access/promises.ts` (`PROMISES`, P1-P5) exactly as design "Access promises", with `access.promise.*` in EN and ES; unit test: five ids in order, every `titleKey` exists in EN and ES, every `ruleIds` entry with prefix IN-, DD- or A11Y- appears in a `.gitar/review/` file next to its promise id (CAP- and HP- ids are G's generated rules and are skipped, because G merges after D)
+- [x] 0.1 Write the IN-1 to IN-12 rules (each sentence naming its promise id) into `.gitar/review/inclusion.md` and DD-1 to DD-4 into `.gitar/review/demo-data.md` exactly as design "Inclusion rules"; keep C0's header line
+- [x] 0.2 Add the "A11Y-2 (Promise P3) fix the token, never weaken the test" line to `.gitar/review/accessibility.md` (G5 steering)
+- [x] 0.2a Write `web/src/styles/tokens.css` with the **complete token name set** (colour roles, type scale, spacing, radii, elevation, focus ring, `--target-min`, `--target-comfort`, `--type-scale`, high-contrast overrides) from D0's list, which C0w's placeholder already uses. Values are neutral, or the 11:20 pick if it is ready. After this PR merges (about 12:50) token names are frozen: later PRs, including the G5 branch, change values only, and a rename or new name needs the orchestrator
 - [ ] 0.3 Open after C0b merges (it creates the three rule files), let Gitar review, merge (no feature code; target about 12:50, gate G-RULES)
 - [ ] 0.4 On PR 1, record the first Gitar finding that cites `inclusion.md` (link in the PR description); if none appears, note it
 
 ## 1. Design direction and tokens (PR 1, merge first)
 - [ ] 1.1 (D0, outside the repo in `.scratch/kubecompanion/design/`, from 11:00) Run the Impeccable skill for KubeCompanion (mobile-first, Kay's context: bright screen, noisy hall, one-handed). Produce 2-3 directions (palette, type pairing, density, shape) with a small preview each; present them and wait for the user's pick (target about 11:05, decision by 11:20, neutral default); record the pick as token names and values, and hand the names to C0w by 11:30
-- [ ] 1.2 Apply the picked direction in `tokens.css` by changing values only; the names were fixed in PR 0 (task 0.2a)
-- [ ] 1.3 Write `global.css` (reset, base type, focus-visible, `.btn`, `.visually-hidden`, logical properties only)
-- [ ] 1.4 `web/src/styles/token-pairs.ts` (`TOKEN_PAIRS`); unit test: contrast ratios of token pairs for default and high-contrast sets, failure message names the pair, the ratio, the minimum and the computed colours
-- [ ] 1.5 Confirm C0's lint config (which installs and enables `eslint-plugin-jsx-a11y`; it works with Preact JSX) flags `div`/`span` click handlers; add a lint fixture test. Only tighten C0's rules, never remove them
-- [ ] 1.6 Write `docs/accessibility.md` (rules, checklist, token and `t()` usage)
+- [x] 1.2 Apply the picked direction in `tokens.css` by changing values only; the names were fixed in PR 0 (task 0.2a)
+- [x] 1.3 Write `global.css` (reset, base type, focus-visible, `.btn`, `.visually-hidden`, logical properties only)
+- [x] 1.4 `web/src/styles/token-pairs.ts` (`TOKEN_PAIRS`); unit test: contrast ratios of token pairs for default and high-contrast sets, failure message names the pair, the ratio, the minimum and the computed colours
+- [x] 1.5 Confirm C0's lint config (which installs and enables `eslint-plugin-jsx-a11y`; it works with Preact JSX) flags `div`/`span` click handlers; add a lint fixture test. Only tighten C0's rules, never remove them
+- [x] 1.6 Write `docs/accessibility.md` (rules, checklist, token and `t()` usage)
 
 ## 2. i18n framework (PR 1)
 - [ ] 2.1 Implement `t()`, `useLang()`, `setLang()`, EN fallback, `{param}` interpolation, `Intl` helpers with explicit time zone; set `<html lang dir>`
