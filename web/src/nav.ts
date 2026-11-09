@@ -18,6 +18,7 @@ export const navItems: NavItem[] = [
   // >> f-observability-product
   { path: '/status', labelKey: 'status.nav' },
   // >> e-captions-translation
+  { path: '/captions', labelKey: 'captions.nav' },
   // >> c-evening-threads
   { path: '/threads', labelKey: 'threads.nav' },
   // >> h-under-the-hood

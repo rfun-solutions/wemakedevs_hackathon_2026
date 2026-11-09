@@ -13,6 +13,7 @@ import { CalmPlaces } from './features/access/CalmPlaces';
 // >> import:f-observability-product
 import { Status } from './screens/status/Status';
 // >> import:e-captions-translation
+import { Captions } from './pages/captions/Captions';
 // >> import:c-evening-threads
 import { Threads } from './screens/Threads';
 // >> import:h-under-the-hood
@@ -34,6 +35,7 @@ export const routes: AppRoute[] = [
   // >> f-observability-product
   { path: '/status', component: Status },
   // >> e-captions-translation
+  { path: '/captions', component: Captions },
   // >> c-evening-threads
   { path: '/threads', component: Threads },
   // >> h-under-the-hood
