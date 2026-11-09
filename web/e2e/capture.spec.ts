@@ -67,6 +67,28 @@ test.describe('capture', () => {
     await expect(page.getByText(/Saved on this phone|Guardada en este teléfono/)).toBeVisible();
   });
 
+  test('repeated saves are announced again', async ({ page }) => {
+    mockApi(page);
+    await page.goto('/capture');
+    await noteField(page).fill('first note');
+    await saveButton(page).click();
+    await expect(status(page)).toHaveText(/Saved|Guardada/);
+
+    await page.evaluate(() => {
+      const live = document.querySelector<HTMLParagraphElement>('.capture-status');
+      if (!live) throw new Error('Capture status region was not rendered');
+      live.dataset.announcementChanges = '';
+      new MutationObserver(() => {
+        live.dataset.announcementChanges += `|${live.textContent ?? ''}`;
+      }).observe(live, { childList: true, characterData: true, subtree: true });
+    });
+
+    await noteField(page).fill('second note');
+    await saveButton(page).click();
+    await expect(status(page)).toHaveText(/Saved|Guardada/);
+    await expect(status(page)).toHaveAttribute('data-announcement-changes', /\|\|/);
+  });
+
   test('offline save survives reload and syncs after reconnect with no duplicates', async ({
     page,
   }) => {

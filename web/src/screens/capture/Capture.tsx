@@ -82,6 +82,10 @@ export function Capture() {
   const [personContext, setPersonContext] = useState('');
   const [promiseText, setPromiseText] = useState('');
   const [promiseDue, setPromiseDue] = useState('');
+  const announceStatus = (message: string) => {
+    setStatus('');
+    window.setTimeout(() => setStatus(message), 0);
+  };
   const field = useRef<HTMLTextAreaElement>(null);
   const dictated = useRef(false);
   const speech = useRef<SpeechSession | null>(null);
@@ -101,13 +105,15 @@ export function Capture() {
     if (p) setPromises(p);
     if (pe) setPeople(pe);
   };
+  const refreshRef = useRef(refreshServer);
+  refreshRef.current = refreshServer;
 
   useEffect(() => {
     field.current?.focus();
     const reload = () => void listQueue().then(setQueued);
     reload();
     const offChange = onQueueChange(reload);
-    const offSynced = onQueueSynced(() => void refreshServer());
+    const offSynced = onQueueSynced(() => void refreshRef.current());
     return () => {
       offChange();
       offSynced();
@@ -136,7 +142,7 @@ export function Capture() {
     });
     dictated.current = false;
     setBody('');
-    setStatus(t('capture.saved'));
+    announceStatus(t('capture.saved'));
     field.current?.focus();
   };
 
@@ -167,7 +173,7 @@ export function Capture() {
     await enqueueItem({ kind: 'person', body: name, ...(context ? { extra: { context } } : {}) });
     setPersonName('');
     setPersonContext('');
-    setStatus(t('capture.person.saved'));
+    announceStatus(t('capture.person.saved'));
   };
 
   const addPromise = async (e: Event) => {
@@ -181,7 +187,7 @@ export function Capture() {
     });
     setPromiseText('');
     setPromiseDue('');
-    setStatus(t('capture.promise.saved'));
+    announceStatus(t('capture.promise.saved'));
   };
 
   const toggleDone = async (p: ServerPromise) => {

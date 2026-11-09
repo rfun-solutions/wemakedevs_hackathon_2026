@@ -78,6 +78,7 @@ function kcCaptureFlush(idb, fetchFn) {
               var r = kcCaptureRequest(item);
               return fetchFn(r.path, {
                 method: 'POST',
+                signal: AbortSignal.timeout(10_000),
                 headers: {
                   'Content-Type': 'application/json',
                   'X-Device-Id': item.device_id,

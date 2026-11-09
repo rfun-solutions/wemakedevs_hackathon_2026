@@ -55,6 +55,7 @@ async function post(item: QueueItem): Promise<{ status: number }> {
   const { path, body } = toRequest(item);
   const res = await fetch(path, {
     method: 'POST',
+    signal: AbortSignal.timeout(10_000),
     headers: {
       'Content-Type': 'application/json',
       'X-Device-Id': item.device_id ?? getDeviceId(),
