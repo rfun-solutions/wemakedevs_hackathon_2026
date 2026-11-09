@@ -32,6 +32,8 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Image name and tag
         id: meta
@@ -45,20 +47,13 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Mask the ingest token in logs
-        env:
-          DASH0_INGEST_TOKEN: ${{ secrets.DASH0_TOKEN }}
-        run: |
-          # The org secret DASH0_TOKEN is ingest-only (safe in the browser bundle); mask it anyway.
-          if [ -n "$DASH0_INGEST_TOKEN" ]; then echo "::add-mask::$DASH0_INGEST_TOKEN"; fi
-
       - uses: docker/build-push-action@v7
         with:
           context: .
           push: true
           build-args: |
             APP_VERSION=${{ steps.meta.outputs.tag }}
-            VITE_DASH0_INGEST_TOKEN=${{ secrets.DASH0_TOKEN }}
+            VITE_DASH0_INGEST_TOKEN=${{ vars.VITE_DASH0_INGEST_TOKEN }}
             VITE_DASH0_ENDPOINT=https://ingress.us-west-2.aws.dash0.com
           tags: |
             ${{ steps.meta.outputs.image }}:${{ steps.meta.outputs.tag }}
