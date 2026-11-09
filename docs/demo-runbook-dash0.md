@@ -3,7 +3,7 @@
 Audience: the person on stage and the orchestrator. Goal: show Agent0 finding something real, the fix landing through a Gitar-reviewed PR and the merge queue, and Argo deploying it, with the Status screen recovering.
 
 ## Secrets (C0 Secret list)
-Set by the user; never committed. `DASH0_TOKEN` (server, query and apply), `ANTHROPIC_API_KEY`, `KC_PROBE_TOKEN` (Synthetic Kay posts P3 and P4 to `POST /api/status/kay-checks`; endpoint is 404 and the lights say "Not measured right now" when unset). GitHub repo secret `DASH0_TOKEN` feeds `observability.yml`.
+Set by the user; never committed. `DASH0_TOKEN` (server, query and apply), `ANTHROPIC_API_KEY`, `KC_PROBE_TOKEN` (Synthetic Kay posts P3 and P4 to `POST /api/status/kay-checks`; endpoint is 404 and the lights say "Not measured right now" when unset). `DASH0_TOKEN` is NOT stored in GitHub; `observability.yml` is lint-only.
 
 ## Route 1: organic (preferred)
 1. Open Dash0 Agent0 and ask: "Which route in kubecompanion has the worst p95 or error rate in the last 2 hours, and why?"
@@ -37,4 +37,4 @@ Use only when route 1 finds nothing. Say on stage that it is a rehearsed slowdow
 9. Re-run the Synthetic Kay loop only if the user starts it (it is browser automation).
 
 ## Observability as code
-`observability/*.yaml` is linted on every PR (percli) and applied on merge to main by `observability.yml`. Confirm the dashboard, check rule `KubeCompanionCaptureSlow` and synthetic check `kubecompanion-healthz` appear in Dash0 after the first apply.
+`observability/*.yaml` is linted on every PR (percli) by `observability.yml`. The orchestrator applies the dashboard, check rule `KubeCompanionCaptureSlow` and synthetic check `kubecompanion-healthz` from the laptop with the `dash0` CLI (flags to confirm with `dash0 --help`). Confirm all three appear in Dash0 afterwards.

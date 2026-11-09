@@ -2,7 +2,11 @@
 
 export type ChaosFlags = { latencyMs: number; errorRate: number; naive: boolean };
 
-export const DEFAULT_CHAOS: ChaosFlags = Object.freeze({ latencyMs: 0, errorRate: 0, naive: false });
+export const DEFAULT_CHAOS: ChaosFlags = Object.freeze({
+  latencyMs: 0,
+  errorRate: 0,
+  naive: false,
+});
 
 /** Routes (and prefixes) chaos never touches, whatever flags.json says. */
 const PROTECTED_EXACT = ['/healthz', '/readyz', '/api/status', '/api/ping', '/api/translate'];
@@ -51,7 +55,10 @@ export function isRouteKey(key: string): boolean {
 export function isProtectedRoute(path: string): boolean {
   const p = path.split('?')[0].replace(/\/+$/, '') || '/';
   if (PROTECTED_EXACT.includes(p)) return true;
-  return PROTECTED_PREFIX.some((prefix) => (p + '/').startsWith(prefix.endsWith('/') ? prefix : prefix + '/') || p.startsWith(prefix));
+  return PROTECTED_PREFIX.some(
+    (prefix) =>
+      (p + '/').startsWith(prefix.endsWith('/') ? prefix : prefix + '/') || p.startsWith(prefix),
+  );
 }
 
 export function flagsActive(f: ChaosFlags): boolean {

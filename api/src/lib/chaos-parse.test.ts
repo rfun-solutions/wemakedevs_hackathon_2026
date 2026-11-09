@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
-  DEFAULT_CHAOS, anyActive, decideInjection, isProtectedRoute, isRouteKey, parseChaosFlags,
+  DEFAULT_CHAOS,
+  anyActive,
+  decideInjection,
+  isProtectedRoute,
+  isRouteKey,
+  parseChaosFlags,
 } from './chaos-parse';
 
 describe('parseChaosFlags', () => {
@@ -14,7 +19,9 @@ describe('parseChaosFlags', () => {
     expect(out.agenda).toEqual({ latencyMs: 800, errorRate: 0, naive: true });
   });
   it('clamps and defaults bad fields', () => {
-    const out = parseChaosFlags('{"/api/x":{"latencyMs":-5,"errorRate":7,"naive":"yes"},"y":"bad"}');
+    const out = parseChaosFlags(
+      '{"/api/x":{"latencyMs":-5,"errorRate":7,"naive":"yes"},"y":"bad"}',
+    );
     expect(out['/api/x']).toEqual({ latencyMs: 0, errorRate: 1, naive: false });
     expect(out.y).toEqual(DEFAULT_CHAOS);
   });
@@ -25,8 +32,17 @@ describe('parseChaosFlags', () => {
 
 describe('route classification', () => {
   it('protects health, status, ping, translate, threads', () => {
-    for (const p of ['/healthz', '/readyz', '/api/status', '/api/status/rtt', '/api/status/health?x=1',
-      '/api/ping', '/api/translate', '/api/threads/abc', '/api/threads']) {
+    for (const p of [
+      '/healthz',
+      '/readyz',
+      '/api/status',
+      '/api/status/rtt',
+      '/api/status/health?x=1',
+      '/api/ping',
+      '/api/translate',
+      '/api/threads/abc',
+      '/api/threads',
+    ]) {
       expect(isProtectedRoute(p)).toBe(true);
     }
   });
@@ -50,7 +66,10 @@ describe('decideInjection', () => {
     expect(decideInjection(flags, 'agenda')).toBeNull();
   });
   it('applies route keys', () => {
-    expect(decideInjection(flags, '/api/sessions?q=1', () => 0)).toEqual({ latencyMs: 300, error: true });
+    expect(decideInjection(flags, '/api/sessions?q=1', () => 0)).toEqual({
+      latencyMs: 300,
+      error: true,
+    });
   });
   it('error only when rand below rate', () => {
     const f = parseChaosFlags('{"/api/notes":{"latencyMs":0,"errorRate":0.5}}');

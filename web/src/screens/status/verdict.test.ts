@@ -24,7 +24,8 @@ describe('computeVerdict', () => {
 });
 
 describe('savedLabel', () => {
-  it('null save time hides the line', () => expect(savedLabel(null)).toEqual({ shown: false, ms: null }));
+  it('null save time hides the line', () =>
+    expect(savedLabel(null)).toEqual({ shown: false, ms: null }));
   it('rounds', () => expect(savedLabel(41.6)).toEqual({ shown: true, ms: 42 }));
   it('rejects negatives/NaN', () => {
     expect(savedLabel(-1).shown).toBe(false);

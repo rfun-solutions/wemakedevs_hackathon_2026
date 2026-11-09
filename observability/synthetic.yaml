@@ -16,7 +16,7 @@ spec:
       assertions:
         criticalAssertions:
           - kind: status_code
-            spec: { operator: is, value: "200" }
+            spec: { operator: is, value: '200' }
           - kind: text_body
             spec: { operator: contains, value: ok }
   schedule:

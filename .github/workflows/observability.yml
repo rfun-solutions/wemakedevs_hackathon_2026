@@ -6,21 +6,16 @@ on:
     paths:
       - observability/**
       - .github/workflows/observability.yml
-  push:
-    branches: [main]
-    paths:
-      - observability/**
-      - .github/workflows/observability.yml
   workflow_dispatch:
 
+# Lint only. DASH0_TOKEN is deliberately not in GitHub: the orchestrator applies
+# dashboards, the check rule and the synthetic check from the laptop (see docs/demo-runbook-dash0.md).
 concurrency:
   group: observability-${{ github.ref }}
   cancel-in-progress: true
 
 env:
-  DASH0_API_URL: https://api.us-west-2.aws.dash0.com
-  PERSES_VERSION: v0.51.0
-  DASH0_CLI_VERSION: v1.5.0
+  PERSES_VERSION: 0.55.1 # real release; archive contains percli (asset list read from GitHub)
 
 jobs:
   lint:
@@ -30,46 +25,24 @@ jobs:
 
       - name: Install percli
         run: |
-          curl -fsSL -o percli.tar.gz "https://github.com/perses/perses/releases/download/${PERSES_VERSION}/perses_${PERSES_VERSION#v}_linux_amd64.tar.gz"
-          tar -xzf percli.tar.gz percli
+          curl -fsSL -o perses.tar.gz "https://github.com/perses/perses/releases/download/v${PERSES_VERSION}/perses_${PERSES_VERSION}_linux_amd64.tar.gz"
+          tar -xzf perses.tar.gz percli
           sudo install percli /usr/local/bin/percli
 
+      # UNVERIFIED locally (running the binary was not permitted in the build sandbox):
+      # a red run here means a real schema or flag problem, never a silent pass.
       - name: Lint dashboards (percli)
         run: |
           shopt -s nullglob
-          for f in observability/*.perses.yaml; do
+          files=(observability/*.perses.yaml)
+          if [ ${#files[@]} -eq 0 ]; then echo "no dashboards"; exit 0; fi
+          for f in "${files[@]}"; do
             echo "percli lint $f"
-            percli lint -f "$f" --online=false
+            percli lint -f "$f"
           done
 
       - name: YAML parses
         run: |
           for f in observability/*.yaml; do
             python3 -c 'import sys,yaml; list(yaml.safe_load_all(open(sys.argv[1])))' "$f"
-          done
-
-  apply:
-    # Only after merge to main. Needs the repo secret DASH0_TOKEN (set by the user, never in the repo).
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-
-      - name: Install dash0 CLI
-        run: |
-          # UNVERIFIED flags/asset name: confirm with `dash0 --help` (tasks.md 3.4).
-          curl -fsSL -o dash0.tar.gz "https://github.com/dash0hq/dash0-cli/releases/download/${DASH0_CLI_VERSION}/dash0_linux_amd64.tar.gz"
-          tar -xzf dash0.tar.gz dash0
-          sudo install dash0 /usr/local/bin/dash0
-          dash0 --help | head -20
-
-      - name: Apply observability objects
-        env:
-          DASH0_AUTH_TOKEN: ${{ secrets.DASH0_TOKEN }}
-        run: |
-          if [ -z "$DASH0_AUTH_TOKEN" ]; then echo "DASH0_TOKEN not set; skipping apply"; exit 0; fi
-          for f in observability/*.yaml; do
-            echo "dash0 apply $f"
-            dash0 --api-url "$DASH0_API_URL" --auth-token "$DASH0_AUTH_TOKEN" apply -f "$f"
           done

@@ -53,13 +53,16 @@ export function computeStatus(input: {
 }): StatusPayload {
   let synced: Date | null = null;
   if (input.feedSyncedAt) {
-    const d = input.feedSyncedAt instanceof Date ? input.feedSyncedAt : new Date(input.feedSyncedAt);
+    const d =
+      input.feedSyncedAt instanceof Date ? input.feedSyncedAt : new Date(input.feedSyncedAt);
     if (!Number.isNaN(d.getTime())) synced = d;
   }
   return {
     server_ms_p95: input.p95,
     feed_synced_at: synced ? synced.toISOString() : null,
-    feed_age_s: synced ? Math.max(0, Math.round((input.now.getTime() - synced.getTime()) / 1000)) : null,
+    feed_age_s: synced
+      ? Math.max(0, Math.round((input.now.getTime() - synced.getTime()) / 1000))
+      : null,
     slo_ms: SLO_MS,
     chaos_active: input.chaosActive,
   };

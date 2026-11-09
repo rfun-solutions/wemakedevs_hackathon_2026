@@ -19,5 +19,7 @@ export function computeVerdict(input: {
 
 /** "Saved in N ms" text input; null when nothing was saved yet. */
 export function savedLabel(ms: number | null): { shown: boolean; ms: number | null } {
-  return ms === null || !Number.isFinite(ms) || ms < 0 ? { shown: false, ms: null } : { shown: true, ms: Math.round(ms) };
+  return ms === null || !Number.isFinite(ms) || ms < 0
+    ? { shown: false, ms: null }
+    : { shown: true, ms: Math.round(ms) };
 }
