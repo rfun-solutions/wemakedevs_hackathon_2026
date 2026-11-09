@@ -1,4 +1,4 @@
 {
   "pipeline.hood.title": "Checks that guard your schedule",
-  "pipeline.hood.what": "If the schedule format changes, a check stops it before you see it. Review rules use measured app speed."
+  "pipeline.hood.what": "If the schedule format changes, a check stops it before you see it. Review rules use the app's speed data (test data until the production rules run)."
 }
