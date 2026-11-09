@@ -80,7 +80,7 @@ describe('startCaptionsWith', () => {
     expect(d.makeWhisper).not.toHaveBeenCalled();
     expect(status).toContainEqual({ type: 'engine', engine: 'webspeech', fallback: true });
     for (let i = 0; i < 3; i++) ws.e.cb().onLag?.(5000);
-    await vi.waitFor(() => expect(d.reporter.flush).toHaveBeenCalled());
+    await vi.waitFor(() => expect(status).toContainEqual({ type: 'slow_here' }));
     expect(requestConsent).toHaveBeenCalledTimes(1);
     expect(d.makeWhisper).not.toHaveBeenCalled();
   });
