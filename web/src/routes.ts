@@ -17,5 +17,9 @@ export const routes: AppRoute[] = [
   // >> f-observability-product
   // >> e-captions-translation
   // >> c-evening-threads
+  { path: '/threads', component: Threads },
   // >> h-under-the-hood
 ];
+
+// c-evening-threads import (kept here, not with the others, so parallel imports do not conflict; imports hoist)
+import { Threads } from './screens/Threads';

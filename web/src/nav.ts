@@ -15,5 +15,6 @@ export const navItems: NavItem[] = [
   // >> f-observability-product
   // >> e-captions-translation
   // >> c-evening-threads
+  { path: '/threads', labelKey: 'threads.nav' },
   // >> h-under-the-hood
 ];
