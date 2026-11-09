@@ -186,14 +186,32 @@ describe('startCaptionsWith regressions (Gitar review)', () => {
     expect(s.engine).toBe('whisper');
   });
 
-  it('a declined consent is remembered: the SLI switch does not ask again', async () => {
+  it('declined consent makes whisper unavailable for SLI and reports slow captions', async () => {
     const { d, ws } = deps({ hasConsent: vi.fn().mockReturnValue(false) });
     const ask = vi.fn().mockResolvedValue(false);
-    await startCaptionsWith(d, vi.fn(), { requestConsent: ask });
+    const status: CaptionStatus[] = [];
+    const s = await startCaptionsWith(d, vi.fn(), {
+      requestConsent: ask,
+      onStatus: (x) => status.push(x),
+    });
+    expect(s.engine).toBe('webspeech');
     expect(ask).toHaveBeenCalledTimes(1);
     for (let i = 0; i < 3; i++) ws.e.cb().onLag?.(6000);
-    await new Promise((r) => setTimeout(r, 10));
+    expect(status).toContainEqual({ type: 'slow_here' });
+    expect(status.some((x) => x.type === 'switched')).toBe(false);
+    expect(d.makeWhisper).not.toHaveBeenCalled();
     expect(ask).toHaveBeenCalledTimes(1);
+  });
+
+  it('reports slow captions when an alternative engine fails to start', async () => {
+    const { d, ws, wh } = deps();
+    const status: CaptionStatus[] = [];
+    const s = await startCaptionsWith(d, vi.fn(), { onStatus: (x) => status.push(x) });
+    (ws.e.start as ReturnType<typeof vi.fn>).mockRejectedValueOnce(new Error('x'));
+    for (let i = 0; i < 3; i++) wh.e.cb().onLag?.(6000);
+    await vi.waitFor(() => expect(status).toContainEqual({ type: 'slow_here' }));
+    expect(s.engine).toBe('whisper');
+    expect(status.some((x) => x.type === 'switched')).toBe(false);
   });
 
   it('download progress status is throttled to 10% steps', async () => {

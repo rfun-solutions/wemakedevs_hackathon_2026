@@ -134,7 +134,11 @@ export async function startCaptionsWith(
     },
   };
 
-  const sli = createSliMonitor(() => order.some((e) => e !== session.engine));
+  const sli = createSliMonitor(() =>
+    order.some(
+      (e) => e !== session.engine && !(e === 'whisper' && consentDeclined && !deps.hasConsent()),
+    ),
+  );
 
   const accepts = (id: EngineId) => session.engine === id || pending === id;
 
@@ -213,6 +217,7 @@ export async function startCaptionsWith(
         return;
       }
     }
+    if (!stopped) status({ type: 'slow_here' });
   }
 
   reporter.start();
