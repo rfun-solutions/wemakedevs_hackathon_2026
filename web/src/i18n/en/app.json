@@ -1,0 +1,14 @@
+{
+  "app.name": "KubeCompanion",
+  "app.skip": "Skip to main content",
+  "app.nav.label": "Main",
+  "app.nav.home": "Home",
+  "app.home.title": "Welcome",
+  "app.home.intro": "Your conference companion. It keeps working when the network does not.",
+  "app.lang.switch": "Español",
+  "app.offline.notice": "You are offline. What you save stays on this phone until the network returns.",
+  "app.notFound.title": "Page not found",
+  "app.notFound.back": "Back to Home",
+  "app.hood.title": "Always-on foundation",
+  "app.hood.what": "The app loads on any phone, works offline, and every tap is traced so we can prove it stays fast."
+}

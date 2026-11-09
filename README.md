@@ -1,4 +1,42 @@
-# Radar AI SRE track starter: Cloud Native Hackathon
+# KubeCompanion
+
+At a conference you have more conversations and ideas per hour than you can remember ("I forget every conversation I had an hour ago"). KubeCompanion lets anyone capture a note, a person or a promise in seconds, and lets AI organise the week into threads that end in actions you can take later. This is for everyone.
+
+On top of that, Deaf, hard-of-hearing and ESL attendees lose access at the talk-room door: captions, communication cards and translation carry into the hallway. Every access feature is reviewed for inclusion before it ships (Gitar), measured live (Dash0) and kept healthy on the cluster (Radar).
+
+Live: https://kubecompanion2026.cnh.radarhq.io
+
+## Commands
+
+```bash
+npm ci                 # install (workspaces: api, web)
+npm run lint           # eslint + prettier check
+npm test               # vitest (projects: api, web)
+npm run build          # build api and web
+npx playwright test    # mobile e2e (iPhone 15, Pixel 7) and axe
+docker build -t kubecompanion .
+kubectl kustomize deploy/   # render the manifests
+```
+
+CI checks (required on every PR and merge-queue run): `lint-unit`, `e2e-mobile`, `a11y`, `build-image`, `feed-contract`. Pushes to `main` build the image and the deploy-bot App commits the new tag; Argo CD syncs it.
+
+## Links
+
+<!-- >> c0-scaffold -->
+- [Agent rules](AGENTS.md), [AI disclosure](AI-DISCLOSURE.md), [OpenSpec changes](openspec/changes/)
+<!-- >> d-access-kit -->
+<!-- >> d-access-kit-cards -->
+<!-- >> g-pipeline-feed-contract -->
+<!-- >> a-schedule-agenda -->
+<!-- >> b-capture -->
+<!-- >> f-observability-product -->
+<!-- >> e-captions-translation -->
+<!-- >> c-evening-threads -->
+<!-- >> h-under-the-hood -->
+
+---
+
+# Starter notes (Cloud Native Hackathon, Radar AI SRE track)
 
 Start here if your team has its own cluster at the hackathon: a virtual Kubernetes cluster (vcluster) where you're cluster-admin. You get a small app that `git push` deploys through Argo CD, and notes your coding agent reads so it ships through [Radar](https://radarhq.io)'s MCP server. Below is a menu of what Radar can do: pick what your project needs.
 

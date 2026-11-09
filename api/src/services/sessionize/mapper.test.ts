@@ -12,18 +12,24 @@ const load = (n: string) =>
 
 describe('mapFeed (v1)', () => {
   const mapped = mapFeed(load('sessionize-v1'));
+  // Narrowing for noUncheckedIndexedAccess; throws (fails the test) if nothing was mapped.
+  const first = () => {
+    const s = mapped[0];
+    if (!s) throw new Error('no sessions mapped');
+    return s;
+  };
   it('maps all 60 sessions', () => expect(mapped).toHaveLength(60));
   it('keeps naive local time and the venue zone', () => {
-    expect(mapped[0].startsAtLocal).toMatch(/^2026-11-1\dT\d\d:00:00$/);
-    expect(mapped[0].venueTz).toBe('America/Denver');
+    expect(first().startsAtLocal).toMatch(/^2026-11-1\dT\d\d:00:00$/);
+    expect(first().venueTz).toBe('America/Denver');
   });
   it('resolves room, track and level', () => {
-    expect(mapped[0].roomRaw).toContain(' | ');
-    expect(mapped[0].track).not.toBe('');
-    expect(['Beginner', 'Intermediate', 'Advanced']).toContain(mapped[0].audienceLevel);
-    expect(mapped[0].categories).toHaveLength(2);
+    expect(first().roomRaw).toContain(' | ');
+    expect(first().track).not.toBe('');
+    expect(['Beginner', 'Intermediate', 'Advanced']).toContain(first().audienceLevel);
+    expect(first().categories).toHaveLength(2);
   });
-  it('has no speaker fields', () => expect(Object.keys(mapped[0]).join()).not.toMatch(/speaker/i));
+  it('has no speaker fields', () => expect(Object.keys(first()).join()).not.toMatch(/speaker/i));
   it('throws FeedShapeError naming the drifted fields on v2', () => {
     expect(() => mapFeed(load('sessionize-v2'))).toThrow(FeedShapeError);
     expect(() => mapFeed(load('sessionize-v2'))).toThrow(/starts_at/);

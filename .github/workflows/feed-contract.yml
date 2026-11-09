@@ -1,0 +1,16 @@
+name: feed-contract
+permissions:
+  contents: read
+on:
+  pull_request:
+  merge_group:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  feed-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Stub
+        run: echo "feed-contract is a stub; the contract check is implemented by change G (g-pipeline-feed-contract)."
