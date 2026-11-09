@@ -19,7 +19,7 @@ the stage beat.
 | T+2.5 min | Gitar fix commit (mapper and schema accept v2); CI turns green. Show the Dash0 trace if CI traces are on. |
 | Nudge at T+4 | Comment `Gitar fix CI, keep fixtures unchanged`. |
 
-Backup break: `gh variable set FEED_MODE --body 429`, same flow; the expected fix is bounded retry honouring `Retry-After`.
+Backup break: `gh variable set FEED_MODE --body 429`, same flow. `feed-contract` is red at "Validate feed against schema" with `returned HTTP 429`. The expected fix adds a bounded retry that honours `Retry-After`, in `validate-feed.mjs` (or in `fetchFeed.ts` if the validator is changed to use it).
 Reverting the PR is not a fix: a new PR still fails while `FEED_FIXTURE` stays `sessionize-v2`.
 
 ## Reset (do not skip)

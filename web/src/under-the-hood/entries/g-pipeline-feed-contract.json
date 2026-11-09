@@ -14,7 +14,7 @@
     {
       "sponsor": "gitar",
       "kind": "rule",
-      "label": "rules-from-prod: HP-1 and CAP-1 written from production p95",
+      "label": "rules-from-prod: HP-1 and CAP-1 written from measured p95",
       "ref": ".gitar/review/hot-paths.md"
     },
     {
