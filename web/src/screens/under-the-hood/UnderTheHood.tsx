@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'preact/hooks';
-import { t } from '../../i18n';
+import { t, useLang } from '../../i18n';
 import { ENTRIES } from '../../under-the-hood/registry';
 import type { Sponsor, TechRef, UnderTheHoodEntry } from '../../under-the-hood/types';
 import { PROMISES } from '../../features/access/promises';
@@ -111,6 +111,7 @@ function EntrySection({ entry, live }: { entry: UnderTheHoodEntry; live: LiveDat
 }
 
 export function UnderTheHood() {
+  useLang(); // re-render when the language changes
   const live = useLiveData();
   useEffect(emitViewed, []);
   return (
