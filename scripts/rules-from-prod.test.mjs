@@ -114,8 +114,14 @@ describe('shouldCommit', () => {
     expect(shouldCommit(null, a)).toBe(true);
     expect(shouldCommit(a, a, true)).toBe(true);
   });
-  it('summarize reads routes and breach back from the text', () => {
-    expect(summarize(renderHotPaths(input([['/api/agenda', 2.1], ['/api/notes', 0.8]], [['w', 9000]]), NOW))).toEqual({ routes: ['/api/agenda', '/api/notes'], breached: true });
+  it('summarize reads routes, fixture source and breach back from the text', () => {
+    expect(summarize(renderHotPaths(input([['/api/agenda', 2.1], ['/api/notes', 0.8]], [['w', 9000]]), NOW))).toEqual({ routes: ['/api/agenda', '/api/notes'], fixture: false, breached: true });
+    expect(summarize(renderHotPaths(input([['/api/agenda', 2.1]]), NOW, { source: 'fixture' })).fixture).toBe(true);
+  });
+  it('commits when the source changes between fixture and production', () => {
+    const fixture = renderHotPaths(input([['/api/agenda', 2.1]]), NOW, { source: 'fixture' });
+    expect(shouldCommit(fixture, a)).toBe(true);
+    expect(shouldCommit(a, fixture)).toBe(true);
   });
 });
 
@@ -135,8 +141,9 @@ describe('queryPromQL', () => {
     const f = async () => { const e = new Error('t'); e.name = 'TimeoutError'; throw e; };
     await expect(queryPromQL('up', opts(f))).rejects.toMatchObject({ kind: 'timeout' });
   });
-  it('500 and bad shape are QueryErrors', async () => {
+  it('500, non-JSON and bad shape are QueryErrors', async () => {
     await expect(queryPromQL('up', opts(async () => status(500)))).rejects.toBeInstanceOf(QueryError);
+    await expect(queryPromQL('up', opts(async () => ({ ok: true, status: 200, json: async () => { throw new SyntaxError('invalid JSON'); } })))).rejects.toMatchObject({ kind: 'shape', message: 'Dash0 query returned non-JSON' });
     await expect(queryPromQL('up', opts(async () => ({ ok: true, status: 200, json: async () => ({}) })))).rejects.toMatchObject({ kind: 'shape' });
   });
   it('query strings follow the shared contract', () => {
@@ -182,6 +189,57 @@ describe('main', () => {
     setup();
     await main(['--fixture'], {}, { fetchImpl: () => { throw new Error('network'); }, now: NOW, repoRoot: dir });
     expect(fs.readFileSync(outFile(), 'utf8')).toContain('Generated from fixture, not production');
+  });
+  it('replaces fixture data with live data when route and caption states match', async () => {
+    setup();
+    await main(['--fixture'], {}, { now: NOW, repoRoot: dir });
+
+    await main([], { DASH0_API_TOKEN: 't' }, { fetchImpl: fetchOk, now: NOW, repoRoot: dir });
+    const text = fs.readFileSync(outFile(), 'utf8');
+    expect(text).toContain('Generated from Dash0');
+    expect(text).not.toContain('Generated from fixture, not production');
+  });
+  it('writes nothing when the caption query fails', async () => {
+    setup();
+    await main(['--fixture'], {}, { now: NOW, repoRoot: dir });
+    const before = fs.readFileSync(outFile(), 'utf8');
+
+    await main([], { DASH0_API_TOKEN: 't' }, {
+      fetchImpl: async (url) => (url.includes('kc_captions') ? status(500) : ok(routesResult([['/api/agenda', 2.1]]))),
+      now: NOW,
+      repoRoot: dir,
+    });
+    expect(fs.readFileSync(outFile(), 'utf8')).toBe(before);
+  });
+  it('falls back when the primary route series has no finite samples', async () => {
+    setup();
+    const urls = [];
+    await main([], { DASH0_API_TOKEN: 't' }, {
+      fetchImpl: async (url) => {
+        urls.push(url);
+        if (url.includes('kc_captions')) return ok(capResult([['whisper', 3200]]));
+        if (url.includes('kc_app_http_server_duration_bucket')) return ok(vec([['/api/agenda', 0.8]], 'route'));
+        return ok(routesResult([['/api/agenda', 'NaN']]));
+      },
+      now: NOW,
+      repoRoot: dir,
+    });
+    expect(urls.some((url) => url.includes('kc_app_http_server_duration_bucket'))).toBe(true);
+    expect(fs.readFileSync(outFile(), 'utf8')).toContain('HP-1: Changes to the handler for `/api/agenda`');
+  });
+  it('writes nothing when neither route query has finite samples', async () => {
+    setup();
+    const urls = [];
+    await main([], { DASH0_API_TOKEN: 't' }, {
+      fetchImpl: async (url) => {
+        urls.push(url);
+        return ok(routesResult([['/api/agenda', 'NaN']]));
+      },
+      now: NOW,
+      repoRoot: dir,
+    });
+    expect(urls).toHaveLength(2);
+    expect(fs.existsSync(outFile())).toBe(false);
   });
   it('refuses any path other than the rule file', async () => {
     setup();

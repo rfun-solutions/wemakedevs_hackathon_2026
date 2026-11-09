@@ -61,7 +61,12 @@ export async function queryPromQL(expr, { token, config = CONFIG, fetchImpl = fe
   }
   if (res.status === 401 || res.status === 403) throw new QueryError(`Dash0 rejected the token (HTTP ${res.status}); it cannot query (ingest-only?)`, 'auth');
   if (!res.ok) throw new QueryError(`Dash0 query returned HTTP ${res.status}`, 'http');
-  const body = await res.json();
+  let body;
+  try {
+    body = await res.json();
+  } catch {
+    throw new QueryError('Dash0 query returned non-JSON', 'shape');
+  }
   if (body?.status !== 'success' || !Array.isArray(body?.data?.result)) throw new QueryError('Dash0 query returned an unexpected shape', 'shape');
   return body.data.result;
 }
@@ -151,12 +156,13 @@ export function renderHotPaths({ routes, captions }, now, { window = '1h', sourc
   return `${lines.join('\n')}\n`;
 }
 
-/** Hot-route set and caption-breach state of a rendered file (what shouldCommit compares). */
+/** Hot-route set, source and caption-breach state of a rendered file (what shouldCommit compares). */
 export function summarize(text) {
   if (!text) return null;
   const routes = [...text.matchAll(/^- HP-\d+(?: \(Promise P\d+\))?: .*?for `([^`]+)`/gm)].map((m) => m[1]).sort();
   const cap = text.split('\n').find((l) => l.startsWith('- CAP-1'));
-  return { routes, breached: !!cap && /over the limit\.$/.test(cap) };
+  const fixture = text.includes('Generated from fixture, not production');
+  return { routes, fixture, breached: !!cap && /over the limit\.$/.test(cap) };
 }
 
 export function shouldCommit(prev, next, force = false) {
@@ -164,7 +170,7 @@ export function shouldCommit(prev, next, force = false) {
   const a = summarize(prev);
   const b = summarize(next);
   if (!a || !b) return true;
-  return a.breached !== b.breached || a.routes.join('|') !== b.routes.join('|');
+  return a.fixture !== b.fixture || a.breached !== b.breached || a.routes.join('|') !== b.routes.join('|');
 }
 
 /** The only path this script may write. */
@@ -218,17 +224,14 @@ export async function main(argv = process.argv.slice(2), env = process.env, { fe
       return 0;
     }
     try {
-      let routeResult = await queryPromQL(routesQuery(args.window), { token, fetchImpl });
-      if (!routeResult.length) routeResult = await queryPromQL(routesFallbackQuery(args.window), { token, fetchImpl });
-      if (!routeResult.length) {
-        console.log('rules-from-prod: Dash0 returned no route series; nothing written.');
+      let routes = extractRoutes(await queryPromQL(routesQuery(args.window), { token, fetchImpl }));
+      if (!routes.length) routes = extractRoutes(await queryPromQL(routesFallbackQuery(args.window), { token, fetchImpl }));
+      if (!routes.length) {
+        console.log('rules-from-prod: Dash0 returned no finite route series; nothing written.');
         return 0;
       }
-      const captionResult = await queryPromQL(captionsQuery(args.window), { token, fetchImpl }).catch((err) => {
-        if (err.kind === 'auth') throw err;
-        return [];
-      });
-      input = { routes: extractRoutes(routeResult), captions: extractCaptions(captionResult) };
+      const captionResult = await queryPromQL(captionsQuery(args.window), { token, fetchImpl });
+      input = { routes, captions: extractCaptions(captionResult) };
     } catch (err) {
       if (err instanceof QueryError) {
         console.log(`rules-from-prod: ${err.message}; nothing written.`);
