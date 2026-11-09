@@ -10,6 +10,9 @@ export const navItems: NavItem[] = [
   { path: '/', labelKey: 'app.nav.home' },
   // >> d-access-kit
   // >> d-access-kit-cards
+  { path: '/cards', labelKey: 'access.nav.cards' },
+  { path: '/badge', labelKey: 'access.nav.badge' },
+  { path: '/calm', labelKey: 'access.nav.calm' },
   // >> a-schedule-agenda
   // >> b-capture
   // >> f-observability-product
