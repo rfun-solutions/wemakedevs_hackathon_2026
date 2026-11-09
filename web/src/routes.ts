@@ -6,6 +6,8 @@ import { Home } from './screens/Home';
 // >> import:d-access-kit
 // >> import:d-access-kit-cards
 // >> import:a-schedule-agenda
+import { Schedule } from './pages/Schedule';
+import { Agenda } from './pages/Agenda';
 // >> import:b-capture
 // >> import:f-observability-product
 // >> import:e-captions-translation
@@ -22,6 +24,8 @@ export const routes: AppRoute[] = [
   // >> d-access-kit
   // >> d-access-kit-cards
   // >> a-schedule-agenda
+  { path: '/schedule', component: Schedule },
+  { path: '/agenda', component: Agenda },
   // >> b-capture
   // >> f-observability-product
   // >> e-captions-translation

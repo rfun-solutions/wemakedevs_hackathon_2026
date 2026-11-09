@@ -11,6 +11,8 @@ export const navItems: NavItem[] = [
   // >> d-access-kit
   // >> d-access-kit-cards
   // >> a-schedule-agenda
+  { path: '/schedule', labelKey: 'schedule.nav.schedule' },
+  { path: '/agenda', labelKey: 'schedule.nav.agenda' },
   // >> b-capture
   // >> f-observability-product
   // >> e-captions-translation

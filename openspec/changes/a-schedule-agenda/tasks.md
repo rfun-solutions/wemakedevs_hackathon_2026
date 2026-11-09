@@ -16,15 +16,15 @@
 - [ ] 2.6 Register routes under the `// >> a-schedule-agenda` marker in `api/src/routes/index.ts`
 
 ## 3. UI (PR 3)
-- [ ] 3.1 `web/src/pages/Schedule.tsx` (day tabs, room and track selects, list, add button) using D tokens only
-- [ ] 3.2 `web/src/pages/Agenda.tsx` with day groups and building-change warnings (icon + text)
-- [ ] 3.3 Insert route and nav lines under the `// >> a-schedule-agenda` marker in `web/src/routes.ts` and `web/src/nav.ts`
-- [ ] 3.4 EN and ES strings `web/src/i18n/{en,es}/schedule.json`; ARIA live region for add/remove
-- [ ] 3.5 Playwright mobile tests (iPhone 15 and Pixel 7): filter, add, warning shown
-- [ ] 3.6 axe check on both screens; verify 24 px targets
-- [ ] 3.7 Confirm locally, with `getChaos` mocked, that naive mode yields N+1 `pg.query` spans under `kc.agenda.get`. The end-to-end ConfigMap check is F's task 2.4
-- [ ] 3.8 Add your registry entry: `web/src/under-the-hood/entries/a-schedule-agenda.json` (agenda in venue time, building-change warning; tech: Gitar `time-zones.md`, `feed-contract` check, span `kc.agenda.get` with `live: route:GET /api/agenda`, the Agent0 N+1 story) with `schedule.hood.*` EN and ES
-- [ ] 3.9 (Added 2026-11-09, user: Field Notes parity) "Jump to now" on `Schedule.tsx` and `Agenda.tsx`: a button that scrolls to and focuses the session in progress, or the next one, in venue time (America/Denver), with a visible "Now" marker; pure function `currentOrNextSession(items, now)` in `api`-free web code with unit tests (during a talk, between talks, after the last talk, empty day); Playwright check on iPhone 15; EN and ES strings in your `schedule.json`. Each agenda item also gets a "Take a note" link to B's capture route with `?session=<session id>` (path read from `web/src/routes.ts`; do not edit B's files)
+- [x] 3.1 `web/src/pages/Schedule.tsx` (day tabs, room and track selects, list, add button) using D tokens only
+- [x] 3.2 `web/src/pages/Agenda.tsx` with day groups and building-change warnings (icon + text)
+- [x] 3.3 Insert route and nav lines under the `// >> a-schedule-agenda` marker in `web/src/routes.ts` and `web/src/nav.ts`
+- [x] 3.4 EN and ES strings `web/src/i18n/{en,es}/schedule.json`; ARIA live region for add/remove
+- [x] 3.5 Playwright mobile tests (iPhone 15 and Pixel 7): filter, add, warning shown
+- [x] 3.6 axe check on both screens; verify 24 px targets
+- [x] 3.7 Confirm locally, with `getChaos` mocked, that naive mode yields N+1 `pg.query` spans under `kc.agenda.get`. The end-to-end ConfigMap check is F's task 2.4
+- [x] 3.8 Add your registry entry: `web/src/under-the-hood/entries/a-schedule-agenda.json` (agenda in venue time, building-change warning; tech: Gitar `time-zones.md`, `feed-contract` check, span `kc.agenda.get` with `live: route:GET /api/agenda`, the Agent0 N+1 story) with `schedule.hood.*` EN and ES
+- [x] 3.9 (Added 2026-11-09, user: Field Notes parity) "Jump to now" on `Schedule.tsx` and `Agenda.tsx`: a button that scrolls to and focuses the session in progress, or the next one, in venue time (America/Denver), with a visible "Now" marker; pure function `currentOrNextSession(items, now)` in `api`-free web code with unit tests (during a talk, between talks, after the last talk, empty day); Playwright check on iPhone 15; EN and ES strings in your `schedule.json`. Each agenda item also gets a "Take a note" link to B's capture route with `?session=<session id>` (path read from `web/src/routes.ts`; do not edit B's files)
 
 ## Split option (proposed by cross-change review)
 If A is behind at about 13:30, a second agent takes group 3 (UI) against the API contract in design.md, while the first finishes groups 1-2.
