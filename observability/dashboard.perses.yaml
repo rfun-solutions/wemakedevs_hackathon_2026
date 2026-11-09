@@ -1,0 +1,88 @@
+# KubeCompanion service dashboard (Perses). Applied by .github/workflows/observability.yml.
+# Metric names: B kc_capture_saved_ms, A kc_agenda_request_ms, F kc_status_rtt_ms; span metrics from Dash0.
+kind: PersesDashboard
+metadata:
+  name: kubecompanion-service
+  project: default
+spec:
+  display:
+    name: KubeCompanion service health
+  duration: 1h
+  datasources:
+    dash0:
+      default: true
+      plugin:
+        kind: PrometheusDatasource
+        spec:
+          directUrl: /api/prometheus
+  panels:
+    capture_p95:
+      kind: Panel
+      spec:
+        display: { name: Capture save p95 (ms) }
+        plugin: { kind: TimeSeriesChart, spec: {} }
+        queries:
+          - kind: TimeSeriesQuery
+            spec:
+              plugin:
+                kind: PrometheusTimeSeriesQuery
+                spec:
+                  query: histogram_quantile(0.95, sum by (le) (rate(kc_capture_saved_ms_bucket[5m])))
+    agenda_p95:
+      kind: Panel
+      spec:
+        display: { name: Agenda request p95 (ms) }
+        plugin: { kind: TimeSeriesChart, spec: {} }
+        queries:
+          - kind: TimeSeriesQuery
+            spec:
+              plugin:
+                kind: PrometheusTimeSeriesQuery
+                spec:
+                  query: histogram_quantile(0.95, sum by (le) (rate(kc_agenda_request_ms_bucket[5m])))
+    error_rate:
+      kind: Panel
+      spec:
+        display: { name: Server error share }
+        plugin: { kind: TimeSeriesChart, spec: {} }
+        queries:
+          - kind: TimeSeriesQuery
+            spec:
+              plugin:
+                kind: PrometheusTimeSeriesQuery
+                spec:
+                  query: sum(rate(dash0_spans_total{service_name="kubecompanion", otel_span_status_code="ERROR"}[5m])) / sum(rate(dash0_spans_total{service_name="kubecompanion"}[5m]))
+    feed_age:
+      kind: Panel
+      spec:
+        display: { name: Schedule feed age (s) }
+        plugin: { kind: TimeSeriesChart, spec: {} }
+        queries:
+          - kind: TimeSeriesQuery
+            spec:
+              plugin:
+                kind: PrometheusTimeSeriesQuery
+                spec:
+                  query: time() - max(kc_schedule_feed_synced_timestamp_seconds)
+    client_rtt:
+      kind: Panel
+      spec:
+        display: { name: Client RTT p95, reported by devices (ms) }
+        plugin: { kind: TimeSeriesChart, spec: {} }
+        queries:
+          - kind: TimeSeriesQuery
+            spec:
+              plugin:
+                kind: PrometheusTimeSeriesQuery
+                spec:
+                  query: histogram_quantile(0.95, sum by (le) (rate(kc_status_rtt_ms_bucket[5m])))
+  layouts:
+    - kind: Grid
+      spec:
+        display: { title: Service }
+        items:
+          - { x: 0, y: 0, width: 12, height: 8, content: { $ref: '#/spec/panels/capture_p95' } }
+          - { x: 12, y: 0, width: 12, height: 8, content: { $ref: '#/spec/panels/agenda_p95' } }
+          - { x: 0, y: 8, width: 8, height: 8, content: { $ref: '#/spec/panels/error_rate' } }
+          - { x: 8, y: 8, width: 8, height: 8, content: { $ref: '#/spec/panels/feed_age' } }
+          - { x: 16, y: 8, width: 8, height: 8, content: { $ref: '#/spec/panels/client_rtt' } }
