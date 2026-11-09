@@ -7,11 +7,11 @@ import {
   checkPairs,
   contrastRatio,
   parseTokens,
-} from '../src/styles/token-pairs';
+} from './token-pairs';
 
-const css = readFileSync(resolve(__dirname, '../src/styles/tokens.css'), 'utf8');
-const rootBlock = /:root\s*\{([\s\S]*?)\n\}/.exec(css)![1];
-const highBlock = /html\[data-contrast="high"\]\s*\{([\s\S]*?)\n\}/.exec(css)![1];
+const css = readFileSync(resolve(__dirname, 'tokens.css'), 'utf8');
+const rootBlock = /:root\s*\{([\s\S]*?)\n\}/.exec(css)?.[1] ?? '';
+const highBlock = /html\[data-contrast=['"]high['"]\]\s*\{([\s\S]*?)\n\}/.exec(css)?.[1] ?? '';
 const defaults = parseTokens(rootBlock);
 const high = { ...defaults, ...parseTokens(highBlock) };
 

@@ -1,9 +1,9 @@
 import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { PROMISES } from '../src/features/access/promises';
+import { PROMISES } from './promises';
 
-const root = resolve(__dirname, '../..');
+const root = resolve(__dirname, '../../../..');
 const load = (lang: string): Record<string, string> =>
   JSON.parse(readFileSync(resolve(root, `web/src/i18n/${lang}/access.json`), 'utf8'));
 
