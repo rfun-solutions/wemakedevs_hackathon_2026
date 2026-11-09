@@ -73,7 +73,7 @@
   padding: var(--space-3) var(--space-4);
 }
 .calm-list h3,
-h3 {
+.access-subhead {
   margin: 0 0 var(--space-1);
   font-size: var(--text-md);
 }

@@ -57,7 +57,7 @@ export function Cards() {
         </select>
       </div>
 
-      <h3>{t('access.cards.presets')}</h3>
+      <h3 class="access-subhead">{t('access.cards.presets')}</h3>
       <ul class="card-list">
         {PRESET_IDS.map((id) => {
           const text = cardText(cardLang, `access.card.${id}`);
@@ -77,7 +77,7 @@ export function Cards() {
         })}
       </ul>
 
-      <h3>{t('access.cards.custom.label')}</h3>
+      <h3 class="access-subhead">{t('access.cards.custom.label')}</h3>
       <div class="field">
         <label for="card-custom">{t('access.cards.custom.label')}</label>
         <textarea

@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
-import { cardText, dirFor, type CardLang } from './card-text';
+import { t } from '../../i18n';
+import { dirFor, type CardLang } from './card-text';
 import { largestFit } from './fit-text';
 import { speak, speechSupported, stopSpeaking } from './speech';
 import './access-cards.css';
@@ -100,17 +101,17 @@ export function ShowToPerson({ text, lang, onClose, returnTo }: ShowToPersonProp
       class="show"
       role="dialog"
       aria-modal="true"
-      aria-label={cardText(lang, 'access.show.dialog')}
+      aria-label={t('access.show.dialog')}
       data-show
       onKeyDown={onKeyDown}
     >
       <div class="show-bar">
         <button ref={closeBtn} type="button" class="show-btn" onClick={onClose}>
-          {cardText(lang, 'access.show.close')}
+          {t('access.show.close')}
         </button>
         {canSpeak && (
           <button type="button" class="show-btn" onClick={() => speak(text, lang)}>
-            {cardText(lang, 'access.show.speak')}
+            {t('access.show.speak')}
           </button>
         )}
       </div>
