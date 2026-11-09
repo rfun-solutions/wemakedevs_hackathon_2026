@@ -1,0 +1,21 @@
+{
+  "app.home.next.title": "التالي",
+  "app.home.next.unavailable": "جدولك غير متاح مؤقتًا.",
+  "app.home.next.empty": "أضف جلسات إلى جدولك",
+  "app.home.next.emptyHint": "تصفح البرنامج واحفظ المحاضرات التي تريدها.",
+  "app.home.go": "انتقل إلى",
+  "app.home.tile.capture": "التقاط",
+  "app.home.tile.capture.desc": "احفظ ملاحظة أو صورة",
+  "app.home.tile.captions": "الترجمة النصية",
+  "app.home.tile.captions.desc": "كلمات مباشرة لكل محاضرة",
+  "app.home.tile.schedule": "البرنامج",
+  "app.home.tile.schedule.desc": "ابحث عن المحاضرات والقاعات",
+  "app.home.tile.cards": "البطاقات",
+  "app.home.tile.cards.desc": "اعرض احتياجات الوصول الخاصة بك",
+  "app.home.tile.threads": "السلاسل",
+  "app.home.tile.threads.desc": "يومك، مترابط بالكامل",
+  "app.home.tile.status": "الحالة",
+  "app.home.tile.status.desc": "هل يعمل التطبيق جيدًا؟",
+  "app.home.next.now": "يحدث الآن",
+  "app.home.next.loading": "جارٍ التحقق من جدولك…"
+}
