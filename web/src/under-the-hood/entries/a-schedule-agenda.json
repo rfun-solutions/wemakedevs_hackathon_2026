@@ -1,0 +1,32 @@
+{
+  "id": "a-schedule-agenda",
+  "order": 4,
+  "titleKey": "schedule.hood.title",
+  "whatKey": "schedule.hood.what",
+  "promises": [],
+  "tech": [
+    {
+      "sponsor": "gitar",
+      "kind": "rule",
+      "label": "time-zones.md: venue time America/Denver, never UTC",
+      "ref": ".gitar/review/time-zones.md"
+    },
+    {
+      "sponsor": "gitar",
+      "kind": "check",
+      "label": "feed-contract check on the schedule feed",
+      "ref": ".github/workflows/feed-contract.yml"
+    },
+    {
+      "sponsor": "dash0",
+      "kind": "trace",
+      "label": "kc.agenda.get span (items, naive, db.queries)",
+      "live": "route:GET /api/agenda"
+    },
+    {
+      "sponsor": "dash0",
+      "kind": "investigation",
+      "label": "Agent0 finds the N+1 behind a slow agenda"
+    }
+  ]
+}

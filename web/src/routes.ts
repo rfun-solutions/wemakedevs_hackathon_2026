@@ -10,6 +10,8 @@ import { Cards } from './features/access/Cards';
 import { Badge } from './features/access/Badge';
 import { CalmPlaces } from './features/access/CalmPlaces';
 // >> import:a-schedule-agenda
+import { Schedule } from './pages/Schedule';
+import { Agenda } from './pages/Agenda';
 // >> import:b-capture
 // >> import:f-observability-product
 import { Status } from './screens/status/Status';
@@ -34,6 +36,8 @@ export const routes: AppRoute[] = [
   { path: '/badge', component: Badge },
   { path: '/calm', component: CalmPlaces },
   // >> a-schedule-agenda
+  { path: '/schedule', component: Schedule },
+  { path: '/agenda', component: Agenda },
   // >> b-capture
   // >> f-observability-product
   { path: '/status', component: Status },
