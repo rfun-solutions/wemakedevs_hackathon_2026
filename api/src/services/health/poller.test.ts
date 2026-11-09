@@ -4,9 +4,10 @@ import { createHealthPoller, onHealthTransition, STALE_MS } from './poller.js';
 type Row = { metric: Record<string, string>; value: [number, string] };
 const row = (metric: Record<string, string>, v: number): Row => ({ metric, value: [1, String(v)] });
 
-/** Fake Dash0: routes in seconds, captions in ms, counts per engine. */
+/** Fake Dash0: span routes in seconds, fallback routes and captions in ms, counts per engine. */
 function fake(state: {
-  agendaS: number;
+  agendaS?: number;
+  fallbackMs?: number;
   whisperMs?: number;
   whisperN?: number;
   fail?: boolean;
@@ -15,12 +16,16 @@ function fake(state: {
     if (state.fail) return new Response('', { status: 500 });
     const q = decodeURIComponent(new URL(url).searchParams.get('query') ?? '');
     let result: Row[] = [];
-    if (q.includes('dash0_spans_duration_seconds_bucket'))
-      result = [
-        row({ dash0_operation_name: 'GET /api/agenda' }, state.agendaS),
-        row({ dash0_operation_name: 'GET /api/status' }, 9),
-      ];
-    else if (q.includes('kc_captions_segment_ms_bucket'))
+    if (q.includes('dash0_spans_duration_seconds_bucket')) {
+      if (state.agendaS !== undefined)
+        result = [
+          row({ dash0_operation_name: 'GET /api/agenda' }, state.agendaS),
+          row({ dash0_operation_name: 'GET /api/status' }, 9),
+        ];
+    } else if (q.includes('kc_app_http_server_duration_bucket')) {
+      if (state.fallbackMs !== undefined)
+        result = [row({ route: 'GET /api/agenda' }, state.fallbackMs)];
+    } else if (q.includes('kc_captions_segment_ms_bucket'))
       result = [row({ engine: 'whisper' }, state.whisperMs ?? 500)];
     else if (q.includes('kc_captions_segment_ms_count'))
       result = [row({ engine: 'whisper' }, state.whisperN ?? 50)];
@@ -49,6 +54,12 @@ describe('health poller', () => {
     expect(s.source).toBe('dash0');
     expect(s.routes).toEqual([{ route: '/api/agenda', p95Ms: 100, slow: false }]);
     expect(s.captions.lagging).toBe(false);
+  });
+
+  it('keeps fallback route p95 values in milliseconds', async () => {
+    const { poller } = setup({ fallbackMs: 250 });
+    await poller.pollOnce();
+    expect(poller.snapshot().routes).toEqual([{ route: '/api/agenda', p95Ms: 250, slow: false }]);
   });
 
   it('flags the agenda slow above 300 ms', async () => {

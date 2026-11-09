@@ -54,11 +54,14 @@ export function onHealthTransition(cb: Listener | (() => void)): () => void {
 function routesFrom(samples: PromSample[]): HealthSnapshot['routes'] {
   const by = new Map<string, number>();
   for (const s of samples) {
-    const label = s.metric[PROMQL_CONFIG.routeLabel] ?? s.metric[PROMQL_CONFIG.fallbackRouteLabel];
+    const primary = s.metric[PROMQL_CONFIG.routeLabel];
+    const label = primary ?? s.metric[PROMQL_CONFIG.fallbackRouteLabel];
     if (!label) continue;
     const route = label.replace(/^(GET|POST|PUT|PATCH|DELETE)\s+/, '');
     if (EXCLUDED.includes(route) || EXCLUDED_PREFIX.some((p) => route.startsWith(p))) continue;
-    by.set(route, Math.max(by.get(route) ?? 0, s.value * 1000)); // route histograms are in seconds
+    // dash0 span histogram is in seconds; kc_app_http_server_duration is recorded in ms
+    const ms = primary ? s.value * 1000 : s.value;
+    by.set(route, Math.max(by.get(route) ?? 0, ms));
   }
   return [...by].map(([route, p95Ms]) => ({
     route,
