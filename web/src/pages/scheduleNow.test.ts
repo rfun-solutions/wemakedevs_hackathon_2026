@@ -8,7 +8,10 @@ const items = [
 
 describe('currentOrNextSession', () => {
   it('returns the session in progress', () => {
-    expect(currentOrNextSession(items, new Date('2026-11-10T16:10:00Z'))).toEqual({ session: items[1], state: 'current' });
+    expect(currentOrNextSession(items, new Date('2026-11-10T16:10:00Z'))).toEqual({
+      session: items[1],
+      state: 'current',
+    });
   });
   it('returns the next session between talks', () => {
     expect(currentOrNextSession(items, new Date('2026-11-10T16:50:00Z'))?.session.id).toBe('b');
@@ -16,7 +19,10 @@ describe('currentOrNextSession', () => {
   });
   it('treats end as exclusive and start as inclusive', () => {
     expect(currentOrNextSession(items, new Date('2026-11-10T16:35:00Z'))?.state).toBe('next');
-    expect(currentOrNextSession(items, new Date('2026-11-10T17:00:00Z'))).toMatchObject({ session: { id: 'b' }, state: 'current' });
+    expect(currentOrNextSession(items, new Date('2026-11-10T17:00:00Z'))).toMatchObject({
+      session: { id: 'b' },
+      state: 'current',
+    });
   });
   it('returns the first session before the day starts', () => {
     expect(currentOrNextSession(items, new Date('2026-11-10T12:00:00Z'))?.session.id).toBe('a');
@@ -32,7 +38,9 @@ describe('currentOrNextSession', () => {
       { id: 'late', startsAt: '2026-11-10T09:10:00-07:00', endsAt: '2026-11-10T10:00:00-07:00' },
       { id: 'early', startsAt: '2026-11-10T09:00:00-07:00', endsAt: '2026-11-10T10:00:00-07:00' },
     ];
-    expect(currentOrNextSession(overlap, new Date('2026-11-10T16:20:00Z'))?.session.id).toBe('early');
+    expect(currentOrNextSession(overlap, new Date('2026-11-10T16:20:00Z'))?.session.id).toBe(
+      'early',
+    );
   });
   it('is independent of the browser zone (instants, not wall strings)', () => {
     const r = currentOrNextSession(items, new Date('2026-11-10T09:10:00-07:00'));

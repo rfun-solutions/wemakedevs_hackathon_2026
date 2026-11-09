@@ -14,7 +14,10 @@ export function venueDay(instant: Date | string): string {
  * Returns the session in progress at `now` (earliest start if several overlap), otherwise the next
  * session to start. Returns null for an empty list or when every session has already ended.
  */
-export function currentOrNextSession<T extends TimedItem>(items: readonly T[], now: Date): NowResult<T> {
+export function currentOrNextSession<T extends TimedItem>(
+  items: readonly T[],
+  now: Date,
+): NowResult<T> {
   const t = now.getTime();
   const sorted = [...items]
     .map((s) => ({ s, start: Date.parse(s.startsAt), end: Date.parse(s.endsAt) }))

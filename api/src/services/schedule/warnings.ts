@@ -20,7 +20,10 @@ export function walkMinutesFromEnv(env: Record<string, string | undefined> = pro
 const dayKey = (d: Date) => d.toLocaleDateString('en-CA', { timeZone: 'America/Denver' });
 
 /** `items` must be sorted by start time. Only consecutive items on the same venue day are compared. */
-export function buildingWarnings(items: AgendaSession[], walkMinutes: number = walkMinutesFromEnv()): BuildingWarning[] {
+export function buildingWarnings(
+  items: AgendaSession[],
+  walkMinutes: number = walkMinutesFromEnv(),
+): BuildingWarning[] {
   const out: BuildingWarning[] = [];
   for (let i = 1; i < items.length; i++) {
     const prev = items[i - 1]!;

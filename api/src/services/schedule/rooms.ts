@@ -21,7 +21,8 @@ export function isKnownBuilding(building: string | null | undefined): boolean {
   return b !== '' && !UNKNOWN_BUILDING.test(b);
 }
 
-const SERVICE_RE = /\b(registration|coat\s*\+?\s*(and\s*)?bag check|bag check|badge pickup|speaker (ready|lounge)|lunch|coffee break|breakfast|reception|check-?in)\b/i;
+const SERVICE_RE =
+  /\b(registration|coat\s*\+?\s*(and\s*)?bag check|bag check|badge pickup|speaker (ready|lounge)|lunch|coffee break|breakfast|reception|check-?in)\b/i;
 const SERVICE_ROOM_RE = /\b(registration|coat|bag check)\b/i;
 
 /** Service sessions (registration, coat check, meals) are hidden from the default list. */

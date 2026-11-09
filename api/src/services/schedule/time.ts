@@ -16,7 +16,14 @@ function tzOffsetMs(instantMs: number, tz: string): number {
     second: '2-digit',
   }).formatToParts(new Date(instantMs));
   const get = (type: string) => Number(parts.find((p) => p.type === type)?.value);
-  const asUtc = Date.UTC(get('year'), get('month') - 1, get('day'), get('hour'), get('minute'), get('second'));
+  const asUtc = Date.UTC(
+    get('year'),
+    get('month') - 1,
+    get('day'),
+    get('hour'),
+    get('minute'),
+    get('second'),
+  );
   return asUtc - Math.floor(instantMs / 1000) * 1000;
 }
 
@@ -28,7 +35,12 @@ export function naiveToUtc(naive: string, tz: string = VENUE_TZ): Date {
   const m = NAIVE_RE.exec(naive);
   if (!m) throw new Error(`Invalid naive datetime: ${JSON.stringify(naive)}`);
   const [y, mo, d, h, mi, s] = [m[1], m[2], m[3], m[4], m[5], m[6] ?? '0'].map(Number) as [
-    number, number, number, number, number, number,
+    number,
+    number,
+    number,
+    number,
+    number,
+    number,
   ];
   const wallAsUtc = Date.UTC(y, mo - 1, d, h, mi, s);
   // Two-pass fixed point handles instants near a DST change.

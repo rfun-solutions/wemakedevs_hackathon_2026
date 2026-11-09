@@ -6,7 +6,11 @@ describe('accessTags', () => {
     expect(accessTags({ title: 'Plain talk' })).toEqual(['captions-unknown']);
   });
   it('tags novice level as novice-friendly and jargon-light', () => {
-    expect(accessTags({ title: 'x', audienceLevel: 'Cloud Native Novice' })).toEqual(['novice-friendly', 'jargon-light', 'captions-unknown']);
+    expect(accessTags({ title: 'x', audienceLevel: 'Cloud Native Novice' })).toEqual([
+      'novice-friendly',
+      'jargon-light',
+      'captions-unknown',
+    ]);
     expect(accessTags({ title: 'x', audienceLevel: 'Beginner' })).toContain('novice-friendly');
   });
   it('does not tag advanced level as novice', () => {
@@ -22,6 +26,8 @@ describe('accessTags', () => {
     expect(accessTags({ title: 'x', description: 'Q&A at the end' })).toContain('qa-heavy');
   });
   it('does not match substrings ("deliver", "alive")', () => {
-    expect(accessTags({ title: 'Deliver software', description: 'stay alive' })).toEqual(['captions-unknown']);
+    expect(accessTags({ title: 'Deliver software', description: 'stay alive' })).toEqual([
+      'captions-unknown',
+    ]);
   });
 });
