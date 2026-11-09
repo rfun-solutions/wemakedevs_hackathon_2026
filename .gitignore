@@ -9,3 +9,11 @@
 node_modules/
 npm-debug.log*
 .DS_Store
+
+# Build output and test artifacts
+dist/
+coverage/
+playwright-report/
+test-results/
+*.tsbuildinfo
+.vite/
