@@ -6,12 +6,19 @@ import { Home } from './screens/Home';
 // >> import:d-access-kit
 import { Settings } from './features/access/Settings';
 // >> import:d-access-kit-cards
+import { Cards } from './features/access/Cards';
+import { Badge } from './features/access/Badge';
+import { CalmPlaces } from './features/access/CalmPlaces';
 // >> import:a-schedule-agenda
 // >> import:b-capture
 // >> import:f-observability-product
+import { Status } from './screens/status/Status';
 // >> import:e-captions-translation
+import { Captions } from './pages/captions/Captions';
 // >> import:c-evening-threads
+import { Threads } from './screens/Threads';
 // >> import:h-under-the-hood
+import { UnderTheHood } from './screens/under-the-hood/UnderTheHood';
 
 export interface AppRoute {
   path: string;
@@ -23,10 +30,17 @@ export const routes: AppRoute[] = [
   // >> d-access-kit
   { path: '/settings', component: Settings },
   // >> d-access-kit-cards
+  { path: '/cards', component: Cards },
+  { path: '/badge', component: Badge },
+  { path: '/calm', component: CalmPlaces },
   // >> a-schedule-agenda
   // >> b-capture
   // >> f-observability-product
+  { path: '/status', component: Status },
   // >> e-captions-translation
+  { path: '/captions', component: Captions },
   // >> c-evening-threads
+  { path: '/threads', component: Threads },
   // >> h-under-the-hood
+  { path: '/under-the-hood', component: UnderTheHood },
 ];

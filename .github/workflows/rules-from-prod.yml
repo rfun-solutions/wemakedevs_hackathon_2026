@@ -1,0 +1,84 @@
+name: rules-from-prod
+permissions:
+  contents: read
+on:
+  schedule:
+    - cron: "7 * * * *"
+  workflow_dispatch:
+    inputs:
+      window:
+        description: PromQL rate window (for example 15m, 1h)
+        default: 1h
+      force:
+        description: Commit even when the hot routes and caption state did not change
+        type: boolean
+        default: false
+# Deliberately NOT the deploy group: a new pending run in a group cancels the older pending one,
+# which could drop a deploy.
+concurrency:
+  group: rules-from-prod
+  cancel-in-progress: false
+jobs:
+  rules:
+    # Only the real repo: the template keeps no rule file.
+    if: github.repository != 'skyhook-io/cnh-starter'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      # An ingest-only token cannot query: the script then skips cleanly and writes nothing.
+      # The laptop path (docs/runbooks/hot-paths.md) uses a full-access DASH0_API_TOKEN instead.
+      DASH0_API_TOKEN: ${{ secrets.DASH0_API_TOKEN || secrets.DASH0_TOKEN }}
+      WINDOW: ${{ inputs.window || '1h' }}
+      FORCE: ${{ inputs.force }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # Do not persist GITHUB_TOKEN: its extraheader would override the deploy-bot App token on push.
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+      - name: Generate hot-paths.md from Dash0
+        run: |
+          args=(--window "$WINDOW")
+          if [ "$FORCE" = "true" ]; then args+=(--force); fi
+          node scripts/rules-from-prod.mjs "${args[@]}"
+      - name: Detect change
+        id: changed
+        run: |
+          if git diff --quiet -- .gitar/review/hot-paths.md; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Nothing to commit."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Mint deploy-bot token
+        if: steps.changed.outputs.changed == 'true'
+        id: app-token
+        uses: actions/create-github-app-token@v3.3.0
+        with:
+          app-id: ${{ vars.DEPLOY_BOT_APP_ID }}
+          private-key: ${{ secrets.DEPLOY_BOT_PRIVATE_KEY }}
+      - name: Commit the rule file as the deploy bot
+        if: steps.changed.outputs.changed == 'true'
+        env:
+          GH_APP_TOKEN: ${{ steps.app-token.outputs.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          cp .gitar/review/hot-paths.md "$RUNNER_TEMP/hot-paths.md"
+          git config user.name "kubecompanion-deploy-bot[bot]"
+          git config user.email "354589384+kubecompanion-deploy-bot[bot]@users.noreply.github.com"
+          git remote set-url origin "https://x-access-token:${GH_APP_TOKEN}@github.com/${REPO}.git"
+          # Only this one file is ever staged. On a push race, re-apply on the latest main and retry once.
+          for _ in 1 2; do
+            git fetch -q origin main
+            git reset -q --hard FETCH_HEAD
+            cp "$RUNNER_TEMP/hot-paths.md" .gitar/review/hot-paths.md
+            git add .gitar/review/hot-paths.md
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -qm "rules: update hot-paths from Dash0 ($(TZ=America/Denver date +%H:%M))"
+            if git push -q origin HEAD:main; then exit 0; fi
+            sleep 3
+          done
+          echo "Could not push the rules commit after 2 tries." >&2
+          exit 1

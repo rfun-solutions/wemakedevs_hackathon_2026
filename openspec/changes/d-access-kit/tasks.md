@@ -36,20 +36,20 @@ Edits: `web/index.html` (pre-paint prefs script), app shell (mount live regions)
 - [x] 3.6 Unit tests for prefs and announce; Playwright mobile: 200% has no horizontal scroll, prefs persist across reload, storage-blocked fallback
 
 ## 4. Communication cards and badge (PR 3)
-- [ ] 4.1 Cards screen with presets from i18n (`access.card.*` in `web/src/i18n/{en,es,pt-BR,ar}/access-cards.json`), custom text card, card-language selector; insert its route and nav line under the `// >> d-access-kit-cards` marker
-- [ ] 4.2 `<ShowToPerson>`: full-screen, fit-text, wake lock when available, Close and Escape, focus return, `lang` tagging
-- [ ] 4.3 Optional TTS with feature detection and voice picking by language; no autoplay
-- [ ] 4.4 Badge screen: pronouns, name, preference toggles, localStorage `kc.badge.v1`, show in `<ShowToPerson>`; strings in `access-cards.json` (EN, ES, PT-BR, AR); route and nav line under `// >> d-access-kit-cards`
+- [x] 4.1 Cards screen with presets from i18n (`access.card.*` in `web/src/i18n/{en,es,pt-BR,ar}/access-cards.json`), custom text card, card-language selector; insert its route and nav line under the `// >> d-access-kit-cards` marker
+- [x] 4.2 `<ShowToPerson>`: full-screen, fit-text, wake lock when available, Close and Escape, focus return, `lang` tagging
+- [x] 4.3 Optional TTS with feature detection and voice picking by language; no autoplay
+- [x] 4.4 Badge screen: pronouns, name, preference toggles, localStorage `kc.badge.v1`, show in `<ShowToPerson>`; strings in `access-cards.json` (EN, ES, PT-BR, AR); route and nav line under `// >> d-access-kit-cards`
 - [ ] 4.5 Browser telemetry events `kc.access.card_shown`, `kc.access.display_mode_changed`, `kc.access.lang_changed` with no free text or badge data
-- [ ] 4.6 Playwright mobile (iPhone 15 and Pixel 7): open preset, custom card, close restores focus, badge persists, no network request carries badge fields
-- [ ] 4.7 axe matrix: shell, Cards, Settings, Badge in default, 200%, high contrast and AR RTL; confirm the `a11y` job runs it
+- [x] 4.6 Playwright mobile (iPhone 15 and Pixel 7): open preset, custom card, close restores focus, badge persists, no network request carries badge fields
+- [x] 4.7 axe matrix: shell, Cards, Settings, Badge in default, 200%, high contrast and AR RTL; confirm the `a11y` job runs it
 - [ ] 4.8 Manual check on a real iPhone in Safari: card legibility, TTS, 200% type
-- [ ] 4.9 Stutter preset `access.card.stutter` ("I stutter. Please give me time to finish.") in EN and ES (PT-BR, AR smoke) in `access-cards.json`; add it to the Playwright preset test
-- [ ] 4.10 Calm places: `calm-places.ts` and `CalmPlaces.tsx` exactly as design "Calm places", route `/calm` and one nav line under `// >> d-access-kit-cards`, `access.calm.*` EN and ES in `access-cards.json`, source link and checked date; event `kc.access.calm_places_viewed`; Playwright mobile (iPhone 15, Pixel 7): 260A listed, offline reload still lists it, no request carries location; axe clean
-- [ ] 4.11 Add your registry entry: `web/src/under-the-hood/entries/d-access-kit.json` (cards, display modes, promises, calm places; tech: `inclusion.md` IN-2, G5 token rule, `a11y` axe check, Synthetic Kay `live: promise:P3` and `promise:P4`) with `access.hood.*` EN and ES in `access-cards.json`
+- [x] 4.9 Stutter preset `access.card.stutter` ("I stutter. Please give me time to finish.") in EN and ES (PT-BR, AR smoke) in `access-cards.json`; add it to the Playwright preset test
+- [x] 4.10 Calm places: `calm-places.ts` and `CalmPlaces.tsx` exactly as design "Calm places", route `/calm` and one nav line under `// >> d-access-kit-cards`, `access.calm.*` EN and ES in `access-cards.json`, source link and checked date; event `kc.access.calm_places_viewed`; Playwright mobile (iPhone 15, Pixel 7): 260A listed, offline reload still lists it, no request carries location; axe clean
+- [x] 4.11 Add your registry entry: `web/src/under-the-hood/entries/d-access-kit.json` (cards, display modes, promises, calm places; tech: `inclusion.md` IN-2, G5 token rule, `a11y` axe check, Synthetic Kay `live: promise:P3` and `promise:P4`) with `access.hood.*` EN and ES in `access-cards.json`
 
 ## 5. Staged accessibility regression (G5, after group 4; branch only; THE on-stage Gitar fix, decided 2026-11-08; G3 is a prepared evidence PR)
-- [ ] 5.1 Make the axe e2e failure in `web/e2e/access/` print the failing element's `TOKEN_PAIRS` name and computed colours
+- [x] 5.1 Make the axe e2e failure in `web/e2e/access/` print the failing element's `TOKEN_PAIRS` name and computed colours
 - [ ] 5.2 Create branch `bugfix/KC-<n>-card-contrast` from `main`: change one `<ShowToPerson>` token so the pair is 3.9:1; confirm locally that the contrast test and `a11y` fail with the token named; push the branch, do NOT open the PR. Push an identical second branch `bugfix/KC-<n>-card-contrast-rehearsal` for G's dress rehearsal, so the stage branch is still broken on stage
 - [ ] 5.3 Hand the branch name to G's `docs/runbooks/a11y-regression.md`; after the stage run, confirm Gitar's fix touched only `tokens.css`
 

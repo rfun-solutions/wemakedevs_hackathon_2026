@@ -1,0 +1,20 @@
+{
+  "status.nav": "Status",
+  "status.title": "Is it the Wi-Fi or us?",
+  "status.loading": "Checking...",
+  "status.error": "We could not reach the app just now. Your notes are safe on this phone.",
+  "status.saved": "Saved in {ms} ms",
+  "status.saved.none": "No note saved on this phone yet",
+  "status.feed.age": "Schedule updated {min} min ago",
+  "status.feed.now": "Schedule updated just now",
+  "status.feed.unknown": "Schedule update time not available yet",
+  "status.rtt": "Your connection: {ms} ms",
+  "status.server": "Our saving time: {ms} ms (target under {slo} ms)",
+  "status.chaos": "A planned test slowdown is switched on.",
+  "status.verdict.title": "What we can see",
+  "status.verdict.offline": "You are offline. Your notes are queued on this phone.",
+  "status.verdict.server_slow": "We are slow right now, not your Wi-Fi.",
+  "status.verdict.connection_slow": "Your connection looks slow, not us.",
+  "status.verdict.all_good": "All good.",
+  "status.verdict.unknown": "Not enough information yet."
+}

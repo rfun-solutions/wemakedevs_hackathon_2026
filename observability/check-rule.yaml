@@ -1,0 +1,20 @@
+# Capture latency check rule (SLO candidate: capture p95 < 500 ms). Applied by observability.yml.
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: kubecompanion-capture
+  labels:
+    app: kubecompanion
+spec:
+  groups:
+    - name: kubecompanion-capture
+      interval: 1m
+      rules:
+        - alert: KubeCompanionCaptureSlow
+          expr: histogram_quantile(0.95, sum by (le) (rate(kc_capture_saved_ms_bucket[5m]))) > 500
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: Saving a note is slow for Kay
+            description: Capture save p95 has been above 500 ms for 5 minutes. Check the Status screen and kc-chaos.

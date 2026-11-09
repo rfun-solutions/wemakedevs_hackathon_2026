@@ -11,10 +11,17 @@ export const navItems: NavItem[] = [
   // >> d-access-kit
   { path: '/settings', labelKey: 'access.nav.settings' },
   // >> d-access-kit-cards
+  { path: '/cards', labelKey: 'access.nav.cards' },
+  { path: '/badge', labelKey: 'access.nav.badge' },
+  { path: '/calm', labelKey: 'access.nav.calm' },
   // >> a-schedule-agenda
   // >> b-capture
   // >> f-observability-product
+  { path: '/status', labelKey: 'status.nav' },
   // >> e-captions-translation
+  { path: '/captions', labelKey: 'captions.nav' },
   // >> c-evening-threads
+  { path: '/threads', labelKey: 'threads.nav' },
   // >> h-under-the-hood
+  { path: '/under-the-hood', labelKey: 'hood.nav' },
 ];
