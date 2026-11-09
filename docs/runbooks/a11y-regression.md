@@ -5,10 +5,10 @@ repo evidence only, not a stage beat.
 
 ## Before (T-10 min)
 
-- D's branch `bugfix/KC-<n>-card-contrast` is ready (one token in `web/src/styles/tokens.css` drops the show-to-person card text to 3.9:1).
+- D's branch `bugfix/KC-2-card-contrast` is ready (one token in `web/src/styles/tokens.css` drops the show-to-person card text to 3.9:1).
 - The PR is NOT yet open. Label `gitar-managed` is set at open; auto-apply must be on (comment `gitar auto-apply:on` if needed).
 - `main` is green and `FEED_FIXTURE` is `sessionize-v1` (the feed break must not be live at the same time).
-- Fallback tabs ready: the dress-rehearsal G5 PR (from D's `-rehearsal` branch), then the G3 evidence PR link.
+- Fallback tabs ready: the dress-rehearsal G5 PR (from D's `bugfix/KC-2-card-contrast-rehearsal` branch), then the G3 evidence PR link.
 
 ## On stage
 
@@ -34,5 +34,5 @@ Close the PR; delete nothing on `main`. Check `gh variable list` shows no stray 
 
 ## Dry run
 
-Run once on D's `-rehearsal` branch; that PR becomes the fallback tab and the stage branch stays unopened. Record the
+Run once on D's `bugfix/KC-2-card-contrast-rehearsal` branch; that PR becomes the fallback tab and the stage branch stays unopened. Record the
 times in RUNNING-LOG.md. `feed-break.md` and `hot-paths.md` must not call G3 the stage beat.
