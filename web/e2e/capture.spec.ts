@@ -65,6 +65,11 @@ test.describe('capture', () => {
     await expect(noteField(page)).toHaveValue('');
     await expect(noteField(page)).toBeFocused();
     await expect(page.getByText(/Saved on this phone|Guardada en este teléfono/)).toBeVisible();
+    // every card shows when the note was taken, in venue time
+    const when = page.locator('.capture-item time').first();
+    await expect(when).toBeVisible();
+    await expect(when).toHaveAttribute('datetime', /^\d{4}-\d{2}-\d{2}T/);
+    await expect(when).toHaveText(/\d{1,2}:\d{2}/);
   });
 
   test('repeated saves are announced again', async ({ page }) => {
