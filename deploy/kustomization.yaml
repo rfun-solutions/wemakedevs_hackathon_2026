@@ -16,7 +16,8 @@ resources:
   # >> f-observability-product
   - chaos-configmap.yaml
   # >> c-evening-threads
+  - threads-cronjob.yaml
 images:
   - name: app
     newName: ghcr.io/rfun-solutions/wemakedevs_hackathon_2026
-    newTag: 7b1311e
+    newTag: 969d934
