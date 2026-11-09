@@ -99,7 +99,6 @@ test.describe('captions', () => {
   });
 
   test('Save as note posts the line to /api/notes with the device id', async ({ page }) => {
-    test.fixme(true, 'needs B real enqueueNote (C0 stub rejects); re-enable after B PR2 merges');
     const posts: { body: Record<string, unknown>; device: string | undefined }[] = [];
     await page.route('**/api/notes', async (route) => {
       if (route.request().method() === 'POST') {
@@ -122,7 +121,6 @@ test.describe('captions', () => {
   test('Insert time mark adds a venue-time line and saves [mark HH:MM:SS] <last line>', async ({
     page,
   }) => {
-    test.fixme(true, 'needs B real enqueueNote (C0 stub rejects); re-enable after B PR2 merges');
     const posts: Record<string, unknown>[] = [];
     await page.route('**/api/notes', async (route) => {
       if (route.request().method() === 'POST') {
