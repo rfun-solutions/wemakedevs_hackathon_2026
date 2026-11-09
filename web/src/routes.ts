@@ -10,6 +10,7 @@ import { Home } from './screens/Home';
 // >> import:f-observability-product
 // >> import:e-captions-translation
 // >> import:c-evening-threads
+import { Threads } from './screens/Threads';
 // >> import:h-under-the-hood
 
 export interface AppRoute {
@@ -29,6 +30,3 @@ export const routes: AppRoute[] = [
   { path: '/threads', component: Threads },
   // >> h-under-the-hood
 ];
-
-// c-evening-threads import (kept here, not with the others, so parallel imports do not conflict; imports hoist)
-import { Threads } from './screens/Threads';
