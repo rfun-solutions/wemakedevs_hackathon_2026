@@ -12,6 +12,7 @@ resources:
   # >> c0-scaffold
   - postgres.yaml
   # >> a-schedule-agenda
+  - cronjob-ingest.yaml
   # >> f-observability-product
   # >> c-evening-threads
 images:
