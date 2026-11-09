@@ -45,6 +45,8 @@ spec:
                   key: DASH0_TOKEN
                   optional: true
             # >> f-observability-product
+            - name: CHAOS_FILE
+              value: /etc/kc-chaos/flags.json
             # >> c-evening-threads
           resources:
             requests:
@@ -55,6 +57,9 @@ spec:
               memory: 384Mi
           volumeMounts:
             # >> f-observability-product
+            - name: kc-chaos
+              mountPath: /etc/kc-chaos
+              readOnly: true
             # >> f-observability-product-health
           readinessProbe:
             httpGet:
@@ -76,4 +81,8 @@ spec:
       # Pod-level volumes (each entry goes under its own marker).
       volumes:
         # >> f-observability-product
+        - name: kc-chaos
+          configMap:
+            name: kc-chaos
+            optional: true
         # >> f-observability-product-health

@@ -1,0 +1,46 @@
+name: observability
+permissions:
+  contents: read
+on:
+  pull_request:
+    paths:
+      - observability/**
+      - .github/workflows/observability.yml
+  workflow_dispatch:
+
+# Lint only. DASH0_TOKEN is deliberately not in GitHub: the orchestrator applies
+# dashboards, the check rule and the synthetic check from the laptop (see docs/demo-runbook-dash0.md).
+concurrency:
+  group: observability-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PERSES_VERSION: 0.55.1 # real release; archive contains percli (asset list read from GitHub)
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install percli
+        run: |
+          curl -fsSL -o perses.tar.gz "https://github.com/perses/perses/releases/download/v${PERSES_VERSION}/perses_${PERSES_VERSION}_linux_amd64.tar.gz"
+          tar -xzf perses.tar.gz percli
+          sudo install percli /usr/local/bin/percli
+
+      - name: Lint dashboards (percli)
+        run: |
+          shopt -s nullglob
+          files=(observability/*.perses.yaml)
+          if [ ${#files[@]} -eq 0 ]; then echo "no dashboards"; exit 0; fi
+          for f in "${files[@]}"; do
+            echo "percli lint $f"
+            percli lint -f "$f"
+          done
+
+      - name: YAML parses
+        run: |
+          for f in observability/*.yaml; do
+            python3 -c 'import sys,yaml; list(yaml.safe_load_all(open(sys.argv[1])))' "$f"
+          done

@@ -11,6 +11,7 @@ import { CalmPlaces } from './features/access/CalmPlaces';
 // >> import:a-schedule-agenda
 // >> import:b-capture
 // >> import:f-observability-product
+import { Status } from './screens/status/Status';
 // >> import:e-captions-translation
 // >> import:c-evening-threads
 // >> import:h-under-the-hood
@@ -30,6 +31,7 @@ export const routes: AppRoute[] = [
   // >> a-schedule-agenda
   // >> b-capture
   // >> f-observability-product
+  { path: '/status', component: Status },
   // >> e-captions-translation
   // >> c-evening-threads
   // >> h-under-the-hood
