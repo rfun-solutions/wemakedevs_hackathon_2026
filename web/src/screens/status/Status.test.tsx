@@ -43,6 +43,9 @@ describe('Status screen', () => {
     expect(screen.getByText('All good.')).toBeTruthy();
     expect(screen.getByText('No note saved on this phone yet')).toBeTruthy();
     expect(screen.getByRole('status').getAttribute('aria-live')).toBe('polite');
+    const verdict = screen.getByText('All good.');
+    expect(verdict.parentElement?.getAttribute('aria-live')).toBe('polite');
+    expect(verdict.parentElement?.getAttribute('aria-atomic')).toBe('true');
   });
 
   it('says the app is slow when server p95 is over the SLO', async () => {
@@ -51,7 +54,8 @@ describe('Status screen', () => {
     await waitFor(() =>
       expect(screen.getByText('We are slow right now, not your Wi-Fi.')).toBeTruthy(),
     );
-    expect(screen.getByText('A planned test slowdown is switched on.')).toBeTruthy();
+    const chaos = screen.getByText('A planned test slowdown is switched on.');
+    expect(chaos.parentElement?.getAttribute('aria-live')).toBe('polite');
   });
 
   it('says the connection is slow when RTT is over 400 ms and the server is within SLO', async () => {
@@ -63,6 +67,26 @@ describe('Status screen', () => {
         timeout: 4000,
       },
     );
+  });
+
+  it('bounds status, ping and RTT requests with timeout signals', async () => {
+    const requests: Array<{ url: string; init?: RequestInit }> = [];
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: string, init?: RequestInit) => {
+        requests.push({ url, init });
+        if (url === '/api/status') return new Response(JSON.stringify(base), { status: 200 });
+        return new Response(null, { status: 204 });
+      }),
+    );
+    render(<Status />);
+    await waitFor(() => expect(requests.some(({ url }) => url === '/api/status/rtt')).toBe(true));
+
+    for (const path of ['/api/status', '/api/ping', '/api/status/rtt']) {
+      const matching = requests.filter(({ url }) => url === path);
+      expect(matching.length).toBeGreaterThan(0);
+      expect(matching.every(({ init }) => init?.signal instanceof AbortSignal)).toBe(true);
+    }
   });
 
   it('is offline: queued message and no network call', () => {
@@ -77,6 +101,9 @@ describe('Status screen', () => {
     mockFetch(new Error('down'));
     render(<Status />);
     await waitFor(() => expect(screen.getByText(/could not reach the app/)).toBeTruthy());
+    const error = screen.getByRole('alert');
+    expect(error.getAttribute('id')).toBe('status-error');
+    expect(error.parentElement?.getAttribute('aria-live')).toBe('polite');
   });
 
   it('renders Spanish strings', async () => {
