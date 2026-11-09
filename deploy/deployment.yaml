@@ -44,6 +44,9 @@ spec:
                   name: kc-secrets
                   key: DASH0_TOKEN
                   optional: true
+            # >> b-capture
+            - name: KC_DEMO_SEED
+              value: "0"
             # >> f-observability-product
             - name: CHAOS_FILE
               value: /etc/kc-chaos/flags.json
