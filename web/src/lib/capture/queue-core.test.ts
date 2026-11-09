@@ -213,6 +213,24 @@ describe('queue', () => {
   });
 });
 
+describe('replay order', () => {
+  it('flushes in enqueue order even when created_at ties and client_ids sort the other way', async () => {
+    const ids = ['ffffffff-0000-4000-8000-000000000001', '00000000-0000-4000-8000-000000000002'];
+    const posted: string[] = [];
+    const q = createQueue({
+      store: memStore(),
+      post: async (i) => (posted.push(i.body), { status: 201 }),
+      now: () => 1_000, // frozen clock: every created_at is identical
+      perfNow: () => 0,
+      uuid: () => ids.shift()!,
+    });
+    await q.enqueue({ body: 'first', source: 'typed' });
+    await q.enqueue({ body: 'second', source: 'typed' });
+    await q.flush({ force: true });
+    expect(posted).toEqual(['first', 'second']);
+  });
+});
+
 describe('kinds and wire format', () => {
   it('enqueueKind stores person/promise payloads and the device id', async () => {
     const store = memStore();

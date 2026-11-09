@@ -55,6 +55,15 @@ function kcCaptureReq(req) {
   });
 }
 
+/** Mirrors compareQueueItems in queue-core.ts: seq, then created_at, then client_id. */
+function kcCaptureCompare(a, b) {
+  var sa = typeof a.seq === 'number' ? a.seq : Date.parse(a.created_at);
+  var sb = typeof b.seq === 'number' ? b.seq : Date.parse(b.created_at);
+  if (sa !== sb) return sa - sb;
+  if (a.created_at !== b.created_at) return a.created_at < b.created_at ? -1 : 1;
+  return a.client_id < b.client_id ? -1 : a.client_id > b.client_id ? 1 : 0;
+}
+
 /**
  * Posts pending items oldest first. Resolves with the number synced. Rejects when an item must be
  * retried (network error, 5xx, 429) so the browser reschedules the sync. Other 4xx items are left
@@ -69,7 +78,7 @@ function kcCaptureFlush(idb, fetchFn) {
             return i.status === 'pending' && i.device_id;
           })
           .sort(function (a, b) {
-            return a.created_at < b.created_at ? -1 : a.created_at > b.created_at ? 1 : 0;
+            return kcCaptureCompare(a, b);
           });
         var synced = 0;
         return pending

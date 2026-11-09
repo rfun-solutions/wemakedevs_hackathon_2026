@@ -35,6 +35,8 @@ export interface QueueItem {
   device_id?: string;
   /** ISO time of the tap; sent as created_at (server clamps to its now). */
   created_at: string;
+  /** Strictly increasing enqueue order. created_at has millisecond resolution and ties are common. Absent on legacy items. */
+  seq?: number;
   /** Tap-to-durable-write time, reported once in X-Capture-Saved-Ms. */
   saved_ms: number;
   status: ItemStatus;
@@ -70,6 +72,15 @@ export type Outcome = 'synced' | 'retry' | 'rejected';
 export const BACKOFF_BASE_MS = 1000;
 export const BACKOFF_MAX_MS = 60_000;
 
+/** Replay order: enqueue sequence, then created_at, then client_id. public/sw-capture-sync.js mirrors this. */
+export function compareQueueItems(a: QueueItem, b: QueueItem): number {
+  const sa = a.seq ?? Date.parse(a.created_at);
+  const sb = b.seq ?? Date.parse(b.created_at);
+  return (
+    sa - sb || a.created_at.localeCompare(b.created_at) || a.client_id.localeCompare(b.client_id)
+  );
+}
+
 export function backoffMs(attempts: number): number {
   const n = Math.max(1, attempts);
   return Math.min(BACKOFF_MAX_MS, BACKOFF_BASE_MS * 2 ** (n - 1));
@@ -90,6 +101,7 @@ export function createQueue(deps: QueueDeps) {
   const uuid = deps.uuid ?? (() => crypto.randomUUID());
   const changed = () => deps.onChange?.();
   let lastSaveMs: number | null = null;
+  let lastSeq = 0;
   let flushing: Promise<void> | null = null;
   let rerun = false;
   let rerunForce = false;
@@ -100,7 +112,10 @@ export function createQueue(deps: QueueDeps) {
 
   async function enqueueKind(input: EnqueueKindInput): Promise<{ client_id: string }> {
     const t0 = perfNow();
-    const created = new Date(now()).toISOString();
+    const stamp = now();
+    const created = new Date(stamp).toISOString();
+    // Epoch-ms based so it also orders against items saved by an earlier page load; +1 breaks same-ms ties.
+    const seq = (lastSeq = Math.max(lastSeq + 1, stamp));
     const client_id = uuid();
     const item: QueueItem = {
       client_id,
@@ -111,6 +126,7 @@ export function createQueue(deps: QueueDeps) {
       ...(input.extra ? { extra: input.extra } : {}),
       ...(deps.deviceId ? { device_id: deps.deviceId() } : {}),
       created_at: created,
+      seq,
       saved_ms: 0,
       status: 'pending',
       attempts: 0,
@@ -127,9 +143,7 @@ export function createQueue(deps: QueueDeps) {
 
   async function list(): Promise<QueueItem[]> {
     const all = await deps.store.getAll();
-    return all.sort(
-      (a, b) => a.created_at.localeCompare(b.created_at) || a.client_id.localeCompare(b.client_id),
-    );
+    return all.sort(compareQueueItems);
   }
 
   async function runFlush(force: boolean): Promise<void> {
