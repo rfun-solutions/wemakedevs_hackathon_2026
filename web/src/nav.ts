@@ -16,4 +16,5 @@ export const navItems: NavItem[] = [
   // >> e-captions-translation
   // >> c-evening-threads
   // >> h-under-the-hood
+  { path: '/under-the-hood', labelKey: 'hood.nav' },
 ];
