@@ -26,9 +26,21 @@ export type IngestResult =
 const tracer = trace.getTracer('kubecompanion');
 const meter = metrics.getMeter('kubecompanion');
 const runsTotal = meter.createCounter('kc_schedule_ingest_runs_total');
-let lastSuccessMs: number | null = null;
-meter.createObservableGauge('kc_schedule_feed_age_seconds').addCallback((r) => {
-  if (lastSuccessMs !== null) r.observe((Date.now() - lastSuccessMs) / 1000);
+let feedAgePool: Queryable | undefined;
+meter.createObservableGauge('kc_schedule_feed_age_seconds').addCallback(async (r) => {
+  if (!feedAgePool) return;
+  try {
+    const { rows } = await feedAgePool.query(
+      `SELECT extract(epoch FROM now() - max(finished_at)) AS age_s FROM feed_runs WHERE status='ok'`,
+    );
+    const age = rows[0]?.age_s;
+    if (age !== null && age !== undefined) {
+      const seconds = Number(age);
+      if (Number.isFinite(seconds)) r.observe(seconds);
+    }
+  } catch {
+    // The feed_runs table may not exist yet while startup migrations are still running.
+  }
 });
 
 const UPSERT = `
@@ -74,37 +86,39 @@ async function upsertAll(pool: PoolLike, sessions: DerivedSession[]): Promise<vo
 
 export async function runIngest(deps: IngestDeps): Promise<IngestResult> {
   const { pool } = deps;
+  feedAgePool = pool;
   const url = deps.feedUrl ?? process.env.FEED_URL ?? DEFAULT_FEED_URL;
   const doFetch = deps.fetchFeedImpl ?? ((u: string) => fetchFeed(u));
   return tracer.startActiveSpan('kc.schedule.ingest', async (span) => {
-    const started = await pool.query(
-      `INSERT INTO feed_runs (status, started_at) VALUES ('running', now()) RETURNING id`,
-    );
-    const runId = started.rows[0]?.id;
     try {
-      const sessions = deriveFeed(await doFetch(url));
-      await upsertAll(pool, sessions);
-      await pool.query(
-        `UPDATE feed_runs SET status='ok', finished_at=now(), session_count=$2 WHERE id=$1`,
-        [runId, sessions.length],
+      const started = await pool.query(
+        `INSERT INTO feed_runs (status, started_at) VALUES ('running', now()) RETURNING id`,
       );
-      lastSuccessMs = Date.now();
-      runsTotal.add(1, { status: 'ok' });
-      span.setAttributes({ 'feed.sessions': sessions.length, 'feed.status': 'ok' });
-      return { status: 'ok' as const, sessionCount: sessions.length };
-    } catch (err) {
-      // Old rows stay: validation/derive/fetch happen before the transaction, or it rolled back.
-      const message = err instanceof Error ? `${err.name}: ${err.message}` : String(err);
-      await pool
-        .query(`UPDATE feed_runs SET status='error', finished_at=now(), error=$2 WHERE id=$1`, [
-          runId,
-          message.slice(0, 1000),
-        ])
-        .catch(() => undefined);
-      runsTotal.add(1, { status: 'error' });
-      span.setAttributes({ 'feed.status': 'error' });
-      span.setStatus({ code: SpanStatusCode.ERROR, message });
-      return { status: 'error' as const, error: message };
+      const runId = started.rows[0]?.id;
+      try {
+        const sessions = deriveFeed(await doFetch(url));
+        await upsertAll(pool, sessions);
+        await pool.query(
+          `UPDATE feed_runs SET status='ok', finished_at=now(), session_count=$2 WHERE id=$1`,
+          [runId, sessions.length],
+        );
+        runsTotal.add(1, { status: 'ok' });
+        span.setAttributes({ 'feed.sessions': sessions.length, 'feed.status': 'ok' });
+        return { status: 'ok' as const, sessionCount: sessions.length };
+      } catch (err) {
+        // Old rows stay: validation/derive/fetch happen before the transaction, or it rolled back.
+        const message = err instanceof Error ? `${err.name}: ${err.message}` : String(err);
+        await pool
+          .query(`UPDATE feed_runs SET status='error', finished_at=now(), error=$2 WHERE id=$1`, [
+            runId,
+            message.slice(0, 1000),
+          ])
+          .catch(() => undefined);
+        runsTotal.add(1, { status: 'error' });
+        span.setAttributes({ 'feed.status': 'error' });
+        span.setStatus({ code: SpanStatusCode.ERROR, message });
+        return { status: 'error' as const, error: message };
+      }
     } finally {
       span.end();
     }

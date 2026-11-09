@@ -26,6 +26,12 @@ spec:
                     secretKeyRef:
                       name: db-app
                       key: uri
+                - name: DASH0_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: kc-secrets
+                      key: DASH0_TOKEN
+                      optional: true
               resources:
                 requests:
                   cpu: 50m
