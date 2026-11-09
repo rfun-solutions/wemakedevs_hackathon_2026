@@ -47,8 +47,17 @@ describe('classify / backoff', () => {
 describe('queue', () => {
   it('writes to the store before any post and records saved_ms', async () => {
     const s = setup(async () => ({ status: 201 }));
-    const { client_id } = await s.q.enqueue({ body: 'hello', source: 'typed', session_id: 'sess-1' });
-    expect(s.store.map.get(client_id)).toMatchObject({ body: 'hello', session_id: 'sess-1', status: 'pending', saved_ms: 7 });
+    const { client_id } = await s.q.enqueue({
+      body: 'hello',
+      source: 'typed',
+      session_id: 'sess-1',
+    });
+    expect(s.store.map.get(client_id)).toMatchObject({
+      body: 'hello',
+      session_id: 'sess-1',
+      status: 'pending',
+      saved_ms: 7,
+    });
     expect(s.q.getLastSaveMs()).toBe(7);
   });
 
@@ -107,7 +116,10 @@ describe('queue', () => {
     await s.q.enqueue({ body: 'good', source: 'typed' });
     await s.q.flush({ force: true });
     expect(s.store.map.size).toBe(1);
-    expect(s.store.map.get(bad.client_id)).toMatchObject({ status: 'needs_attention', last_error: 'HTTP 400' });
+    expect(s.store.map.get(bad.client_id)).toMatchObject({
+      status: 'needs_attention',
+      last_error: 'HTTP 400',
+    });
     // not re-posted on later flushes
     await s.q.flush({ force: true });
     expect(s.synced).toHaveLength(1);

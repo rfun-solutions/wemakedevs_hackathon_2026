@@ -124,14 +124,48 @@ export const SEED_NOTES: SeedNote[] = [
 ];
 
 export const SEED_PEOPLE: SeedPerson[] = [
-  { client_id: '00000000-0000-4000-8000-200000000001', name: 'Marcus Okafor', context: 'OpenTelemetry collector maintainer, met at the booth' },
-  { client_id: '00000000-0000-4000-8000-200000000002', name: 'Priya Raman', context: 'Speaker on sidecar-less mesh migration' },
-  { client_id: '00000000-0000-4000-8000-200000000003', name: 'Lena Vasquez', context: 'Accessibility working group lead' },
-  { client_id: '00000000-0000-4000-8000-200000000004', name: 'Dev Chen', context: 'Screen reader demo, Kubernetes dashboards' },
+  {
+    client_id: '00000000-0000-4000-8000-200000000001',
+    name: 'Marcus Okafor',
+    context: 'OpenTelemetry collector maintainer, met at the booth',
+  },
+  {
+    client_id: '00000000-0000-4000-8000-200000000002',
+    name: 'Priya Raman',
+    context: 'Speaker on sidecar-less mesh migration',
+  },
+  {
+    client_id: '00000000-0000-4000-8000-200000000003',
+    name: 'Lena Vasquez',
+    context: 'Accessibility working group lead',
+  },
+  {
+    client_id: '00000000-0000-4000-8000-200000000004',
+    name: 'Dev Chen',
+    context: 'Screen reader demo, Kubernetes dashboards',
+  },
 ];
 
 export const SEED_PROMISES: SeedPromise[] = [
-  { client_id: '00000000-0000-4000-8000-300000000001', text: 'Send Marcus my span filtering question and a sample trace', person_client_id: '00000000-0000-4000-8000-200000000001', due: '2026-11-12', done: false },
-  { client_id: '00000000-0000-4000-8000-300000000002', text: 'Email Priya the migration questions from the mesh keynote', person_client_id: '00000000-0000-4000-8000-200000000002', due: '2026-11-13', done: false },
-  { client_id: '00000000-0000-4000-8000-300000000003', text: 'Share the captions feedback with Lena', person_client_id: '00000000-0000-4000-8000-200000000003', due: null, done: true },
+  {
+    client_id: '00000000-0000-4000-8000-300000000001',
+    text: 'Send Marcus my span filtering question and a sample trace',
+    person_client_id: '00000000-0000-4000-8000-200000000001',
+    due: '2026-11-12',
+    done: false,
+  },
+  {
+    client_id: '00000000-0000-4000-8000-300000000002',
+    text: 'Email Priya the migration questions from the mesh keynote',
+    person_client_id: '00000000-0000-4000-8000-200000000002',
+    due: '2026-11-13',
+    done: false,
+  },
+  {
+    client_id: '00000000-0000-4000-8000-300000000003',
+    text: 'Share the captions feedback with Lena',
+    person_client_id: '00000000-0000-4000-8000-200000000003',
+    due: null,
+    done: true,
+  },
 ];

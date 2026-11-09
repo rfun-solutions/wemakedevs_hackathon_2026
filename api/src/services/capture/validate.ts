@@ -16,10 +16,12 @@ const isObject = (v: unknown): v is Record<string, unknown> =>
   typeof v === 'object' && v !== null && !Array.isArray(v);
 
 function text(v: unknown, field: string, max: number, required: boolean): Result<string | null> {
-  if (v === undefined || v === null) return required ? fail(`${field} is required`) : { ok: true, value: null };
+  if (v === undefined || v === null)
+    return required ? fail(`${field} is required`) : { ok: true, value: null };
   if (typeof v !== 'string') return fail(`${field} must be a string`);
   const t = v.trim();
-  if (t.length === 0) return required ? fail(`${field} must not be empty`) : { ok: true, value: null };
+  if (t.length === 0)
+    return required ? fail(`${field} must not be empty`) : { ok: true, value: null };
   if (t.length > max) return fail(`${field} must be at most ${max} characters`);
   return { ok: true, value: t };
 }
@@ -53,7 +55,11 @@ export function validateNote(raw: unknown, now: Date = new Date()): Result<NoteI
   if (!session.ok) return session;
   let person_ids: string[] = [];
   if (raw.person_ids !== undefined) {
-    if (!Array.isArray(raw.person_ids) || raw.person_ids.length > 50 || !raw.person_ids.every(isUuid))
+    if (
+      !Array.isArray(raw.person_ids) ||
+      raw.person_ids.length > 50 ||
+      !raw.person_ids.every(isUuid)
+    )
       return fail('person_ids must be an array of up to 50 uuids');
     person_ids = raw.person_ids as string[];
   }
@@ -86,7 +92,8 @@ export function validatePerson(raw: unknown): Result<PersonInput> {
   if (!name.ok) return name;
   const context = text(raw.context, 'context', 1000, false);
   if (!context.ok) return context;
-  if (raw.note_id !== undefined && raw.note_id !== null && !isUuid(raw.note_id)) return fail('note_id must be a uuid');
+  if (raw.note_id !== undefined && raw.note_id !== null && !isUuid(raw.note_id))
+    return fail('note_id must be a uuid');
   return {
     ok: true,
     value: {
@@ -119,7 +126,8 @@ export function validatePromise(raw: unknown): Result<PromiseInput> {
       return fail('due must be a YYYY-MM-DD date');
     due = raw.due;
   }
-  if (raw.done !== undefined && typeof raw.done !== 'boolean') return fail('done must be a boolean');
+  if (raw.done !== undefined && typeof raw.done !== 'boolean')
+    return fail('done must be a boolean');
   return {
     ok: true,
     value: {

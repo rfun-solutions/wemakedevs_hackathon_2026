@@ -100,7 +100,9 @@ export function createQueue(deps: QueueDeps) {
 
   async function list(): Promise<QueueItem[]> {
     const all = await deps.store.getAll();
-    return all.sort((a, b) => a.created_at.localeCompare(b.created_at) || a.client_id.localeCompare(b.client_id));
+    return all.sort(
+      (a, b) => a.created_at.localeCompare(b.created_at) || a.client_id.localeCompare(b.client_id),
+    );
   }
 
   async function runFlush(force: boolean): Promise<void> {
@@ -155,7 +157,13 @@ export function createQueue(deps: QueueDeps) {
   async function retry(client_id: string): Promise<void> {
     const item = (await deps.store.getAll()).find((i) => i.client_id === client_id);
     if (!item) return;
-    await deps.store.put({ ...item, status: 'pending', attempts: 0, next_attempt_at: 0, last_error: undefined });
+    await deps.store.put({
+      ...item,
+      status: 'pending',
+      attempts: 0,
+      next_attempt_at: 0,
+      last_error: undefined,
+    });
     changed();
   }
 
