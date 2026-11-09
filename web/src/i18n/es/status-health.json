@@ -2,5 +2,5 @@
   "status.health.agenda": "La agenda va lenta para todos ahora mismo (unos {s} s), no es tu Wi-Fi. Tus notas se siguen guardando.",
   "status.health.captions": "Los subtítulos van lentos para todos ahora mismo, no es tu teléfono.",
   "status.hood.title": "Lo que te dice la pantalla de Estado",
-  "status.hood.what": "La pantalla de Estado dice si un momento lento es tu Wi-Fi o nosotros, muestra un aviso cuando la app va lenta para todos y da una frase sencilla de un asistente de IA, marcada como generada por IA."
+  "status.hood.what": "La pantalla de Estado dice si un momento lento se debe a tu Wi-Fi o a nosotros. Muestra un aviso cuando la app va lenta para todos. También da una frase sencilla de un asistente de IA, marcada como generada por IA."
 }
