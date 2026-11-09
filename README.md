@@ -17,12 +17,13 @@ Kay is our design persona: a hard-of-hearing attendee whose first language is Sp
 
 | Feature | What it does |
 |---|---|
+| **Capture in seconds, even offline** | Save a note, a person or a promise in one tap. With no signal it waits safely on your phone and syncs, in order, when the network returns. Notes can be tied to the session you are in. |
 | **Your agenda, in venue time** | Browse sessions by day, room and track, and build an agenda. Times show in Mountain time wherever your phone thinks it is, with a warning when a building change between sessions is tight. |
-| **Live captions that adapt** | Captions pick the best speech engine for your phone, switch if they fall behind, and tell you when they do. Any caption line can be saved as a note, and one tap marks the time. |
+| **Live captions that adapt** | Captions pick the best speech engine for your phone, switch if they fall behind, and tell you when they do. Any caption line can be saved as a note, one tap marks the time, and a Translate toggle shows each line in your language (on-device in Chrome where available, otherwise through our server, with a plain message when translation is not available). |
 | **Cards, badge and calm places** | Communication cards you show to people ("I'm hard of hearing, please face me"), a badge that never leaves your phone, and a list of quiet places at the venue. All of it works offline. |
 | **Evening threads** | Your notes become topic threads that end in clear next steps, with AI when it is available and without it when it is not. |
-| **Your language and display** | English and Spanish, larger text, high contrast and a system-font option, all in Settings. |
-| **Status, explained plainly** | See whether the app is healthy right now. When something breaks, Dash0's Agent0 explains it in one plain sentence, labelled AI-generated. |
+| **Your language and display** | English and Spanish, larger text, high contrast and a system-font option, all in Settings. A bottom bar keeps the four main screens one tap away, and everything else sits under More, readable at 200% text. |
+| **Status, explained plainly** | See whether the app is healthy right now. A plain-language banner says when the app is slow for everyone (so it is not your Wi-Fi). When something breaks, Dash0's Agent0 explains it in one plain sentence, labelled AI-generated. |
 | **Under the hood** | A screen that lists every feature, what it does and the checks behind it, with live values where we measure them and never an invented number. |
 
 ## Five promises we hold ourselves to
