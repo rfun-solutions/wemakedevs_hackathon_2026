@@ -50,6 +50,21 @@ spec:
             # >> f-observability-product
             - name: CHAOS_FILE
               value: /etc/kc-chaos/flags.json
+            # Kubernetes resource attributes for Dash0 (downward API); OTEL_RESOURCE_ATTRIBUTES must come after the vars it uses.
+            - name: K8S_NAMESPACE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: K8S_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: K8S_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: OTEL_RESOURCE_ATTRIBUTES
+              value: k8s.namespace.name=$(K8S_NAMESPACE_NAME),k8s.pod.name=$(K8S_POD_NAME),k8s.node.name=$(K8S_NODE_NAME),k8s.deployment.name=app
             # >> c-evening-threads
             - name: THREADS_MODEL
               value: "claude-haiku-5-5"
