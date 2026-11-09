@@ -29,7 +29,6 @@
       "items": {
         "type": "object",
         "required": ["id", "name"],
-        "additionalProperties": false,
         "properties": {
           "id": { "type": "integer" },
           "name": { "type": "string", "minLength": 1 }
@@ -41,7 +40,6 @@
       "items": {
         "type": "object",
         "required": ["id", "title", "items"],
-        "additionalProperties": false,
         "properties": {
           "id": { "type": "integer" },
           "title": { "type": "string" },
@@ -50,7 +48,6 @@
             "items": {
               "type": "object",
               "required": ["id", "name"],
-              "additionalProperties": false,
               "properties": { "id": { "type": "integer" }, "name": { "type": "string" } }
             }
           }
