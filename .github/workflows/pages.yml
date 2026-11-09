@@ -1,0 +1,46 @@
+name: pages
+permissions:
+  contents: read
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - web/src/under-the-hood/entries/**
+      - web/src/i18n/en/**
+      - docs/how-it-works/**
+      - web/src/features/access/promises.ts
+      - scripts/build-how-it-works.mjs
+      - .github/workflows/pages.yml
+  workflow_dispatch:
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+      - name: Build the static site from the registry
+        run: node --experimental-strip-types scripts/build-how-it-works.mjs .pages-build
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: .pages-build
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
