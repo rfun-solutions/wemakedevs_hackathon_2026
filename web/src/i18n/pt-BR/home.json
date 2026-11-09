@@ -1,0 +1,18 @@
+{
+  "app.home.next.title": "A seguir",
+  "app.home.next.empty": "Adicione sessões à sua agenda",
+  "app.home.next.emptyHint": "Veja a programação e salve as palestras que quiser.",
+  "app.home.go": "Ir para",
+  "app.home.tile.capture": "Capturar",
+  "app.home.tile.capture.desc": "Salve uma nota ou foto",
+  "app.home.tile.captions": "Legendas",
+  "app.home.tile.captions.desc": "Palavras ao vivo de cada palestra",
+  "app.home.tile.schedule": "Programação",
+  "app.home.tile.schedule.desc": "Encontre palestras e salas",
+  "app.home.tile.cards": "Cartões",
+  "app.home.tile.cards.desc": "Mostre suas necessidades de acesso",
+  "app.home.tile.threads": "Fios",
+  "app.home.tile.threads.desc": "Seu dia, tudo conectado",
+  "app.home.tile.status": "Status",
+  "app.home.tile.status.desc": "O app está funcionando bem?"
+}

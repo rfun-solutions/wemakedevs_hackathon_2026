@@ -1,0 +1,18 @@
+{
+  "app.home.next.title": "Next up",
+  "app.home.next.empty": "Add sessions to your agenda",
+  "app.home.next.emptyHint": "Browse the schedule and save the talks you want.",
+  "app.home.go": "Go to",
+  "app.home.tile.capture": "Capture",
+  "app.home.tile.capture.desc": "Save a note or photo",
+  "app.home.tile.captions": "Captions",
+  "app.home.tile.captions.desc": "Live words for any talk",
+  "app.home.tile.schedule": "Schedule",
+  "app.home.tile.schedule.desc": "Find talks and rooms",
+  "app.home.tile.cards": "Cards",
+  "app.home.tile.cards.desc": "Show your access needs",
+  "app.home.tile.threads": "Threads",
+  "app.home.tile.threads.desc": "Your day, tied together",
+  "app.home.tile.status": "Status",
+  "app.home.tile.status.desc": "Is the app working well?"
+}
