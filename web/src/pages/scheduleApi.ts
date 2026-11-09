@@ -1,5 +1,7 @@
 import { api } from '../lib/api';
 
+const TIMEOUT_MS = 8_000;
+
 export interface Session {
   id: string;
   title: string;
@@ -38,17 +40,22 @@ async function json<T>(res: Response): Promise<T> {
 }
 
 export const fetchSessions = async (): Promise<SessionsResponse> =>
-  json(await api('/api/sessions'));
-export const fetchAgenda = async (): Promise<AgendaResponse> => json(await api('/api/agenda'));
+  json(await api('/api/sessions', { signal: AbortSignal.timeout(TIMEOUT_MS) }));
+export const fetchAgenda = async (): Promise<AgendaResponse> =>
+  json(await api('/api/agenda', { signal: AbortSignal.timeout(TIMEOUT_MS) }));
 
 export async function addToAgenda(sessionId: string): Promise<void> {
   const res = await api('/api/agenda', {
     method: 'POST',
     body: JSON.stringify({ session_id: sessionId }),
+    signal: AbortSignal.timeout(TIMEOUT_MS),
   });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
 }
 export async function removeFromAgenda(sessionId: string): Promise<void> {
-  const res = await api(`/api/agenda/${encodeURIComponent(sessionId)}`, { method: 'DELETE' });
+  const res = await api(`/api/agenda/${encodeURIComponent(sessionId)}`, {
+    method: 'DELETE',
+    signal: AbortSignal.timeout(TIMEOUT_MS),
+  });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
 }

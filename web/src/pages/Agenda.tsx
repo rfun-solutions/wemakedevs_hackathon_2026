@@ -29,13 +29,27 @@ export function Agenda() {
   async function remove(id: string, title: string) {
     try {
       await removeFromAgenda(id);
-      // Re-fetch so warnings are recomputed for the new neighbours.
-      const data = await fetchAgenda();
-      setLoad({ state: 'ready', data });
-      setLive(t('schedule.live.removed', { title }));
     } catch {
       setLive(t('schedule.live.failed'));
+      return;
     }
+    setLoad((l) =>
+      l.state === 'ready'
+        ? {
+            state: 'ready',
+            data: {
+              items: l.data.items.filter((i) => i.id !== id),
+              warnings: l.data.warnings.filter(
+                (w) => w.fromSessionId !== id && w.toSessionId !== id,
+              ),
+            },
+          }
+        : l,
+    );
+    setLive(t('schedule.live.removed', { title }));
+    fetchAgenda()
+      .then((data) => setLoad({ state: 'ready', data }))
+      .catch(() => undefined);
   }
 
   function jumpToNow() {

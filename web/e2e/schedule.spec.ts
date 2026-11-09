@@ -2,7 +2,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 
 // The API is stubbed so these specs do not depend on a database or on PR2's routes.
-test.use({ serviceWorkers: 'block' });
+test.use({ serviceWorkers: 'block', timezoneId: 'Asia/Tokyo' });
 
 const base = {
   description: null,

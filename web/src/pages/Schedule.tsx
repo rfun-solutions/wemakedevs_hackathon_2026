@@ -54,7 +54,9 @@ export function Schedule() {
       ),
     [sessions, day, room, track],
   );
-  const marked = currentOrNextSession(filtered, now);
+  const globalHit = currentOrNextSession(sessions, now);
+  const marked =
+    globalHit && filtered.some((s) => s.id === globalHit.session.id) ? globalHit : null;
 
   async function toggle(id: string, title: string) {
     const adding = !agenda.has(id);
