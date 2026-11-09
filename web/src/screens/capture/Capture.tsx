@@ -129,7 +129,7 @@ export function Capture() {
     e.preventDefault();
     const text = body.trim();
     if (!text) {
-      setStatus(t('capture.empty'));
+      announceStatus(t('capture.empty'));
       field.current?.focus();
       return;
     }
@@ -157,12 +157,12 @@ export function Capture() {
       setBody((b) => (b ? `${b} ${text}` : text));
     });
     if (!session.supported) {
-      setStatus(t('capture.dictation.unsupported'));
+      announceStatus(t('capture.dictation.unsupported'));
       return;
     }
     speech.current = session;
     setDictating(true);
-    setStatus(t('capture.dictation.listening'));
+    announceStatus(t('capture.dictation.listening'));
   };
 
   const addPerson = async (e: Event) => {
@@ -199,7 +199,7 @@ export function Capture() {
       if (!res.ok) throw new Error(String(res.status));
       setPromises((list) => list.map((x) => (x.id === p.id ? { ...x, done: !p.done } : x)));
     } catch {
-      setStatus(t('capture.promise.toggleFailed'));
+      announceStatus(t('capture.promise.toggleFailed'));
     }
   };
 
