@@ -61,6 +61,7 @@ export function Captions() {
   const abort = useRef<AbortController | null>(null);
   const mounted = useRef(true);
   const lastProgressBucket = useRef(-1);
+  const lastProgressTotal = useRef(0);
   const dialog = useRef<HTMLDialogElement>(null);
   const typedInput = useRef<HTMLInputElement>(null);
 
@@ -97,6 +98,10 @@ export function Captions() {
     if (s.type === 'switched') setEngine(s.to);
     if (s.type === 'downloading') {
       setDownloading(true);
+      if (s.total > lastProgressTotal.current) {
+        lastProgressTotal.current = s.total;
+        lastProgressBucket.current = -1;
+      }
       const percent = s.total > 0 ? Math.min(100, Math.round((s.loaded / s.total) * 100)) : 0;
       const bucket = Math.floor(percent / 10);
       if (bucket <= lastProgressBucket.current) return;
@@ -110,6 +115,7 @@ export function Captions() {
     ) {
       setDownloading(false);
       lastProgressBucket.current = -1;
+      lastProgressTotal.current = 0;
     }
     if (s.type === 'unsupported') setTypedMode(true);
     const m = statusMessage(s);
@@ -119,6 +125,8 @@ export function Captions() {
   async function turnOn() {
     setStarting(true);
     setMessage(null);
+    lastProgressBucket.current = -1;
+    lastProgressTotal.current = 0;
     abort.current = new AbortController();
     const s = await startCaptions(onSegment, {
       onStatus,

@@ -21,6 +21,7 @@ async function load(): Promise<void> {
   const bytesByFile = new Map<string, number>();
   const loadedByFile = new Map<string, number>();
   let lastProgressBucket = -1;
+  let lastTotal = 0;
   const progress_callback = (p: {
     status: string;
     file?: string;
@@ -33,9 +34,13 @@ async function load(): Promise<void> {
       const sum = (m: Map<string, number>) => [...m.values()].reduce((a, b) => a + b, 0);
       const loaded = sum(loadedByFile);
       const total = sum(bytesByFile);
+      if (total > lastTotal) {
+        lastTotal = total;
+        lastProgressBucket = -1;
+      }
       const percent = total > 0 ? Math.min(100, Math.floor((loaded / total) * 100)) : 0;
       const bucket = Math.floor(percent / 10);
-      if (bucket > lastProgressBucket) {
+      if (bucket !== lastProgressBucket) {
         lastProgressBucket = bucket;
         post({ type: 'progress', loaded, total });
       }

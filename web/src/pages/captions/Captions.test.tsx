@@ -154,6 +154,16 @@ describe('Captions screen', () => {
     expect(status.textContent).toBe('Downloading the captions model: 11%');
   });
 
+  it('reports progress again when the known download total grows', async () => {
+    render(<Captions />);
+    await turnOn();
+    const status = screen.getByRole('status');
+    act(() => onStatus({ type: 'downloading', loaded: 100, total: 100 }));
+    expect(status.textContent).toBe('Downloading the captions model: 100%');
+    act(() => onStatus({ type: 'downloading', loaded: 101, total: 500 }));
+    expect(status.textContent).toBe('Downloading the captions model: 20%');
+  });
+
   it('clears the download cancel button after switching engines', async () => {
     render(<Captions />);
     await turnOn();
