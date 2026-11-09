@@ -14,6 +14,7 @@ export const navItems: NavItem[] = [
   // >> b-capture
   // >> f-observability-product
   // >> e-captions-translation
+  { path: '/captions', labelKey: 'captions.nav' },
   // >> c-evening-threads
   // >> h-under-the-hood
 ];

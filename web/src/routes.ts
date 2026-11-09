@@ -2,6 +2,7 @@
 // Never edit another change's lines or markers (AGENTS.md rule 5). Markers are in merge order.
 import type { ComponentType } from 'preact';
 import { Home } from './screens/Home';
+import { Captions } from './pages/captions/Captions';
 
 export interface AppRoute {
   path: string;
@@ -16,6 +17,7 @@ export const routes: AppRoute[] = [
   // >> b-capture
   // >> f-observability-product
   // >> e-captions-translation
+  { path: '/captions', component: Captions },
   // >> c-evening-threads
   // >> h-under-the-hood
 ];

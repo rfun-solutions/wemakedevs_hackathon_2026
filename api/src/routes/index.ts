@@ -19,6 +19,7 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
   // >> f-observability-product-health
   // >> f-observability-product-kay
   // >> e-captions-translation
+  await app.register((await import('./captions.js')).default);
   // >> e-captions-translation-translate
   // >> c-evening-threads
 }
