@@ -172,13 +172,36 @@ describe('queue', () => {
 
   it('an item enqueued while a flush is listing is still posted (no missed pass)', async () => {
     const bodies: string[] = [];
-    const s = setup(async (i) => (bodies.push(i.body), { status: 201 }));
-    await s.q.enqueue({ body: 'one', source: 'typed' });
-    const first = s.q.flush({ force: true });
-    await s.q.enqueue({ body: 'two', source: 'typed' });
-    await Promise.all([first, s.q.flush({ force: true })]);
+    const base = memStore();
+    // The first getAll takes its snapshot now but resolves only when the gate is released, so the
+    // flush is genuinely "listing" while the second item is enqueued and a second flush is requested.
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => (release = resolve));
+    let getAllCalls = 0;
+    const store: QueueStore = {
+      ...base,
+      getAll: async () => {
+        const isFirst = ++getAllCalls === 1;
+        const snapshot = await base.getAll();
+        if (isFirst) await gate;
+        return snapshot;
+      },
+    };
+    let n = 0;
+    const q = createQueue({
+      store,
+      post: async (i) => (bodies.push(i.body), { status: 201 }),
+      uuid: () => `00000000-0000-4000-8000-${String(++n).padStart(12, '0')}`,
+    });
+    await q.enqueue({ body: 'one', source: 'typed' });
+    const first = q.flush({ force: true });
+    expect(getAllCalls).toBe(1); // the first flush is parked inside getAll
+    await q.enqueue({ body: 'two', source: 'typed' });
+    const second = q.flush({ force: true }); // joins the in-flight run and must schedule another pass
+    release();
+    await Promise.all([first, second]);
     expect(bodies).toEqual(['one', 'two']);
-    expect(s.store.map.size).toBe(0);
+    expect(base.map.size).toBe(0);
   });
 
   it('nextDueAt reports the earliest pending item', async () => {
