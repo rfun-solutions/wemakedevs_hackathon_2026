@@ -12,6 +12,12 @@
       "ref": "web/src/under-the-hood/registry.test.ts"
     },
     {
+      "sponsor": "gitar",
+      "kind": "workflow",
+      "label": "pages workflow: builds the public How it works page from the registry on every merge",
+      "ref": ".github/workflows/pages.yml"
+    },
+    {
       "sponsor": "dash0",
       "kind": "trace",
       "label": "kc.hood.viewed browser event and fetch spans for the two status calls",
