@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { backoffMs, classify, createQueue, type QueueItem, type QueueStore } from './queue-core.js';
+import {
+  backoffMs,
+  classify,
+  createQueue,
+  toRequest,
+  type QueueItem,
+  type QueueStore,
+} from './queue-core.js';
 
 function memStore(): QueueStore & { map: Map<string, QueueItem> } {
   const map = new Map<string, QueueItem>();
@@ -163,11 +170,66 @@ describe('queue', () => {
     expect(calls).toBe(1);
   });
 
+  it('an item enqueued while a flush is listing is still posted (no missed pass)', async () => {
+    const bodies: string[] = [];
+    const s = setup(async (i) => (bodies.push(i.body), { status: 201 }));
+    await s.q.enqueue({ body: 'one', source: 'typed' });
+    const first = s.q.flush({ force: true });
+    await s.q.enqueue({ body: 'two', source: 'typed' });
+    await Promise.all([first, s.q.flush({ force: true })]);
+    expect(bodies).toEqual(['one', 'two']);
+    expect(s.store.map.size).toBe(0);
+  });
+
   it('nextDueAt reports the earliest pending item', async () => {
     const s = setup(async () => ({ status: 503 }));
     expect(await s.q.nextDueAt()).toBeNull();
     await s.q.enqueue({ body: 'x', source: 'typed' });
     await s.q.flush({ force: true });
     expect(await s.q.nextDueAt()).toBeGreaterThan(0);
+  });
+});
+
+describe('kinds and wire format', () => {
+  it('enqueueKind stores person/promise payloads and the device id', async () => {
+    const store = memStore();
+    const q = createQueue({
+      store,
+      post: async () => ({ status: 201 }),
+      uuid: () => '00000000-0000-4000-8000-000000000009',
+      deviceId: () => 'dev-1',
+    });
+    const { client_id } = await q.enqueueKind({
+      kind: 'promise',
+      body: 'send repo',
+      extra: { due: '2026-11-12' },
+    });
+    const item = store.map.get(client_id)!;
+    expect(item).toMatchObject({ kind: 'promise', device_id: 'dev-1' });
+    expect(toRequest(item)).toEqual({
+      path: '/api/promises',
+      body: { client_id, text: 'send repo', due: '2026-11-12' },
+    });
+  });
+
+  it('maps notes (default kind) and people', () => {
+    const base = {
+      client_id: 'c',
+      body: 'b',
+      source: 'dictated',
+      created_at: 'T',
+      saved_ms: 1,
+      status: 'pending',
+      attempts: 0,
+      next_attempt_at: 0,
+    } as const;
+    expect(toRequest({ ...base, session_id: 's1' })).toEqual({
+      path: '/api/notes',
+      body: { client_id: 'c', body: 'b', source: 'dictated', created_at: 'T', session_id: 's1' },
+    });
+    expect(toRequest({ ...base, kind: 'person', body: 'Ana', extra: { context: 'x' } })).toEqual({
+      path: '/api/people',
+      body: { client_id: 'c', name: 'Ana', context: 'x' },
+    });
   });
 });

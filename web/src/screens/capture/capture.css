@@ -1,0 +1,117 @@
+/* Capture screen. Tokens only (design B "Kay Sunrise"); no raw colour or size values. */
+.capture {
+  display: grid;
+  gap: var(--space-5);
+}
+.capture h2,
+.capture h3 {
+  margin: 0 0 var(--space-2);
+  line-height: var(--leading-tight);
+}
+.capture h3 {
+  font-size: var(--text-lg);
+}
+.capture-form {
+  display: grid;
+  gap: var(--space-3);
+}
+.capture-field {
+  display: grid;
+  gap: var(--space-1);
+  font-weight: var(--weight-bold);
+}
+.capture-field input,
+.capture-field textarea {
+  font: inherit;
+  font-weight: var(--weight-regular);
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  min-height: var(--target-comfort);
+  width: 100%;
+}
+.capture-field textarea {
+  min-height: calc(var(--target-primary) * 2);
+  resize: vertical;
+}
+.capture-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+.capture-actions .btn-primary {
+  min-height: var(--target-primary);
+}
+.btn-secondary {
+  min-height: var(--target-comfort);
+  min-width: var(--target-comfort);
+  padding: 0 var(--space-4);
+  font: inherit;
+  font-weight: var(--weight-bold);
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+.capture-status {
+  margin: 0;
+  min-height: 1.5em;
+  color: var(--color-text-muted);
+}
+.capture-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-3);
+}
+.capture-item {
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  display: grid;
+  gap: var(--space-2);
+}
+.capture-item p {
+  margin: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+.capture-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+.capture-badge {
+  font-weight: var(--weight-bold);
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-full);
+  background: var(--color-info-bg);
+  color: var(--color-info);
+}
+.capture-badge[data-state='synced'] {
+  background: var(--color-success-bg);
+  color: var(--color-success);
+}
+.capture-badge[data-state='attention'] {
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+}
+.capture-check {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  min-height: var(--target-comfort);
+}
+.capture-check input {
+  width: var(--target-comfort);
+  height: var(--target-comfort);
+  flex: none;
+}

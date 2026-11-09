@@ -12,6 +12,7 @@ export const navItems: NavItem[] = [
   // >> d-access-kit-cards
   // >> a-schedule-agenda
   // >> b-capture
+  { path: '/capture', labelKey: 'capture.nav' },
   // >> f-observability-product
   // >> e-captions-translation
   // >> c-evening-threads

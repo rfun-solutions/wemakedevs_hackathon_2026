@@ -9,13 +9,30 @@ export interface EnqueueInput {
   session_id?: string;
 }
 
+/** What a queued item becomes on the wire. `body` holds the note text, person name or promise text. */
+export type ItemKind = 'note' | 'person' | 'promise';
+
+export interface EnqueueKindInput {
+  kind: ItemKind;
+  body: string;
+  /** Extra wire fields: person `context`; promise `due`, `person_id`. */
+  extra?: Record<string, string>;
+  source?: NoteSource;
+  session_id?: string;
+}
+
 export type ItemStatus = 'pending' | 'needs_attention';
 
 export interface QueueItem {
   client_id: string;
+  /** Absent means 'note'. */
+  kind?: ItemKind;
   body: string;
   source: NoteSource;
   session_id?: string;
+  extra?: Record<string, string>;
+  /** Device that saved the item, so the service worker (no localStorage) can replay it. */
+  device_id?: string;
   /** ISO time of the tap; sent as created_at (server clamps to its now). */
   created_at: string;
   /** Tap-to-durable-write time, reported once in X-Capture-Saved-Ms. */
@@ -43,6 +60,7 @@ export interface QueueDeps {
   now?: () => number;
   perfNow?: () => number;
   uuid?: () => string;
+  deviceId?: () => string;
   onChange?: () => void;
   onSynced?: (item: QueueItem) => void;
 }
@@ -73,16 +91,25 @@ export function createQueue(deps: QueueDeps) {
   const changed = () => deps.onChange?.();
   let lastSaveMs: number | null = null;
   let flushing: Promise<void> | null = null;
+  let rerun = false;
+  let rerunForce = false;
 
   async function enqueue(input: EnqueueInput): Promise<{ client_id: string }> {
+    return enqueueKind({ kind: 'note', ...input });
+  }
+
+  async function enqueueKind(input: EnqueueKindInput): Promise<{ client_id: string }> {
     const t0 = perfNow();
     const created = new Date(now()).toISOString();
     const client_id = uuid();
     const item: QueueItem = {
       client_id,
+      kind: input.kind,
       body: input.body,
-      source: input.source,
+      source: input.source ?? 'typed',
       ...(input.session_id ? { session_id: input.session_id } : {}),
+      ...(input.extra ? { extra: input.extra } : {}),
+      ...(deps.deviceId ? { device_id: deps.deviceId() } : {}),
       created_at: created,
       saved_ms: 0,
       status: 'pending',
@@ -106,7 +133,8 @@ export function createQueue(deps: QueueDeps) {
   }
 
   async function runFlush(force: boolean): Promise<void> {
-    for (const item of await list()) {
+    const all = await list();
+    for (const item of all) {
       if (item.status !== 'pending') continue;
       if (!force && item.next_attempt_at > now()) break; // keep order: wait for the oldest
       let status: number | null = null;
@@ -138,13 +166,31 @@ export function createQueue(deps: QueueDeps) {
     }
   }
 
-  /** Posts pending items oldest first. Concurrent calls share one run. `force` ignores backoff (online, foreground). */
+  /**
+   * Posts pending items oldest first. Concurrent calls share one run, but a call that arrives while a run
+   * is in flight schedules another pass, so an item enqueued after that run listed the store is not missed.
+   * `force` ignores backoff (online, foreground).
+   */
   function flush(opts: { force?: boolean } = {}): Promise<void> {
-    if (!flushing) {
-      flushing = runFlush(opts.force === true).finally(() => {
-        flushing = null;
-      });
+    if (flushing) {
+      rerun = true;
+      rerunForce ||= opts.force === true;
+      return flushing;
     }
+    flushing = (async () => {
+      let force = opts.force === true;
+      try {
+        do {
+          rerun = false;
+          await runFlush(force);
+          force = rerunForce;
+          rerunForce = false;
+        } while (rerun);
+      } finally {
+        // Cleared in the same tick as the final `rerun` check, so a caller can never join a run that is ending.
+        flushing = null;
+      }
+    })();
     return flushing;
   }
 
@@ -172,7 +218,43 @@ export function createQueue(deps: QueueDeps) {
     changed();
   }
 
-  return { enqueue, flush, list, retry, remove, nextDueAt, getLastSaveMs: () => lastSaveMs };
+  return {
+    enqueue,
+    enqueueKind,
+    flush,
+    list,
+    retry,
+    remove,
+    nextDueAt,
+    getLastSaveMs: () => lastSaveMs,
+  };
 }
 
 export type CaptureQueue = ReturnType<typeof createQueue>;
+
+/** Wire path and JSON body for an item (the service worker copy in public/sw-capture-sync.js mirrors this). */
+export function toRequest(item: QueueItem): { path: string; body: Record<string, unknown> } {
+  const kind = item.kind ?? 'note';
+  if (kind === 'person') {
+    return {
+      path: '/api/people',
+      body: { client_id: item.client_id, name: item.body, ...item.extra },
+    };
+  }
+  if (kind === 'promise') {
+    return {
+      path: '/api/promises',
+      body: { client_id: item.client_id, text: item.body, ...item.extra },
+    };
+  }
+  return {
+    path: '/api/notes',
+    body: {
+      client_id: item.client_id,
+      body: item.body,
+      source: item.source,
+      created_at: item.created_at,
+      ...(item.session_id ? { session_id: item.session_id } : {}),
+    },
+  };
+}
