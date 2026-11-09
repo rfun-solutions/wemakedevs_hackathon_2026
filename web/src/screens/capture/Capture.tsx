@@ -12,7 +12,8 @@ import {
   type QueueItem,
 } from '../../lib/capture/queue';
 import { startDictation, type SpeechSession } from '../../lib/speech';
-import { t } from '../../i18n';
+import { t, useLang } from '../../i18n';
+import { formatNoteWhen } from '../../lib/capture/when';
 import './capture.css';
 
 interface ServerNote {
@@ -41,6 +42,15 @@ async function getJson<T>(path: string, key: string): Promise<T[] | null> {
   } catch {
     return null; // offline: keep whatever is already shown
   }
+}
+
+function When({ iso }: { iso: string }) {
+  const text = formatNoteWhen(iso, useLang());
+  return text ? (
+    <time class="capture-when" dateTime={iso}>
+      {text}
+    </time>
+  ) : null;
 }
 
 function ItemStatus({ item }: { item: QueueItem }) {
@@ -264,6 +274,7 @@ export function Capture() {
                 <p>{i.body}</p>
                 <div class="capture-meta">
                   <ItemStatus item={i} />
+                  <When iso={i.created_at} />
                   {i.session_id && <span>{t('capture.session.label', { id: i.session_id })}</span>}
                 </div>
                 <Actions item={i} />
@@ -276,6 +287,7 @@ export function Capture() {
                   <span class="capture-badge" data-state="synced">
                     {t('capture.status.synced')}
                   </span>
+                  <When iso={n.created_at} />
                   {n.session_id && <span>{t('capture.session.label', { id: n.session_id })}</span>}
                 </div>
               </li>
