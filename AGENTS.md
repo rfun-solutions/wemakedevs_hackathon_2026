@@ -62,3 +62,71 @@ Every team's cluster shows these. None is the team's to fix. Don't spend an AI i
 ## Application workflows
 
 Read [`examples/agent-workflows/README.md`](examples/agent-workflows/README.md) before adding credentials, one-off Jobs or dependencies. Discover the live MCP catalog before assuming an optional or newly added tool is available.
+
+---
+
+# KubeCompanion build rules (all agents)
+
+The section above is the cnh-starter guide (cluster, GitOps, Radar). The rules below govern how agents build KubeCompanion. Planning lives in `docs/planning/` (start with `build/parallel-plan.md`) and specs in `openspec/changes/`.
+
+
+
+0. **Completion ledger (hard gate, user decision 2026-11-09).**
+   - When you believe a PR is done, append one entry to `COMPLETION-LEDGER.md (outside the repo; absolute path given in your agent prompt)` using the format at its top: what you built (claims tied to OpenSpec task ids), every file changed (`git diff --name-only origin/main...HEAD`), and how you verified it (exact commands, exit codes, key output lines, the CI run URL for that exact head sha), plus known gaps.
+   - Then log `ledger-ready` in RUNNING-LOG.md and stop. **Never run `gh pr merge` yourself.** The orchestrator fact-checks the entry against the commit and arms auto-merge only on VERIFIED. PARTIAL or REFUTED comes back to you with the gaps.
+   - Any new push needs a new entry; an old verdict does not carry over.
+
+1. **Isolation.**
+   - Work only in your own worktree: `git worktree add ../wt/<agent> -b <branch> origin/main`.
+   - Use `PORT=$KC_PORT`, `VITE_PORT=$KC_VITE_PORT` and `DATABASE_URI=…/kc_<agent>` from the orchestrator's ports file.
+   - Never set `DASH0_TOKEN` locally. Set `ANTHROPIC_API_KEY` locally only with the orchestrator's OK.
+2. **Branch naming.**
+   - Use `feature/KC-<issue>-<change-id>[-<part>]-pr<k>`, for example `feature/KC-5-d-access-kit-cards-pr3`.
+   - Use `bugfix/` for staged breaks.
+   - Use a new branch per PR, always from `origin/main`.
+   - **Never branch from another agent's unmerged branch.** A squash merge turns that into an add/add conflict, as the scratch test in §0 shows.
+   - Commit format: `feat: [KC-<n>] …`, using the GitHub noreply email.
+3. **Rebase policy under the merge queue.**
+   - Strict up-to-date is off, so do not update your branch unless one of these is true:
+     - GitHub shows a conflict.
+     - The queue ejected your PR.
+     - You need code that is now on `main`.
+   - To update, run `git fetch origin && git merge origin/main`, re-run your tests, push, append a new COMPLETION-LEDGER.md entry for the new head and log `ledger-ready`. The orchestrator re-verifies and re-arms auto-merge (no `--squash`; the queue sets the method).
+   - **Never rebase a pushed branch and never force-push.** `git pull --rebase` is allowed only for local, unpushed commits on top of Gitar's commits.
+4. **Gitar.**
+   - Label each PR `gitar-managed`.
+   - After Gitar pushes, run `git pull --rebase` before your next commit.
+   - Reject, and report to the orchestrator, any Gitar commit that edits another change's files, weakens a test or a11y rule, or touches `.github/workflows/`.
+5. **Shared files.**
+   - Insert only under your own `>> <change-id>` marker.
+   - Never edit outside the Ownership list of your change and task groups.
+   - Never touch dependencies, `package-lock.json`, `tsconfig*`, `playwright.config.ts` or `vitest` config. Touch `vite.config.ts` only with orchestrator approval.
+   - Lockfile accident: `git checkout origin/main -- package-lock.json && npm ci`.
+   - Tick only your own lines in `tasks.md`.
+   - Never run `openspec archive`.
+6. **Before you open a PR.**
+   - Run `npm run lint && npm test` and the Playwright specs of your change (iPhone 15 + Pixel 7, axe), plus `openspec validate <change> --strict`.
+   - Push only when you are ready for review, because every push costs about 6 CI jobs.
+   - Open PRs only after the orchestrator has posted **RULES LIVE**.
+   - Do not enqueue until **LOOP PROVEN**.
+7. **Claiming work.**
+   - Your task groups are fixed in your prompt (§4.6). Claim them with a comment on your GitHub issue, `claimed: groups X`, and one log line.
+   - Do not take another agent's tasks without the orchestrator's assignment.
+8. **The running doc.**
+   - Build-day agents do **not** write to the Claude Docs doc. The orchestrator is its only writer.
+   - Log by appending (never Edit/Write the file): `printf -- '- %s [<agent>] [KC-n] <event>\n' "$(date +%H:%M)" >> RUNNING-LOG.md (outside the repo; absolute path given in your agent prompt)`
+   - Log events: start, PR opened, merged, blocked, decision.
+   - This needs the user's OK, because `2026/hackathon/CLAUDE.md` currently tells every agent to update the doc.
+9. **Stop and ask the orchestrator; do not improvise** when any of these happens:
+   - You need a file outside your ownership, or a new dependency.
+   - An interface signature differs from the design.
+   - `main` is red or the deploy is broken.
+   - Your PR has been ejected twice.
+   - The cluster shows quota or CrashLoop.
+   - LLM cost appears.
+   - You are 30 min past your time box.
+   - Anything involves secrets, the ruleset, repo variables (`FEED_FIXTURE`/`FEED_MODE`), the `kc-chaos` ConfigMap or `KC_DEMO_SEED`.
+10. **After every merge** (from C0's `AGENTS.md`): check with the Radar MCP (sync status, `get_changes`, warning events) and note anything odd in the PR.
+
+---
+

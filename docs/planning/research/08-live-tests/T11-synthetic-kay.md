@@ -1,0 +1,8 @@
+# T11: Playwright + iPhone 15 emulation, RUM for kc-web-kay (2026-11-08)
+
+- **Install** in `live-tests/t11/`: `npm i -D playwright esbuild @dash0/sdk-web` (playwright 1.65.0); `npx playwright install chromium` was instant: the browser build was already in `~/Library/Caches/ms-playwright` (chromium-1254 etc.).
+- **Script:** `live-tests/t11/run.mjs` (+ `main.js` bundled to `app-kay.js` with esbuild, DASH0_INGEST_ONLY injected via `--define`, endpoint `https://ingress.us-west-2.aws.dash0.com`, serviceName `kc-web-kay`). It opens the running t2-app page `http://localhost:3000/` with `devices['iPhone 15']` (393x659, iOS 17.5 UA), swaps `/app.js` for the kay bundle via `page.route` (t2-app untouched), taps the button 5x, reloads, taps again, waits 8 s. Full-access token occurrences in bundle: 0.
+- **Ingest:** browser POSTs to `/v1/logs` and `/v1/traces` all returned 200.
+- **Confirmed via API** (`/api/prometheus/api/v1/query`, ~15 s after): `dash0_web_events_total{service_name="kc-web-kay"}` = 16, `dash0_web_page_views_total` = 2, `dash0_web_requests_total{url_path="/api/hello"}` = 6. So RUM from an emulated mobile browser arrives as `dash0_web_*` metrics. (`sum by (device_type, browser_name)` returned the same total with empty labels, so device type is not in those labels.)
+- **Cost:** wall time 17.5 s in-script (17.96 s real incl. node start; 8 s is the deliberate wait). Peak RSS of the node process 140 MB; this does not include the Chromium child processes (not measured), so budget a few hundred MB more.
+- Run: `cd live-tests/t11 && node run.mjs` (t2-app must be running on :3000).

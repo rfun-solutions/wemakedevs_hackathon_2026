@@ -1,0 +1,53 @@
+schema: spec-driven
+
+# Project context (optional)
+# Add only constraints that should guide OpenSpec artifacts and workflows.
+# Include constraints an agent cannot infer by reading the code.
+# Keep general project documentation and discoverable codebase facts out.
+# Example:
+#   context: |
+#     Designs and tasks must cover Windows, macOS, and Linux
+#     Write all artifacts in Spanish
+context: |
+  Problem statement (decided by the user 2026-11-08 evening; README and slide headline):
+  At a conference you have more conversations and ideas per hour than you can remember
+  ("I forget every conversation I had an hour ago"). KubeCompanion lets anyone capture a
+  note, a person or a promise in seconds, and lets AI organise the week into threads that
+  end in actions you can take later. This is for everyone.
+  On top of that, Deaf, hard-of-hearing and ESL attendees lose access at the talk-room
+  door: captions, communication cards and translation carry into the hallway. Every access
+  feature is reviewed for inclusion before it ships (Gitar), measured live (Dash0) and
+  kept healthy on the cluster (Radar).
+  Access promises P1-P5 (content owned by change d-access-kit in ACCESS-PROMISES.md):
+    P1 captions reach the screen within 4 s, or we switch engines and tell you;
+    P2 a note saves in under 0.5 s, or waits safely offline and saves later;
+    P3 every control works at 200% text and in high contrast;
+    P4 every card and screen is in your language (EN and ES);
+    P5 translation is available, or we say plainly that it is not.
+  Every promise is cited by a numbered Gitar review rule, measured live by Dash0 (a light per
+  promise on the Status screen, owned by f-observability-product) and backed by the Radar all-clear.
+  Every feature appends one entry to the Under-the-hood registry
+  (web/src/under-the-hood/entries/<change-id>.json, created by c0-scaffold).
+  Demo character: Kay (they/them), hard of hearing, ESL, first KubeCon.
+
+# Per-artifact rules (optional)
+# Add custom rules for specific artifacts.
+# Example:
+#   rules:
+#     proposal:
+#       - Keep proposals under 500 words
+#       - Always state what is out of scope
+#     tasks:
+#       - Break tasks into chunks of max 2 hours
+
+# Per-operation guidance (optional)
+# Add advisory guidance for how apply and archive work should be conducted.
+# This is separate from artifact rules above.
+# Example:
+#   operations:
+#     apply:
+#       guidance:
+#         - Keep test summaries concise
+#     archive:
+#       guidance:
+#         - Summarize the archive outcome before finishing
