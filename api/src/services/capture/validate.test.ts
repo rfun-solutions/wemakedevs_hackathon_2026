@@ -65,6 +65,7 @@ describe('validatePerson / validatePromise', () => {
       value: { done: false },
     });
     expect(validatePromise({ client_id: ID, text: 'x', due: '2026-13-45' }).ok).toBe(false);
+    expect(validatePromise({ client_id: ID, text: 'x', due: '2026-02-30' }).ok).toBe(false);
     expect(validatePromise({ client_id: ID, text: 'x', due: '2026-11-12' }).ok).toBe(true);
     expect(validatePromise({ client_id: ID, text: '' }).ok).toBe(false);
   });

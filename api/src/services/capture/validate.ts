@@ -122,9 +122,11 @@ export function validatePromise(raw: unknown): Result<PromiseInput> {
     return fail('person_id must be a uuid');
   let due: string | null = null;
   if (raw.due !== undefined && raw.due !== null) {
-    if (typeof raw.due !== 'string' || !DATE_RE.test(raw.due) || Number.isNaN(Date.parse(raw.due)))
+    const ms = typeof raw.due === 'string' && DATE_RE.test(raw.due) ? Date.parse(raw.due) : NaN;
+    // Round-trip so days that roll over (2026-02-30) are a 400, not a 500 from Postgres.
+    if (Number.isNaN(ms) || new Date(ms).toISOString().slice(0, 10) !== raw.due)
       return fail('due must be a YYYY-MM-DD date');
-    due = raw.due;
+    due = raw.due as string;
   }
   if (raw.done !== undefined && typeof raw.done !== 'boolean')
     return fail('done must be a boolean');
