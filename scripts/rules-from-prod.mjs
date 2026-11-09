@@ -39,6 +39,11 @@ export const routesFallbackQuery = (window) =>
 export const captionsQuery = (window) =>
   `histogram_quantile(0.95, sum by (le, engine) (rate(kc_captions_segment_ms_bucket[${window}])))`;
 
+/** Replaces every occurrence of each non-empty secret in text; used before anything is printed. */
+export function redact(text, ...secrets) {
+  return secrets.filter(Boolean).reduce((t, secret) => String(t).split(secret).join('[redacted]'), String(text));
+}
+
 export class QueryError extends Error {
   constructor(message, kind) {
     super(message);
@@ -79,7 +84,7 @@ async function runQuery(expr, { token, config, fetchImpl }) {
     });
   } catch (err) {
     const timedOut = err && (err.name === 'TimeoutError' || err.name === 'AbortError');
-    throw new QueryError(timedOut ? 'Dash0 query timed out' : `Dash0 query failed: ${err?.message ?? err}`, timedOut ? 'timeout' : 'network');
+    throw new QueryError(timedOut ? 'Dash0 query timed out' : `Dash0 query failed: ${redact(err?.message ?? err, token)}`, timedOut ? 'timeout' : 'network');
   }
   if (res.status === 401 || res.status === 403) throw new QueryError(`Dash0 rejected the token (HTTP ${res.status}); it cannot query (ingest-only?)`, 'auth');
   if (!res.ok) throw new QueryError(`Dash0 query returned HTTP ${res.status}`, 'http');
@@ -234,6 +239,7 @@ export async function main(argv = process.argv.slice(2), env = process.env, { fe
   const outFile = resolveOutPath(root, args.out);
   const prev = fs.existsSync(outFile) ? fs.readFileSync(outFile, 'utf8') : null;
 
+  const secrets = [];
   let input;
   let source = 'dash0';
   if (args.fixture) {
@@ -241,6 +247,7 @@ export async function main(argv = process.argv.slice(2), env = process.env, { fe
     source = 'fixture';
   } else {
     const token = env.DASH0_API_TOKEN || env.DASH0_TOKEN;
+    secrets.push(env.DASH0_API_TOKEN, env.DASH0_TOKEN);
     if (!token) {
       console.log('rules-from-prod: no DASH0_API_TOKEN or DASH0_TOKEN set; skipping, nothing written.');
       return 0;
@@ -257,7 +264,7 @@ export async function main(argv = process.argv.slice(2), env = process.env, { fe
       input = { routes, captions };
     } catch (err) {
       if (err instanceof QueryError) {
-        console.log(`rules-from-prod: ${err.message}; nothing written.`);
+        console.log(`rules-from-prod: ${redact(err.message, ...secrets)}; nothing written.`);
         return 0;
       }
       throw err;
@@ -283,7 +290,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   main().then(
     (code) => process.exit(code),
     (err) => {
-      console.error(`rules-from-prod: ${err.message}`);
+      console.error(`rules-from-prod: ${redact(err.message, process.env.DASH0_API_TOKEN, process.env.DASH0_TOKEN)}`);
       process.exit(1);
     },
   );

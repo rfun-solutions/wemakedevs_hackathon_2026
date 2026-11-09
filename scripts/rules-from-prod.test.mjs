@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -13,6 +13,7 @@ import {
   summarize,
   resolveOutPath,
   main,
+  redact,
   routesQuery,
   captionsQuery,
   QueryError,
@@ -271,5 +272,42 @@ describe('main', () => {
     expect(() => resolveOutPath(dir, '../x')).toThrow(/refusing/);
     await expect(main(['--fixture', '--out', 'README.md'], {}, { repoRoot: dir, now: NOW })).rejects.toThrow(/refusing/);
     expect(resolveOutPath(dir)).toBe(path.join(dir, CONFIG.outPath));
+  });
+});
+
+describe('the token is never printed', () => {
+  const SENTINEL = 'tok-SENTINEL-7f3a9c';
+  let dir;
+  afterEach(() => {
+    vi.restoreAllMocks();
+    if (dir) fs.rmSync(dir, { recursive: true, force: true });
+  });
+
+  const scenarios = {
+    success: async (url) => (url.includes('kc_captions') ? ok(capResult([['whisper', 3200]])) : ok(routesResult([['/api/agenda', 2.1]]))),
+    unauthorized: async () => status(401),
+    server_error: async () => status(500),
+    non_json: async () => ({ ok: true, status: 200, json: async () => { throw new SyntaxError(`Unexpected token in ${SENTINEL}`); } }),
+    // worst case: the network error text itself carries the secret
+    network_error: async () => { throw new Error(`connect failed with Authorization: Bearer ${SENTINEL}`); },
+  };
+
+  for (const [name, fetchImpl] of Object.entries(scenarios)) {
+    for (const envName of ['DASH0_API_TOKEN', 'DASH0_TOKEN']) {
+      it(`${name} (${envName}): sentinel absent from stdout and stderr`, async () => {
+        dir = fs.mkdtempSync(path.join(os.tmpdir(), 'rfp-'));
+        const out = [];
+        for (const m of ['log', 'error', 'warn', 'info']) vi.spyOn(console, m).mockImplementation((...a) => out.push(a.join(' ')));
+        await main(['--window', '15m'], { [envName]: SENTINEL }, { fetchImpl, now: NOW, repoRoot: dir });
+        expect(out.length).toBeGreaterThan(0);
+        expect(out.join('\n')).not.toContain(SENTINEL);
+        const file = path.join(dir, CONFIG.outPath);
+        if (fs.existsSync(file)) expect(fs.readFileSync(file, 'utf8')).not.toContain(SENTINEL);
+      });
+    }
+  }
+
+  it('redact replaces every occurrence and ignores empty secrets', () => {
+    expect(redact('a SECRET b SECRET', 'SECRET', undefined, '')).toBe('a [redacted] b [redacted]');
   });
 });
