@@ -1,7 +1,7 @@
 /* KubeCompanion design tokens. Direction B "Kay Sunrise" (user pick 2026-11-09).
    Token NAMES are frozen once PR0 merges: change values only; a rename or a new name needs the orchestrator.
    Mustard (--color-accent) is 1.9:1 on white: never use it as text.
-   Contrast is checked in web/tests (token-pairs). Logical properties only elsewhere. */
+   Contrast is checked in web/src/styles/token-pairs.test.ts. Logical properties only elsewhere. */
 :root {
   --color-bg: #fbf8f1; /* page background */
   --color-surface: #ffffff; /* cards, inputs, footer */

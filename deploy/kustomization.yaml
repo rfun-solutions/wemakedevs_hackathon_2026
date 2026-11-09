@@ -12,9 +12,10 @@ resources:
   # >> c0-scaffold
   - postgres.yaml
   # >> a-schedule-agenda
+  - cronjob-ingest.yaml
   # >> f-observability-product
   # >> c-evening-threads
 images:
   - name: app
     newName: ghcr.io/rfun-solutions/wemakedevs_hackathon_2026
-    newTag: e9105a4
+    newTag: a7d7fc3

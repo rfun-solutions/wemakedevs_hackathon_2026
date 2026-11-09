@@ -15,10 +15,10 @@ Edits: `web/index.html` (pre-paint prefs script), app shell (mount live regions)
 ## 1. Design direction and tokens (PR 1, merge first)
 - [ ] 1.1 (D0, outside the repo in `.scratch/kubecompanion/design/`, from 11:00) Run the Impeccable skill for KubeCompanion (mobile-first, Kay's context: bright screen, noisy hall, one-handed). Produce 2-3 directions (palette, type pairing, density, shape) with a small preview each; present them and wait for the user's pick (target about 11:05, decision by 11:20, neutral default); record the pick as token names and values, and hand the names to C0w by 11:30
 - [x] 1.2 Apply the picked direction in `tokens.css` by changing values only; the names were fixed in PR 0 (task 0.2a)
-- [ ] 1.3 Write `global.css` (reset, base type, focus-visible, `.btn`, `.visually-hidden`, logical properties only)
+- [x] 1.3 Write `global.css` (reset, base type, focus-visible, `.btn`, `.visually-hidden`, logical properties only)
 - [x] 1.4 `web/src/styles/token-pairs.ts` (`TOKEN_PAIRS`); unit test: contrast ratios of token pairs for default and high-contrast sets, failure message names the pair, the ratio, the minimum and the computed colours
-- [ ] 1.5 Confirm C0's lint config (which installs and enables `eslint-plugin-jsx-a11y`; it works with Preact JSX) flags `div`/`span` click handlers; add a lint fixture test. Only tighten C0's rules, never remove them
-- [ ] 1.6 Write `docs/accessibility.md` (rules, checklist, token and `t()` usage)
+- [x] 1.5 Confirm C0's lint config (which installs and enables `eslint-plugin-jsx-a11y`; it works with Preact JSX) flags `div`/`span` click handlers; add a lint fixture test. Only tighten C0's rules, never remove them
+- [x] 1.6 Write `docs/accessibility.md` (rules, checklist, token and `t()` usage)
 
 ## 2. i18n framework (PR 1)
 - [ ] 2.1 Implement `t()`, `useLang()`, `setLang()`, EN fallback, `{param}` interpolation, `Intl` helpers with explicit time zone; set `<html lang dir>`

@@ -1,9 +1,9 @@
 ## 1. PR 1: data and API
-- [ ] 1.1 Migrations `api/migrations/200_notes.sql`, `201_people.sql`, `202_promises.sql` with indexes and unique `(device_id, client_id)`
-- [ ] 1.2 Routes `api/src/routes/notes.ts`, `people.ts`, `promises.ts` with schema validation; register under the `// >> b-capture` marker in `api/src/routes/index.ts`
-- [ ] 1.3 Spans `kc.capture.notes_create`, histograms `kc_capture_saved_ms` and `kc_capture_notes_create_ms` (SLO comment block)
-- [ ] 1.4 `POST /api/capture/seed` behind `KC_DEMO_SEED=1`, with `seed-data.ts` and `DEMO_DEVICE_ID` (see design). It is the single seeding path, which C's `npm run seed:threads` also calls. Test idempotence and the 404 when the flag is off
-- [ ] 1.5 Unit/integration tests: create, idempotent replay, isolation, 400s, `caption` source
+- [x] 1.1 Migrations `api/migrations/200_notes.sql`, `201_people.sql`, `202_promises.sql` with indexes and unique `(device_id, client_id)`
+- [x] 1.2 Routes `api/src/routes/notes.ts`, `people.ts`, `promises.ts` with schema validation; register under the `// >> b-capture` marker in `api/src/routes/index.ts`
+- [x] 1.3 Spans `kc.capture.notes_create`, histograms `kc_capture_saved_ms` and `kc_capture_notes_create_ms` (SLO comment block)
+- [x] 1.4 `POST /api/capture/seed` behind `KC_DEMO_SEED=1`, with `seed-data.ts` and `DEMO_DEVICE_ID` (see design). It is the single seeding path, which C's `npm run seed:threads` also calls. Test idempotence and the 404 when the flag is off
+- [x] 1.5 Unit/integration tests: create, idempotent replay, isolation, 400s, `caption` source
 
 ## 2. PR 2: capture UI and queue
 - [ ] 2.2 Replace C0's stub `web/src/lib/capture/queue.ts` with the real queue (IndexedDB, backoff, flush triggers), keeping the exports `enqueueNote` and `getLastSaveMs` and their types exactly; unit tests using fake-indexeddb. (Former task 2.1, the speech stub, is dropped: C0 ships it and E replaces it.)

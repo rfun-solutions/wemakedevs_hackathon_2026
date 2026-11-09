@@ -10,7 +10,7 @@ concurrency:
 jobs:
   feed-contract:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     env:
       FIXTURE: ${{ vars.FEED_FIXTURE || 'sessionize-v1' }}
       MODE: ${{ vars.FEED_MODE || 'ok' }}
@@ -26,7 +26,7 @@ jobs:
       - name: Start mock upstream
         run: |
           node feed-contract/mock-upstream/server.mjs > mock-upstream.log 2>&1 &
-          for i in $(seq 1 20); do
+          for _ in $(seq 1 20); do
             curl -fs http://127.0.0.1:4010/healthz > /dev/null && exit 0
             sleep 0.5
           done
@@ -40,3 +40,5 @@ jobs:
         run: npx vitest run --project api api/src/services/sessionize
       - name: Fixture and mock upstream tests
         run: npx vitest run --config feed-contract/vitest.config.mjs
+      - name: Deploy bump changes exactly one line
+        run: scripts/test-set-image-tag.sh
