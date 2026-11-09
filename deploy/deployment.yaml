@@ -50,11 +50,11 @@ spec:
               value: "claude-haiku-5-5"
             - name: THREADS_DAILY_CAP_USD
               value: "0.05"
-            # Secret `threads-cron` is created by hand (docs/runbooks/threads.md); the cron path stays 401 until it exists.
+            # Secret `kc-secrets` is created out of band (docs/runbooks/threads.md); the cron path stays 401 until the key exists.
             - name: THREADS_CRON_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: threads-cron
+                  name: kc-secrets
                   key: THREADS_CRON_TOKEN
                   optional: true
           resources:

@@ -4,25 +4,24 @@ Owner: c-evening-threads. Credentialing-free; the end user is Kay, a conference 
 
 ## Secret for the nightly job (user runs this once, never commit a token)
 
-The CronJob `threads-nightly` and the app both read `THREADS_CRON_TOKEN` from the Secret `threads-cron`.
-The Secret does not exist in git. Until it exists the cron path answers 401 and the app is unaffected.
+The CronJob `threads-nightly` and the app both read `THREADS_CRON_TOKEN` from the shared Secret `kc-secrets`.
+The Secret is created out of band and is never committed. Add this key when creating `kc-secrets`; if it already exists,
+add the key without replacing its other credentials. Until the key exists the cron path answers 401 and the app is unaffected.
 
 ```sh
-kubectl -n team-kubecompanion2026 create secret generic threads-cron \
-  --from-literal=THREADS_CRON_TOKEN="$(openssl rand -hex 32)"
-# the app reads it at start: restart once so the pods pick it up
-kubectl -n team-kubecompanion2026 rollout restart deployment/app
+kubectl -n team-kubecompanion2026 patch secret kc-secrets --type=merge \
+  -p "{\"stringData\":{\"THREADS_CRON_TOKEN\":\"$(openssl rand -hex 32)\"}}"
 ```
+
+After updating the Secret, restart `deployment/app` with Radar's `manage_workload` tool so its environment picks up the key.
 
 ## Run the nightly job by hand
 
 The CronJob is suspended (`suspend: true`, 02:00 `America/Denver` when enabled) so the demo is deterministic.
 
-```sh
-kubectl -n team-kubecompanion2026 create job --from=cronjob/threads-nightly threads-manual-$(date +%H%M)
-kubectl -n team-kubecompanion2026 logs job/threads-manual-<suffix>
-# enable the schedule: kubectl -n team-kubecompanion2026 patch cronjob threads-nightly -p '{"spec":{"suspend":false}}'
-```
+Use Radar's `manage_cronjob` tool to run `threads-nightly` now, then inspect the Job with `get_workload_logs`.
+To enable the recurring schedule, change `suspend` to `false` in `deploy/threads-cronjob.yaml` and push the change;
+Argo CD will sync it. Do not patch the live CronJob.
 
 ## Settings
 
