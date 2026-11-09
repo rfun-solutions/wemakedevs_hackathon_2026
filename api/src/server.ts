@@ -9,14 +9,14 @@ let migrated = false;
 
 // Shutdown handlers go in before anything slow (KC-1): the app runs as PID 1, which ignores SIGTERM
 // without a handler, so a kill during boot used to wait out the 30s grace period and end in SIGKILL (137).
-let appRef: Awaited<ReturnType<typeof buildApp>> | undefined;
+const ref: { app?: Awaited<ReturnType<typeof buildApp>> } = {};
 let closing = false;
 for (const sig of ['SIGTERM', 'SIGINT'] as const) {
   process.on(sig, () => {
     if (closing) return;
     closing = true;
     void (async () => {
-      await appRef?.close().catch(() => undefined);
+      await ref.app?.close().catch(() => undefined);
       await pool?.end().catch(() => undefined);
       await shutdownTelemetry();
       process.exit(0);
@@ -29,7 +29,7 @@ const app = await buildApp({
   isMigrated: () => migrated,
   logger: { level: process.env.LOG_LEVEL ?? 'info' },
 });
-appRef = app;
+ref.app = app;
 
 async function migrateWithRetry(): Promise<void> {
   if (!pool) {
