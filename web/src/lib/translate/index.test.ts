@@ -38,6 +38,26 @@ describe('createTranslateHandler', () => {
   });
 });
 
+describe('timeouts and retries', () => {
+  it('falls back to the server when Chrome stalls', async () => {
+    const chrome = vi.fn().mockReturnValue(new Promise(() => undefined));
+    const server = vi.fn().mockResolvedValue('hola');
+    const h = createTranslateHandler('es', chrome, server, 20);
+    expect(await h.translate('s1', 'hi')).toBe('hola');
+    expect(server).toHaveBeenCalledTimes(1);
+  });
+
+  it('forgets a failed segment so it can be retried', async () => {
+    const server = vi
+      .fn()
+      .mockRejectedValueOnce(new TranslateUnavailableError('429'))
+      .mockResolvedValue('hola');
+    const h = createTranslateHandler('es', null, server);
+    await expect(h.translate('s1', 'hi')).rejects.toBeInstanceOf(TranslateUnavailableError);
+    expect(await h.translate('s1', 'hi')).toBe('hola');
+  });
+});
+
 describe('createChromeTranslate', () => {
   it('is null without Translator or LanguageDetector', async () => {
     expect(await createChromeTranslate('es', {})).toBeNull();

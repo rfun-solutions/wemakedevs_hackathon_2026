@@ -39,7 +39,8 @@ export function TranslateToggle({ lines }: { lines: CaptionLine[] }) {
     const target = getLang();
     const chrome = await createChromeTranslate(target);
     handler.current = createTranslateHandler(target, chrome);
-    asked.current = new Set();
+    // Only lines that finish after the toggle turns on are translated: a backlog would trip the 15/min limit.
+    asked.current = new Set(lines.filter((l) => l.final).map((l) => l.id));
     setResults({});
     setOn(true);
   }

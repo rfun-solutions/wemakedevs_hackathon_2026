@@ -14,13 +14,20 @@ export class TranslateUnavailableError extends Error {
   }
 }
 
+export const SERVER_TIMEOUT_MS = 10_000;
+export const CHROME_TIMEOUT_MS = 8000;
+
 export type TranslateFn = (text: string) => Promise<string>;
 
 /** Server path. Never throws anything but TranslateUnavailableError. */
 export async function translateViaServer(text: string, target: TranslateTarget): Promise<string> {
   let res: Response;
   try {
-    res = await api('/api/translate', { method: 'POST', body: JSON.stringify({ text, target }) });
+    res = await api('/api/translate', {
+      method: 'POST',
+      body: JSON.stringify({ text, target }),
+      signal: AbortSignal.timeout(SERVER_TIMEOUT_MS),
+    });
   } catch {
     throw new TranslateUnavailableError('network');
   }
@@ -91,32 +98,56 @@ export interface TranslateHandler {
   translate(id: string, text: string): Promise<string>;
 }
 
-/** The single handler. Chrome first, then the server; reports `kc_translate_total{path}` per call. */
+function withTimeout<T>(p: Promise<T>, ms: number): Promise<T> {
+  let timer: ReturnType<typeof setTimeout>;
+  const limit = new Promise<never>((_, rej) => {
+    timer = setTimeout(() => rej(new TranslateUnavailableError('timeout')), ms);
+  });
+  return Promise.race([p, limit]).finally(() => clearTimeout(timer));
+}
+
+/**
+ * The single handler. Chrome first (bounded, so a stalled model download falls back), then the server.
+ * Reports `kc_translate_total{path}` and a `kc.translate.client` span per call. A failed segment is dropped
+ * from the memo so a later call may retry it.
+ */
 export function createTranslateHandler(
   target: TranslateTarget,
   chrome: TranslateFn | null,
   server: (text: string, target: TranslateTarget) => Promise<string> = translateViaServer,
+  chromeTimeoutMs: number = CHROME_TIMEOUT_MS,
 ): TranslateHandler {
   const done = new Map<string, Promise<string>>();
   return {
     translate(id, text) {
       let p = done.get(id);
       if (!p) {
+        const started = Date.now();
+        const report = (path: string, outcome: string) =>
+          emit('kc.translate.client', { path, outcome, ms: Date.now() - started });
         p = (async () => {
           if (chrome) {
             try {
-              const out = await chrome(text);
+              const out = await withTimeout(chrome(text), chromeTimeoutMs);
               emit('kc_translate_total', { value: 1, path: 'chrome' });
+              report('chrome', 'ok');
               return out;
             } catch {
-              /* fall through to the server */
+              report('chrome', 'fallback');
             }
           }
-          const out = await server(text, target);
-          emit('kc_translate_total', { value: 1, path: 'server' });
-          return out;
+          try {
+            const out = await server(text, target);
+            emit('kc_translate_total', { value: 1, path: 'server' });
+            report('server', 'ok');
+            return out;
+          } catch (e) {
+            report('server', 'error');
+            throw e;
+          }
         })();
         done.set(id, p);
+        p.catch(() => done.delete(id));
       }
       return p;
     },
