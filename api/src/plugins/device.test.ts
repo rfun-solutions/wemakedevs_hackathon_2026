@@ -69,6 +69,25 @@ describe('device plugin', () => {
     expect(query.mock.calls[0]?.[1]).toEqual([GOOD]);
   });
 
+  it('sweeps expired touch entries every 1000 requests and still re-upserts after the window', async () => {
+    vi.useFakeTimers();
+    try {
+      const query = vi.fn<Q>().mockResolvedValue({});
+      const app = await make({ query });
+      const uuid = (i: number) => `3f2b8c1e-5d4a-4b7e-9a1c-${String(i).padStart(12, '0')}`;
+      await app.inject({ url: '/api/who', headers: { 'x-device-id': GOOD } });
+      expect(query).toHaveBeenCalledTimes(1);
+      vi.advanceTimersByTime(6 * 60_000);
+      for (let i = 0; i < 1000; i++)
+        await app.inject({ url: '/api/who', headers: { 'x-device-id': uuid(i) } });
+      expect(query).toHaveBeenCalledTimes(1001);
+      await app.inject({ url: '/api/who', headers: { 'x-device-id': GOOD } });
+      expect(query).toHaveBeenCalledTimes(1002);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it('isDeviceId validates the v4 format', () => {
     expect(isDeviceId(GOOD)).toBe(true);
     expect(isDeviceId(undefined)).toBe(false);
