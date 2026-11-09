@@ -1,0 +1,40 @@
+/* Settings screen. Tokens only; logical properties only. */
+.settings .field {
+  margin-block-end: var(--space-5);
+  padding: 0;
+  border: 0;
+  min-inline-size: 0;
+}
+.settings label,
+.settings legend {
+  font-weight: var(--weight-bold);
+  font-size: var(--text-md);
+}
+.settings .field-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+.settings .range {
+  flex: 1 1 10rem;
+  min-block-size: var(--target-comfort);
+  accent-color: var(--color-link);
+}
+.settings .check {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-block-size: var(--target-comfort);
+}
+.settings .check input {
+  inline-size: var(--target-min);
+  block-size: var(--target-min);
+  flex: none;
+  accent-color: var(--color-link);
+}
+.settings .help {
+  margin: var(--space-1) 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
