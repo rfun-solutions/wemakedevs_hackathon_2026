@@ -5,6 +5,7 @@ import { startCaptions, type CaptionSession, type CaptionStatus } from '../../li
 import { MODEL_SIZE_MB } from '../../lib/speech/consent';
 import type { CaptionSegment, EngineId } from '../../lib/speech/types';
 import { span } from '../../lib/speech/telemetry';
+import { TranslateToggle } from './TranslateToggle';
 import { markNoteBody, venueTime } from './mark';
 import './captions.css';
 
@@ -238,6 +239,7 @@ export function Captions() {
         {message?.text ?? ''}
       </p>
       {/* >> e-captions-translation-translate */}
+      <TranslateToggle lines={lines} />
       <div class="captions-log" role="log" aria-live="polite" aria-label={t('captions.log.label')}>
         {lines.length === 0 && <p class="captions-empty">{t('captions.empty')}</p>}
         <ul class="captions-lines">

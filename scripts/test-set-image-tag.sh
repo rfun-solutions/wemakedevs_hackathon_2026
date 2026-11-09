@@ -12,7 +12,7 @@ if [ "$(yq '.images[] | select(.name == "app") | .newTag' deploy/kustomization.y
   echo "pick a different test tag" >&2; exit 1
 fi
 [ "$changed" = 2 ] || { echo "expected 1 changed line (2 diff sides), got $changed" >&2; echo "$d" >&2; exit 1; }
-printf '%s\n' "$d" | grep -q 'newTag: abc1234' || { echo "changed line is not newTag" >&2; exit 1; }
+printf '%s\n' "$d" | grep -qE 'newTag: "?abc1234"?' || { echo "changed line is not newTag" >&2; exit 1; }
 grep -c '# >>' deploy/kustomization.yaml > "$tmp/a"; grep -c '# >>' "$tmp/k.yaml" > "$tmp/b"; cmp "$tmp/a" "$tmp/b"
 # idempotent: same tag again changes nothing
 cp "$tmp/k.yaml" "$tmp/k2.yaml"; scripts/set-image-tag.sh "$image" abc1234 "$tmp/k2.yaml"; cmp "$tmp/k.yaml" "$tmp/k2.yaml"
