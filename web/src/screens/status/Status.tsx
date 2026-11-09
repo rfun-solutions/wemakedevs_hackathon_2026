@@ -6,6 +6,8 @@ import { computeVerdict, feedLabel, savedLabel } from './verdict';
 import { medianOf, type StatusPayload } from './status-client';
 
 const POLL_MS = 30_000;
+const STATUS_TIMEOUT_MS = 5000;
+const PING_TIMEOUT_MS = 3000;
 
 function useOnline(): boolean {
   const [online, setOnline] = useState(() => navigator.onLine);
@@ -28,7 +30,7 @@ async function measureRtt(): Promise<number | null> {
   for (let i = 0; i < 3; i++) {
     const start = performance.now();
     try {
-      const res = await api('/api/ping');
+      const res = await api('/api/ping', { signal: AbortSignal.timeout(PING_TIMEOUT_MS) });
       if (res.ok) samples.push(performance.now() - start);
     } catch {
       /* a failed ping is simply not a sample */
@@ -39,6 +41,7 @@ async function measureRtt(): Promise<number | null> {
     void api('/api/status/rtt', {
       method: 'POST',
       body: JSON.stringify({ rtt_ms: Math.round(median) }),
+      signal: AbortSignal.timeout(PING_TIMEOUT_MS),
     }).catch(() => undefined);
   }
   return median;
@@ -61,7 +64,7 @@ export function Status() {
     let cancelled = false;
     const load = async () => {
       try {
-        const res = await api('/api/status');
+        const res = await api('/api/status', { signal: AbortSignal.timeout(STATUS_TIMEOUT_MS) });
         if (!res.ok) throw new Error(String(res.status));
         const body = (await res.json()) as StatusPayload;
         if (!cancelled) {
@@ -100,7 +103,15 @@ export function Status() {
       </p>
 
       <h3>{t('status.verdict.title')}</h3>
-      <p id="status-verdict">{t(`status.verdict.${verdict}`)}</p>
+      <div aria-live="polite" aria-atomic="true">
+        <p id="status-verdict">{t(`status.verdict.${verdict}`)}</p>
+        {status?.chaos_active && <p id="status-chaos">{t('status.chaos')}</p>}
+        {failed && online && (
+          <p id="status-error" role="alert">
+            {t('status.error')}
+          </p>
+        )}
+      </div>
       <ul>
         {rtt !== null && online && <li>{t('status.rtt', { ms: Math.round(rtt) })}</li>}
         {status?.server_ms_p95 != null && (
@@ -108,8 +119,6 @@ export function Status() {
         )}
         <li>{t(feed.key, feed.params)}</li>
       </ul>
-      {status?.chaos_active && <p id="status-chaos">{t('status.chaos')}</p>}
-      {failed && online && <p id="status-error">{t('status.error')}</p>}
 
       {/* >> f-observability-product-health */}
       {/* >> f-observability-product */}
