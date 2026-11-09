@@ -13,9 +13,11 @@ Set by the user; never committed. `DASH0_TOKEN` (server, query and apply), `ANTH
 ## Route 2: backup chaos at 15:45
 Use only when route 1 finds nothing. Say on stage that it is a rehearsed slowdown.
 
-1. Set the flag (app-level only; the cluster is untouched):
-   `kubectl -n team-kubecompanion2026 patch configmap kc-chaos --type merge -p '{"data":{"flags.json":"{\"agenda\":{\"latencyMs\":800,\"errorRate\":0,\"naive\":false}}"}}'`
-   Variant for the N+1 path: set `"naive":true` and `latencyMs` 0. The reader re-reads within 10 s. Argo may revert the ConfigMap on sync; patch again if so.
+1. Set the flag through GitOps (Argo CD has `selfHeal: true`, so a live `kubectl patch` of `kc-chaos` is reverted within minutes and must not be used):
+   open a PR that changes `data.flags.json` in `deploy/chaos-configmap.yaml` to
+   `'{"agenda":{"latencyMs":800,"errorRate":0,"naive":false}}'` (variant for the N+1 path: `"naive":true`, `latencyMs` 0), let Gitar review and the queue merge it.
+   Timing to plan for: merge, then Argo sync (up to about 3 min), then kubelet refreshes the mounted ConfigMap (typically 60 to 90 s), then the reader re-reads within 5 s. Budget 2 to 5 minutes and rehearse before 15:45; stage the PR in advance and merge it at 15:40.
+   Alternative needing an Argo change owned by the orchestrator: `ignoreDifferences` on `ConfigMap kc-chaos` `/data` in `argocd/application.yaml`, after which `kubectl patch` works (still subject to the kubelet delay).
 2. Run the bounded load from a laptop (50 virtual users, 60 s, agenda and sessions only; the script refuses translate, llm and thread paths):
    `k6 run -e BASE_URL=https://kubecompanion2026.cnh.radarhq.io scripts/load/agenda.js`
    Ask the orchestrator before running it against the public URL.
@@ -32,7 +34,7 @@ Use only when route 1 finds nothing. Say on stage that it is a rehearsed slowdow
 6. For the two-AI-SRE angle and the release footer, follow `docs/demo-runbook-ai-sres.md`.
 
 ## Reset steps
-7. Clear chaos: `kubectl -n team-kubecompanion2026 patch configmap kc-chaos --type merge -p '{"data":{"flags.json":"{}"}}'`; confirm Status shows chaos inactive within 10 s.
+7. Clear chaos: revert the `deploy/chaos-configmap.yaml` change through a PR (`flags.json: '{}'`); confirm Status shows chaos inactive after the same sync and kubelet delay (2 to 5 minutes).
 8. Confirm no k6 process is still running. Stop and remove any local `kc-pg-*` containers.
 9. Re-run the Synthetic Kay loop only if the user starts it (it is browser automation).
 
