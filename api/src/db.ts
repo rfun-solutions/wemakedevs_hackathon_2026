@@ -1,10 +1,7 @@
 import pg from 'pg';
 
 /** Pool from DATABASE_URI (CNPG `db-app` secret `uri`, or local docker). Undefined when unset: /readyz then reports 503. */
-export function createPool(
-  env: NodeJS.ProcessEnv = process.env,
-  options: { statementTimeoutMs?: number } = {},
-): pg.Pool | undefined {
+export function createPool(env: NodeJS.ProcessEnv = process.env): pg.Pool | undefined {
   const connectionString = env.DATABASE_URI ?? env.DATABASE_URL;
   if (!connectionString) return undefined;
   const pool = new pg.Pool({
@@ -12,9 +9,6 @@ export function createPool(
     max: 10,
     connectionTimeoutMillis: 3000,
     idleTimeoutMillis: 30_000,
-    ...(options.statementTimeoutMs === undefined
-      ? {}
-      : { statement_timeout: options.statementTimeoutMs }),
   });
   // An idle client erroring (db restart) must not crash the process.
   pool.on('error', () => undefined);

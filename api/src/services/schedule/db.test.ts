@@ -13,10 +13,16 @@ describe('schedule database pool', () => {
   });
 
   it('sets a statement timeout on the shared route pool', () => {
-    const pool = { end: vi.fn().mockResolvedValue(undefined) } as unknown as Pool;
+    const handlers: Record<string, (c: unknown) => void> = {};
+    const pool = {
+      end: vi.fn().mockResolvedValue(undefined),
+      on: (ev: string, fn: (c: unknown) => void) => (handlers[ev] = fn),
+    } as unknown as Pool;
     createPool.mockReturnValue(pool);
 
     expect(resolveScheduleDb()).toBe(pool);
-    expect(createPool).toHaveBeenCalledWith(process.env, { statementTimeoutMs: 2_000 });
+    const query = vi.fn().mockResolvedValue({});
+    handlers.connect?.({ query });
+    expect(query).toHaveBeenCalledWith('SET statement_timeout = 2000');
   });
 });

@@ -11,7 +11,15 @@ const SCHEDULE_STATEMENT_TIMEOUT_MS = 2_000;
 /** Routes use the injected db (tests), otherwise one shared pool from DATABASE_URI. */
 export function resolveScheduleDb(injected?: ScheduleDb): ScheduleDb | undefined {
   if (injected) return injected;
-  shared ??= createPool(process.env, { statementTimeoutMs: SCHEDULE_STATEMENT_TIMEOUT_MS });
+  if (!shared) {
+    shared = createPool();
+    // Bound every statement from the schedule routes (done here: api/src/db.ts is C0's file).
+    shared?.on('connect', (client) => {
+      void client
+        .query(`SET statement_timeout = ${SCHEDULE_STATEMENT_TIMEOUT_MS}`)
+        .catch(() => undefined);
+    });
+  }
   return shared;
 }
 
