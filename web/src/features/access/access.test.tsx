@@ -149,7 +149,7 @@ describe('Cards screen', () => {
       },
     );
     render(<ShowToPerson text="Hi" lang="es" onClose={() => undefined} />);
-    fireEvent.click(screen.getByRole('button', { name: 'Leer en voz alta' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Read aloud' }));
     expect(speak).toHaveBeenCalledTimes(1);
     expect(speak.mock.calls[0]?.[0].lang).toBe('es-ES');
   });
