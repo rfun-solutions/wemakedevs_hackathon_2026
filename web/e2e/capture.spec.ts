@@ -117,6 +117,12 @@ test.describe('capture', () => {
 
   test('dictation unsupported is announced and typing still works', async ({ page }) => {
     mockApi(page);
+    // E1's real speech module is on main: make "unsupported" explicit instead of relying on the old stub.
+    await page.addInitScript(() => {
+      for (const k of ['SpeechRecognition', 'webkitSpeechRecognition']) {
+        Object.defineProperty(window, k, { value: undefined, configurable: true });
+      }
+    });
     await page.goto('/capture');
     await page.getByRole('button', { name: /^(Dictate|Dictar)$/ }).click();
     await expect(status(page)).toHaveText(/Dictation not available|Dictado no disponible/);
