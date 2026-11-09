@@ -13,9 +13,10 @@ Set by the user; never committed. `DASH0_TOKEN` (server, query and apply), `ANTH
 ## Route 2: backup chaos at 15:45
 Use only when route 1 finds nothing. Say on stage that it is a rehearsed slowdown.
 
-1. Set the flag (app-level only; the cluster is untouched):
+1. Create the runtime flag ConfigMap and set the flag (app-level only; the cluster is untouched). It is intentionally excluded from Argo CD so syncs do not undo demo patches:
+   `kubectl -n team-kubecompanion2026 apply -f deploy/chaos-configmap.yaml`
    `kubectl -n team-kubecompanion2026 patch configmap kc-chaos --type merge -p '{"data":{"flags.json":"{\"agenda\":{\"latencyMs\":800,\"errorRate\":0,\"naive\":false}}"}}'`
-   Variant for the N+1 path: set `"naive":true` and `latencyMs` 0. The reader re-reads within 10 s. Argo may revert the ConfigMap on sync; patch again if so.
+   Variant for the N+1 path: set `"naive":true` and `latencyMs` 0. The reader re-reads within 5 s.
 2. Run the bounded load from a laptop (50 virtual users, 60 s, agenda and sessions only; the script refuses translate, llm and thread paths):
    `k6 run -e BASE_URL=https://kubecompanion2026.cnh.radarhq.io scripts/load/agenda.js`
    Ask the orchestrator before running it against the public URL.
@@ -32,7 +33,7 @@ Use only when route 1 finds nothing. Say on stage that it is a rehearsed slowdow
 6. For the two-AI-SRE angle and the release footer, follow `docs/demo-runbook-ai-sres.md`.
 
 ## Reset steps
-7. Clear chaos: `kubectl -n team-kubecompanion2026 patch configmap kc-chaos --type merge -p '{"data":{"flags.json":"{}"}}'`; confirm Status shows chaos inactive within 10 s.
+7. Clear chaos: `kubectl -n team-kubecompanion2026 patch configmap kc-chaos --type merge -p '{"data":{"flags.json":"{}"}}'`; confirm Status shows chaos inactive within 5 s.
 8. Confirm no k6 process is still running. Stop and remove any local `kc-pg-*` containers.
 9. Re-run the Synthetic Kay loop only if the user starts it (it is browser automation).
 

@@ -13,7 +13,7 @@ resources:
   - postgres.yaml
   # >> a-schedule-agenda
   # >> f-observability-product
-  - chaos-configmap.yaml
+  # kc-chaos is applied separately so demo flag patches are not reverted by Argo CD.
   # >> c-evening-threads
 images:
   - name: app
