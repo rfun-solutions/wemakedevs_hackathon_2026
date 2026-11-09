@@ -18,10 +18,9 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci --no-audit --no-fund
-      - run: npm run build
       - run: npx playwright install --with-deps chromium webkit
       - name: Playwright (iPhone 15, Pixel 7, kay)
-        run: npx playwright test --grep-invert "@a11y" --pass-with-no-tests
+        run: npx playwright test --project=iphone-15 --project=pixel-7 --project=kay --grep-invert "axe clean" --pass-with-no-tests
         env:
           CI: "true"
           PORT: "3100"

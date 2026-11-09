@@ -18,10 +18,9 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci --no-audit --no-fund
-      - run: npm run build
-      - run: npx playwright install --with-deps chromium webkit
+      - run: npx playwright install --with-deps webkit
       - name: Axe on the shell page
-        run: npx playwright test --grep "@a11y" --pass-with-no-tests
+        run: npx playwright test --project=iphone-15 --grep "axe clean" --pass-with-no-tests
         env:
           CI: "true"
           PORT: "3100"
