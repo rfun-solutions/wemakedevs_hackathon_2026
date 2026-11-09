@@ -7,11 +7,29 @@ const port = Number(process.env.PORT ?? 8080);
 const pool = createPool();
 let migrated = false;
 
+// Shutdown handlers go in before anything slow (KC-1): the app runs as PID 1, which ignores SIGTERM
+// without a handler, so a kill during boot used to wait out the 30s grace period and end in SIGKILL (137).
+const ref: { app?: Awaited<ReturnType<typeof buildApp>> } = {};
+let closing = false;
+for (const sig of ['SIGTERM', 'SIGINT'] as const) {
+  process.on(sig, () => {
+    if (closing) return;
+    closing = true;
+    void (async () => {
+      await ref.app?.close().catch(() => undefined);
+      await pool?.end().catch(() => undefined);
+      await shutdownTelemetry();
+      process.exit(0);
+    })();
+  });
+}
+
 const app = await buildApp({
   ...(pool ? { db: pool } : {}),
   isMigrated: () => migrated,
   logger: { level: process.env.LOG_LEVEL ?? 'info' },
 });
+ref.app = app;
 
 async function migrateWithRetry(): Promise<void> {
   if (!pool) {
@@ -34,17 +52,3 @@ async function migrateWithRetry(): Promise<void> {
 // Listen first so /healthz answers while the database comes up; /readyz gates on migrations.
 await app.listen({ port, host: '0.0.0.0' });
 void migrateWithRetry();
-
-let closing = false;
-for (const sig of ['SIGTERM', 'SIGINT'] as const) {
-  process.on(sig, () => {
-    if (closing) return;
-    closing = true;
-    void (async () => {
-      await app.close();
-      await pool?.end().catch(() => undefined);
-      await shutdownTelemetry();
-      process.exit(0);
-    })();
-  });
-}
