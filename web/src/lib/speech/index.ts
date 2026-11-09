@@ -152,8 +152,10 @@ export async function startCaptionsWith(
         metric.lag(ms, id);
         reporter.add(id, ms);
         const action = sli.record(ms);
-        if (action === 'message') status({ type: 'slow_here' });
-        else if (action === 'switch') void switchEngine('slow');
+        if (action === 'message') {
+          reporter.flush();
+          status({ type: 'slow_here' });
+        } else if (action === 'switch') void switchEngine('slow');
       },
       onGiveUp: (reason) => {
         if (!stopped && accepts(id)) status({ type: 'gave_up', reason });
