@@ -1,0 +1,34 @@
+{
+  "id": "b-capture",
+  "order": 5,
+  "titleKey": "capture.hood.title",
+  "whatKey": "capture.hood.what",
+  "promises": ["P2"],
+  "tech": [
+    {
+      "sponsor": "dash0",
+      "kind": "trace",
+      "label": "span kc.capture.save",
+      "ref": "web/src/lib/capture/telemetry.ts"
+    },
+    {
+      "sponsor": "dash0",
+      "kind": "query",
+      "label": "kc_capture_saved_ms p95",
+      "ref": "api/src/services/capture/metrics.ts",
+      "live": "promise:P2"
+    },
+    {
+      "sponsor": "gitar",
+      "kind": "rule",
+      "label": "inclusion.md IN-11",
+      "ref": ".gitar/review/inclusion.md"
+    },
+    {
+      "sponsor": "gitar",
+      "kind": "rule",
+      "label": "api-contract.md AC-1",
+      "ref": ".gitar/review/api-contract.md"
+    }
+  ]
+}

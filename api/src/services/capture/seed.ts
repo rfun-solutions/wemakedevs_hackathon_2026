@@ -4,7 +4,7 @@ import { SEED_NOTES, SEED_PEOPLE, SEED_PROMISES } from './seed-data.js';
 /** Reserved demo device (valid UUID v4). C's `npm run seed:threads` seeds this device through POST /api/capture/seed. */
 export const DEMO_DEVICE_ID = '00000000-0000-4000-8000-00000000ca1e';
 
-/** The endpoint exists only while KC_DEMO_SEED=1 (set for rehearsal and the demo, never in git). */
+/** The endpoint exists only while KC_DEMO_SEED=1 (on only for rehearsal and the demo; toggled through git in deploy/deployment.yaml under the b-capture env marker, see docs/demo-seeding.md). */
 export const seedEnabled = (env: NodeJS.ProcessEnv = process.env): boolean =>
   env.KC_DEMO_SEED === '1';
 
