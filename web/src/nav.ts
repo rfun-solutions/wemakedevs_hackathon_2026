@@ -19,5 +19,6 @@ export const navItems: NavItem[] = [
   { path: '/status', labelKey: 'status.nav' },
   // >> e-captions-translation
   // >> c-evening-threads
+  { path: '/threads', labelKey: 'threads.nav' },
   // >> h-under-the-hood
 ];

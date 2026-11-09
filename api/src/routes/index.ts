@@ -27,4 +27,5 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
   // >> e-captions-translation
   // >> e-captions-translation-translate
   // >> c-evening-threads
+  await app.register((await import('./threads.js')).default);
 }

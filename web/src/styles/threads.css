@@ -1,0 +1,62 @@
+/* c-evening-threads: tokens only */
+.threads-build {
+  min-height: var(--target-primary);
+  margin-block: var(--space-3);
+}
+.threads-status:not(:empty) {
+  margin-block: var(--space-3);
+  padding: var(--space-3);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-info-bg);
+  color: var(--color-text);
+}
+.threads-error {
+  color: var(--color-danger);
+}
+.threads-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: var(--space-4);
+}
+.threads-card {
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+.threads-card h3 {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-md);
+}
+.threads-meta {
+  margin: 0 0 var(--space-3);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+.threads-steps {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+.threads-steps legend {
+  font-weight: var(--weight-bold);
+  padding: 0;
+  margin-bottom: var(--space-2);
+}
+.threads-step {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--target-comfort);
+}
+.threads-step input {
+  width: var(--target-min);
+  height: var(--target-min);
+  flex: none;
+}
+.threads-step.done span {
+  text-decoration: line-through;
+  color: var(--color-text-muted);
+}

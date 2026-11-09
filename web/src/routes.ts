@@ -14,6 +14,7 @@ import { CalmPlaces } from './features/access/CalmPlaces';
 import { Status } from './screens/status/Status';
 // >> import:e-captions-translation
 // >> import:c-evening-threads
+import { Threads } from './screens/Threads';
 // >> import:h-under-the-hood
 
 export interface AppRoute {
@@ -34,5 +35,6 @@ export const routes: AppRoute[] = [
   { path: '/status', component: Status },
   // >> e-captions-translation
   // >> c-evening-threads
+  { path: '/threads', component: Threads },
   // >> h-under-the-hood
 ];
