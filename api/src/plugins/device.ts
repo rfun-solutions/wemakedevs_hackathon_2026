@@ -26,6 +26,7 @@ export interface DevicePluginOptions {
 const plugin: FastifyPluginCallback<DevicePluginOptions> = (app: FastifyInstance, opts, done) => {
   const touchEveryMs = opts.touchEveryMs ?? 5 * 60_000;
   const lastTouched = new Map<string, number>();
+  let calls = 0;
 
   app.decorateRequest('deviceId', undefined);
 
@@ -49,6 +50,9 @@ const plugin: FastifyPluginCallback<DevicePluginOptions> = (app: FastifyInstance
 
     if (opts.db) {
       const now = Date.now();
+      if (++calls % 1000 === 0) {
+        for (const [k, t] of lastTouched) if (now - t >= touchEveryMs) lastTouched.delete(k);
+      }
       const last = lastTouched.get(header);
       if (last === undefined || now - last >= touchEveryMs) {
         lastTouched.set(header, now);
