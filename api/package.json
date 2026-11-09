@@ -26,6 +26,7 @@
     "pino": "^10.4.0"
   },
   "devDependencies": {
+    "@opentelemetry/sdk-trace": "^3.1.1",
     "@types/node": "^22.19.0",
     "@types/pg": "^8.15.6"
   }
